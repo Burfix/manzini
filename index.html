@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V&A Waterfront Compliance Hub | Risk & Safety Management</title>
+    <title>V&A Waterfront Compliance Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,7 +15,7 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        vna: { blue: '#003366', navy: '#001a33', gold: '#c9a227', light: '#f8f9fa' },
+                        vna: { blue: '#003366', navy: '#001a33', gold: '#c9a227', light: '#f8f9fa', red: '#dc2626' },
                         risk: { low: '#22c55e', medium: '#eab308', high: '#f97316', critical: '#ef4444' }
                     }
                 }
@@ -28,105 +28,104 @@
         .glass { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); }
         .dark .glass { background: rgba(15,23,42,0.95); }
         .gradient-text { background: linear-gradient(135deg, #003366 0%, #c9a227 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .radar-container { position: relative; width: 100%; height: 300px; }
         .risk-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        .store-card { transition: all 0.3s ease; }
-        .store-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .expiry-warning { border-left: 4px solid #f97316; }
-        .expiry-critical { border-left: 4px solid #ef4444; }
-        .expiry-good { border-left: 4px solid #22c55e; }
-        .dashboard-content { min-height: calc(100vh - 80px); overflow-y: auto; padding-bottom: 40px; }
-        .chart-container { position: relative; height: 250px; width: 100%; }
-        .kpi-card { min-height: 120px; }
+        .nav-item { @apply flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-vna-blue transition-all cursor-pointer; }
+        .nav-item.active { @apply bg-vna-blue text-white hover:bg-vna-navy hover:text-white; }
+        .card-hover { transition: all 0.2s ease; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+        .dashboard-content { min-height: calc(100vh - 64px); overflow-y: auto; }
+        .page-section { display: none; animation: fadeIn 0.3s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .risk-badge { @apply px-2 py-1 rounded-full text-xs font-bold; }
+        .risk-critical { @apply bg-red-100 text-red-700; }
+        .risk-high { @apply bg-orange-100 text-orange-700; }
+        .risk-medium { @apply bg-yellow-100 text-yellow-700; }
+        .risk-low { @apply bg-green-100 text-green-700; }
+        .status-dot { @apply w-2 h-2 rounded-full; }
+        .timeline-line { @apply absolute left-4 top-8 bottom-0 w-0.5 bg-gray-200; }
     </style>
 </head>
 <body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
-    <!-- Login Screen -->
+    <!-- LOGIN SCREEN -->
     <div id="login-screen" class="fixed inset-0 z-50 bg-gradient-to-br from-vna-blue to-vna-navy flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden my-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden my-auto">
             <div class="grid md:grid-cols-2">
-                <div class="p-8 md:p-12 bg-gradient-to-br from-vna-blue to-vna-navy text-white">
+                <div class="p-8 md:p-12 bg-gradient-to-br from-vna-blue to-vna-navy text-white flex flex-col justify-center">
                     <div class="mb-8">
                         <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4">
-                            <i data-lucide="shield-check" class="w-8 h-8 text-vna-gold"></i>
+                            <i data-lucide="anchor" class="w-8 h-8 text-vna-gold"></i>
                         </div>
                         <h1 class="text-3xl font-bold mb-2">V&A Waterfront</h1>
-                        <p class="text-white/80">Compliance & Risk Management Hub</p>
+                        <p class="text-white/80 text-lg">Compliance & Risk Management Hub</p>
                     </div>
                     <div class="space-y-4 text-sm text-white/70">
-                        <div class="flex items-center space-x-3">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i>
-                            <span>Real-time Risk Monitoring</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i>
-                            <span>Store Compliance Tracking</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i>
-                            <span>License & Certification Alerts</span>
-                        </div>
+                        <div class="flex items-center space-x-3"><i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i><span>Real-time Risk Monitoring</span></div>
+                        <div class="flex items-center space-x-3"><i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i><span>Automated Compliance Tracking</span></div>
+                        <div class="flex items-center space-x-3"><i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i><span>Smart Audit Workflows</span></div>
                     </div>
                 </div>
                 
                 <div class="p-8 md:p-12 overflow-y-auto max-h-[80vh]">
-                    <h2 class="text-2xl font-bold mb-6">Select Demo Role</h2>
+                    <h2 class="text-2xl font-bold mb-2">Select Your Role</h2>
+                    <p class="text-gray-500 mb-6 text-sm">Demo mode - no password required</p>
+                    
                     <div class="space-y-3">
-                        <button onclick="login('executive')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group">
+                        <button onclick="login('executive')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group card-hover">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <div class="font-semibold text-lg group-hover:text-vna-blue">ESG Executive</div>
-                                    <div class="text-sm text-gray-500">Strategic overview & reporting</div>
+                                    <div class="font-bold text-lg group-hover:text-vna-blue">Mall Leadership</div>
+                                    <div class="text-sm text-gray-500">Risk overview, trends, intervention points</div>
                                 </div>
                                 <i data-lucide="trending-up" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
                             </div>
                         </button>
                         
-                        <button onclick="login('manager')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group">
+                        <button onclick="login('manager')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group card-hover">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <div class="font-semibold text-lg group-hover:text-vna-blue">Risk & Safety Manager</div>
-                                    <div class="text-sm text-gray-500">Property-wide oversight & risk radar</div>
+                                    <div class="font-bold text-lg group-hover:text-vna-blue">Operations Manager</div>
+                                    <div class="text-sm text-gray-500">Audits, certificates, team workflow</div>
                                 </div>
-                                <i data-lucide="radar" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
+                                <i data-lucide="users" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
                             </div>
                         </button>
                         
-                        <button onclick="login('coordinator')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group">
+                        <button onclick="login('officer')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group card-hover">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <div class="font-semibold text-lg group-hover:text-vna-blue">Property Coordinator</div>
-                                    <div class="text-sm text-gray-500">Store audits & compliance checks</div>
-                                </div>
-                                <i data-lucide="building-2" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
-                            </div>
-                        </button>
-                        
-                        <button onclick="login('officer')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="font-semibold text-lg group-hover:text-vna-blue">Health & Safety Officer</div>
-                                    <div class="text-sm text-gray-500">Store-level audits & inspections</div>
+                                    <div class="font-bold text-lg group-hover:text-vna-blue">Compliance Officer</div>
+                                    <div class="text-sm text-gray-500">Field audits, checklists, evidence</div>
                                 </div>
                                 <i data-lucide="clipboard-check" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
                             </div>
                         </button>
+                        
+                        <button onclick="login('tenant')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group card-hover">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="font-bold text-lg group-hover:text-vna-blue">Store / Tenant</div>
+                                    <div class="text-sm text-gray-500">Compliance status, actions, certificates</div>
+                                </div>
+                                <i data-lucide="store" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
+                            </div>
+                        </button>
                     </div>
-                    <p class="mt-6 text-xs text-gray-500 text-center">Demo Mode - No password required</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main App (Hidden until login) -->
+    <!-- MAIN APP -->
     <div id="main-app" class="hidden min-h-screen flex flex-col">
-        <!-- Navigation -->
+        
+        <!-- Top Navigation -->
         <nav class="fixed w-full z-40 glass border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
                         <div class="w-10 h-10 bg-gradient-to-br from-vna-blue to-vna-navy rounded-xl flex items-center justify-center">
                             <i data-lucide="anchor" class="w-6 h-6 text-vna-gold"></i>
                         </div>
@@ -139,812 +138,1387 @@
                     <div class="flex items-center space-x-4">
                         <button onclick="showNotifications()" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
                             <i data-lucide="bell" class="w-5 h-5"></i>
-                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full risk-pulse"></span>
+                            <span id="notif-badge" class="absolute top-1 right-1 w-2 h-2 bg-vna-red rounded-full risk-pulse"></span>
                         </button>
-                        <button onclick="logout()" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-                            Switch Role
+                        <button onclick="logout()" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex items-center space-x-2">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                            <span class="hidden sm:inline">Switch Role</span>
                         </button>
                     </div>
                 </div>
             </div>
         </nav>
 
-        <!-- Dashboard Content -->
-        <div class="dashboard-content pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <!-- Layout: Sidebar + Content -->
+        <div class="flex flex-1 pt-16">
             
-            <!-- Role: ESG Executive -->
-            <div id="dashboard-executive" class="hidden space-y-6 py-6">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <h1 class="text-3xl font-bold">Executive Dashboard</h1>
-                    <button onclick="exportReport()" class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy transition-colors flex items-center space-x-2">
-                        <i data-lucide="download" class="w-4 h-4"></i>
-                        <span>Export Report</span>
-                    </button>
+            <!-- Sidebar Navigation -->
+            <aside id="sidebar" class="w-64 glass border-r border-gray-200 dark:border-gray-800 hidden lg:block fixed h-full overflow-y-auto pb-20">
+                <div class="p-4 space-y-1" id="sidebar-nav">
+                    <!-- Populated by JS based on role -->
                 </div>
+            </aside>
 
-                <!-- KPI Cards -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="kpi-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div class="text-sm text-gray-500 mb-1">Overall Risk Score</div>
-                        <div class="text-3xl font-bold text-risk-medium">6.2/10</div>
-                        <div class="text-xs text-green-600 mt-1">↓ 0.3 from last month</div>
-                    </div>
-                    <div class="kpi-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div class="text-sm text-gray-500 mb-1">Compliance Rate</div>
-                        <div class="text-3xl font-bold text-risk-low">87%</div>
-                        <div class="text-xs text-green-600 mt-1">↑ 2% from last month</div>
-                    </div>
-                    <div class="kpi-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div class="text-sm text-gray-500 mb-1">Expiring Licenses</div>
-                        <div class="text-3xl font-bold text-risk-high">12</div>
-                        <div class="text-xs text-red-600 mt-1">Action required</div>
-                    </div>
-                    <div class="kpi-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div class="text-sm text-gray-500 mb-1">Open Incidents</div>
-                        <div class="text-3xl font-bold text-risk-critical">3</div>
-                        <div class="text-xs text-gray-500 mt-1">Critical priority</div>
-                    </div>
-                </div>
+            <!-- Mobile Nav Toggle -->
+            <button onclick="toggleMobileNav()" class="lg:hidden fixed bottom-4 right-4 z-50 w-14 h-14 bg-vna-blue text-white rounded-full shadow-lg flex items-center justify-center">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
 
-                <!-- Charts -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-bold text-lg mb-4">Risk Trend (6 Months)</h3>
-                        <div class="chart-container">
-                            <canvas id="executiveRiskChart"></canvas>
+            <!-- Main Content Area -->
+            <main class="flex-1 lg:ml-64 dashboard-content p-4 sm:p-6 lg:p-8">
+                <div class="max-w-7xl mx-auto">
+                    
+                    <!-- ==================== EXECUTIVE JOURNEY ==================== -->
+                    
+                    <!-- Exec: Home / Dashboard -->
+                    <div id="exec-home" class="page-section active space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <h1 class="text-3xl font-bold">Mall Risk Overview</h1>
+                                <p class="text-gray-500 mt-1">Last updated: <span id="last-updated">Just now</span></p>
+                            </div>
+                            <button onclick="exportReport()" class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy transition-colors flex items-center space-x-2">
+                                <i data-lucide="download" class="w-4 h-4"></i>
+                                <span>Export Executive Summary</span>
+                            </button>
                         </div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-bold text-lg mb-4">Compliance by Category</h3>
-                        <div class="chart-container">
-                            <canvas id="executiveComplianceChart"></canvas>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- ESG Metrics -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <h3 class="font-bold text-lg mb-4">ESG Performance Indicators</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm font-medium">Environmental</span>
-                                <span class="text-sm font-bold text-risk-low">92%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-risk-low h-2 rounded-full" style="width: 92%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500">Waste management, energy efficiency</p>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm font-medium">Social</span>
-                                <span class="text-sm font-bold text-risk-medium">78%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-risk-medium h-2 rounded-full" style="width: 78%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500">Worker safety, community impact</p>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm font-medium">Governance</span>
-                                <span class="text-sm font-bold text-risk-low">88%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-risk-low h-2 rounded-full" style="width: 88%"></div>
-                            </div>
-                            <p class="text-xs text-gray-500">Compliance, certifications</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <h3 class="font-bold text-lg mb-4">Recent Executive Actions</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i>
+                        <!-- Big Number: Overall Risk -->
+                        <div class="bg-gradient-to-br from-vna-blue to-vna-navy rounded-2xl p-8 text-white">
+                            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div class="text-center md:text-left">
+                                    <div class="text-white/80 text-lg mb-2">Overall Mall Risk Score</div>
+                                    <div class="text-6xl font-bold" id="overall-risk-score">6.2<span class="text-3xl text-white/60">/10</span></div>
+                                    <div class="mt-2 inline-flex items-center px-3 py-1 bg-white/20 rounded-full text-sm">
+                                        <i data-lucide="trending-down" class="w-4 h-4 mr-1 text-green-300"></i>
+                                        <span>0.3 improvement vs last month</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="text-sm font-medium">Q1 ESG Report Published</div>
-                                    <div class="text-xs text-gray-500">2 hours ago</div>
+                                <div class="grid grid-cols-2 gap-4 text-center">
+                                    <div class="bg-white/10 rounded-xl p-4">
+                                        <div class="text-3xl font-bold" id="total-tenants">108</div>
+                                        <div class="text-sm text-white/70">Active Tenants</div>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl p-4">
+                                        <div class="text-3xl font-bold text-yellow-300" id="critical-count">5</div>
+                                        <div class="text-sm text-white/70">Critical Risk</div>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl p-4">
+                                        <div class="text-3xl font-bold text-orange-300" id="high-count">12</div>
+                                        <div class="text-sm text-white/70">High Risk</div>
+                                    </div>
+                                    <div class="bg-white/10 rounded-xl p-4">
+                                        <div class="text-3xl font-bold text-red-300" id="expiring-30-count">8</div>
+                                        <div class="text-sm text-white/70">Expiring ≤30d</div>
+                                    </div>
                                 </div>
                             </div>
-                            <button class="text-sm text-vna-blue hover:underline">View</button>
                         </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                                    <i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-600"></i>
-                                </div>
-                                <div>
-                                    <div class="text-sm font-medium">Risk Threshold Exceeded - Portswood</div>
-                                    <div class="text-xs text-gray-500">5 hours ago</div>
-                                </div>
-                            </div>
-                            <button class="text-sm text-vna-blue hover:underline">Review</button>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                                    <i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i>
-                                </div>
-                                <div>
-                                    <div class="text-sm font-medium">Compliance Target Achieved - Victoria Wharf</div>
-                                    <div class="text-xs text-gray-500">1 day ago</div>
-                                </div>
-                            </div>
-                            <button class="text-sm text-vna-blue hover:underline">Details</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Role: Risk & Safety Manager -->
-            <div id="dashboard-manager" class="hidden space-y-6 py-6">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <h1 class="text-3xl font-bold">Risk & Safety Command Center</h1>
-                    <div class="flex items-center space-x-4">
-                        <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium flex items-center">
-                            <span class="w-2 h-2 bg-red-500 rounded-full mr-2 risk-pulse"></span>
-                            Live Risk Radar
-                        </span>
-                    </div>
-                </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Highest Risk Precincts -->
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="font-bold text-lg flex items-center">
+                                        <i data-lucide="alert-triangle" class="w-5 h-5 mr-2 text-vna-red"></i>
+                                        Highest Risk Precincts
+                                    </h3>
+                                    <button onclick="navigateTo('precincts')" class="text-sm text-vna-blue hover:underline">View All</button>
+                                </div>
+                                <div class="space-y-3" id="top-precincts-list">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
 
-                <!-- Risk Radar Section -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="lg:col-span-1 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-bold text-lg mb-4">Risk Radar</h3>
-                        <div class="radar-container">
-                            <canvas id="riskRadarChart"></canvas>
-                        </div>
-                        <div class="mt-4 space-y-2 text-sm">
-                            <div class="flex justify-between items-center p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                                <span class="flex items-center"><span class="w-3 h-3 bg-risk-critical rounded-full mr-2"></span>Critical</span>
-                                <span class="font-bold">2</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                                <span class="flex items-center"><span class="w-3 h-3 bg-risk-high rounded-full mr-2"></span>High</span>
-                                <span class="font-bold">5</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                                <span class="flex items-center"><span class="w-3 h-3 bg-risk-medium rounded-full mr-2"></span>Medium</span>
-                                <span class="font-bold">12</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                                <span class="flex items-center"><span class="w-3 h-3 bg-risk-low rounded-full mr-2"></span>Low</span>
-                                <span class="font-bold">89</span>
+                            <!-- Certifications Expiring -->
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="font-bold text-lg flex items-center">
+                                        <i data-lucide="calendar" class="w-5 h-5 mr-2 text-vna-gold"></i>
+                                        Certifications Expiring ≤30 Days
+                                    </h3>
+                                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-bold" id="expiring-badge">8</span>
+                                </div>
+                                <div class="space-y-3 max-h-[300px] overflow-y-auto" id="expiring-certs-list">
+                                    <!-- Populated by JS -->
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="lg:col-span-2 space-y-6">
-                        <!-- Property Overview Map -->
+                        <!-- Compliance Trend -->
                         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="font-bold text-lg mb-4">Property Risk Heatmap</h3>
-                            <div class="relative h-64 bg-gray-100 dark:bg-gray-700 rounded-xl overflow-hidden">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div class="grid grid-cols-4 gap-4 w-full h-full p-4">
-                                        <div class="bg-risk-low/20 border-2 border-risk-low rounded-lg p-3 flex flex-col justify-between">
-                                            <span class="text-xs font-bold">Victoria Wharf</span>
-                                            <span class="text-2xl font-bold text-risk-low">3.2</span>
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold text-lg">Compliance Trend</h3>
+                                <div class="flex space-x-2">
+                                    <button onclick="setTrendPeriod(30)" class="px-3 py-1 text-sm rounded-lg bg-vna-blue text-white">30d</button>
+                                    <button onclick="setTrendPeriod(90)" class="px-3 py-1 text-sm rounded-lg bg-gray-200 hover:bg-gray-300">90d</button>
+                                </div>
+                            </div>
+                            <div class="h-[250px]">
+                                <canvas id="complianceTrendChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="bg-vna-gold/10 border border-vna-gold/30 rounded-2xl p-6">
+                            <h3 class="font-bold text-lg mb-4 text-vna-navy">Executive Actions Needed</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="exec-actions">
+                                <div class="bg-white rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onclick="navigateToPrecinct('portswood')">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="risk-badge risk-critical">CRITICAL</span>
+                                        <span class="text-xs text-gray-500">2h ago</span>
+                                    </div>
+                                    <div class="font-medium">Portswood Precinct</div>
+                                    <div class="text-sm text-gray-500 mt-1">Fire system offline - immediate intervention required</div>
+                                </div>
+                                <div class="bg-white rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onclick="navigateToTenant(5)">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="risk-badge risk-high">HIGH</span>
+                                        <span class="text-xs text-gray-500">5h ago</span>
+                                    </div>
+                                    <div class="font-medium">Ocean Basket</div>
+                                    <div class="text-sm text-gray-500 mt-1">Food safety cert expired - trading at risk</div>
+                                </div>
+                                <div class="bg-white rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onclick="navigateToPrecinct('breakwater')">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="risk-badge risk-medium">MEDIUM</span>
+                                        <span class="text-xs text-gray-500">1d ago</span>
+                                    </div>
+                                    <div class="font-medium">Breakwater Precinct</div>
+                                    <div class="text-sm text-gray-500 mt-1">3 tenants with compliance declining</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exec: Precincts List -->
+                    <div id="exec-precincts" class="page-section space-y-6">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">Dashboard</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span class="font-medium text-gray-900">All Precincts</span>
+                        </div>
+                        <h1 class="text-3xl font-bold mb-6">Precinct Risk Overview</h1>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="precincts-grid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Exec: Single Precinct View -->
+                    <div id="exec-precinct-detail" class="page-section space-y-6">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">Dashboard</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('precincts')">Precincts</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span class="font-medium text-gray-900" id="precinct-breadcrumb-name">Portswood</span>
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                                <div>
+                                    <h1 class="text-3xl font-bold" id="precinct-detail-name">Portswood</h1>
+                                    <p class="text-gray-500 mt-1"><span id="precinct-tenant-count">12</span> tenants • Avg compliance: <span id="precinct-compliance" class="font-bold text-risk-critical">64%</span></p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="text-right">
+                                        <div class="text-sm text-gray-500">Precinct Risk Score</div>
+                                        <div class="text-4xl font-bold text-risk-critical" id="precinct-risk-score">8.4</div>
+                                    </div>
+                                    <div class="w-16 h-16 rounded-full border-4 border-red-500 flex items-center justify-center">
+                                        <i data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Open Actions -->
+                            <div class="mb-6">
+                                <h3 class="font-bold text-lg mb-3">Open Actions (<span id="precinct-open-actions">5</span>)</h3>
+                                <div class="space-y-2" id="precinct-actions-list">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Worst Tenants -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="font-bold text-lg mb-4">Tenants by Risk (Highest First)</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50 dark:bg-gray-700 text-left">
+                                        <tr>
+                                            <th class="px-4 py-3 font-medium">Tenant</th>
+                                            <th class="px-4 py-3 font-medium">Category</th>
+                                            <th class="px-4 py-3 font-medium text-center">Risk Score</th>
+                                            <th class="px-4 py-3 font-medium text-center">Compliance</th>
+                                            <th class="px-4 py-3 font-medium">Last Audit</th>
+                                            <th class="px-4 py-3 font-medium">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="precinct-tenants-list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exec: Tenant Detail -->
+                    <div id="exec-tenant-detail" class="page-section space-y-6">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">Dashboard</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('precincts')">Precincts</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span class="cursor-pointer hover:text-vna-blue" id="tenant-breadcrumb-precinct">Portswood</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span class="font-medium text-gray-900" id="tenant-breadcrumb-name">Ocean Basket</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Left: Summary -->
+                            <div class="lg:col-span-2 space-y-6">
+                                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h1 class="text-3xl font-bold" id="exec-tenant-name">Ocean Basket</h1>
+                                            <p class="text-gray-500" id="exec-tenant-zone">Portswood • Restaurant</p>
                                         </div>
-                                        <div class="bg-risk-medium/20 border-2 border-risk-medium rounded-lg p-3 flex flex-col justify-between">
-                                            <span class="text-xs font-bold">Clock Tower</span>
-                                            <span class="text-2xl font-bold text-risk-medium">5.8</span>
+                                        <div class="text-right">
+                                            <div class="text-4xl font-bold text-risk-critical" id="exec-tenant-risk">8.9</div>
+                                            <div class="text-sm text-gray-500">Risk Score</div>
                                         </div>
-                                        <div class="bg-risk-high/20 border-2 border-risk-high rounded-lg p-3 flex flex-col justify-between relative">
-                                            <span class="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full risk-pulse"></span>
-                                            <span class="text-xs font-bold">Breakwater</span>
-                                            <span class="text-2xl font-bold text-risk-high">7.4</span>
+                                    </div>
+
+                                    <div class="grid grid-cols-3 gap-4 mb-6">
+                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                            <div class="text-2xl font-bold text-risk-critical" id="exec-tenant-compliance">54%</div>
+                                            <div class="text-xs text-gray-500">Compliance</div>
                                         </div>
-                                        <div class="bg-risk-low/20 border-2 border-risk-low rounded-lg p-3 flex flex-col justify-between">
-                                            <span class="text-xs font-bold">Water Shed</span>
-                                            <span class="text-2xl font-bold text-risk-low">2.9</span>
+                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                            <div class="text-2xl font-bold" id="exec-tenant-audits">12</div>
+                                            <div class="text-xs text-gray-500">Audits YTD</div>
                                         </div>
-                                        <div class="bg-risk-critical/20 border-2 border-risk-critical rounded-lg p-3 flex flex-col justify-between relative">
-                                            <span class="absolute top-2 right-2 w-3 h-3 bg-red-600 rounded-full risk-pulse"></span>
-                                            <span class="text-xs font-bold">Portswood</span>
-                                            <span class="text-2xl font-bold text-risk-critical">8.9</span>
+                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                            <div class="text-2xl font-bold text-vna-red" id="exec-tenant-open">3</div>
+                                            <div class="text-xs text-gray-500">Open Actions</div>
                                         </div>
-                                        <div class="bg-risk-medium/20 border-2 border-risk-medium rounded-lg p-3 flex flex-col justify-between">
-                                            <span class="text-xs font-bold">Alfred Mall</span>
-                                            <span class="text-2xl font-bold text-risk-medium">6.1</span>
+                                    </div>
+
+                                    <!-- Latest Audit -->
+                                    <div class="border-t pt-4">
+                                        <h3 class="font-bold mb-3">Latest Audit: <span id="latest-audit-date">Jan 20, 2024</span></h3>
+                                        <div class="space-y-2" id="latest-audit-failures">
+                                            <!-- Populated by JS -->
                                         </div>
-                                        <div class="bg-risk-low/20 border-2 border-risk-low rounded-lg p-3 flex flex-col justify-between">
-                                            <span class="text-xs font-bold">Pierhead</span>
-                                            <span class="text-2xl font-bold text-risk-low">4.2</span>
+                                    </div>
+                                </div>
+
+                                <!-- Certificate Timeline -->
+                                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                                    <h3 class="font-bold text-lg mb-4">Certificate Timeline</h3>
+                                    <div class="relative space-y-6 pl-8" id="cert-timeline">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Actions -->
+                            <div class="space-y-6">
+                                <div class="bg-vna-red/10 border border-vna-red/30 rounded-2xl p-6">
+                                    <h3 class="font-bold text-vna-red mb-4 flex items-center">
+                                        <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
+                                        Open Corrective Actions
+                                    </h3>
+                                    <div class="space-y-3" id="tenant-actions-list">
+                                        <!-- Populated by JS -->
+                                    </div>
+                                </div>
+
+                                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                                    <h3 class="font-bold mb-4">Contact</h3>
+                                    <div class="space-y-3 text-sm">
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="user" class="w-4 h-4 text-gray-400"></i>
+                                            <span>Store Manager: Sarah Johnson</span>
                                         </div>
-                                        <div class="bg-risk-medium/20 border-2 border-risk-medium rounded-lg p-3 flex flex-col justify-between">
-                                            <span class="text-xs font-bold">Canal Walk</span>
-                                            <span class="text-2xl font-bold text-risk-medium">5.5</span>
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="mail" class="w-4 h-4 text-gray-400"></i>
+                                            <span>sarah@oceanbasket.co.za</span>
+                                        </div>
+                                        <div class="flex items-center space-x-3">
+                                            <i data-lucide="phone" class="w-4 h-4 text-gray-400"></i>
+                                            <span>+27 21 123 4567</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Critical Alerts -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 border-l-4 border-l-red-500">
-                            <h3 class="font-bold text-lg mb-4 flex items-center text-red-600">
-                                <i data-lucide="alert-triangle" class="w-5 h-5 mr-2"></i>
-                                Critical Risk Alerts
+                    <!-- ==================== MANAGER JOURNEY ==================== -->
+                    
+                    <!-- Manager: Home / Priorities -->
+                    <div id="mgr-home" class="page-section space-y-6">
+                        <h1 class="text-3xl font-bold">Today's Priorities</h1>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-red-700 font-medium">Expiring Today</span>
+                                    <span class="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold">3</span>
+                                </div>
+                                <div class="text-3xl font-bold text-red-700">Certificates</div>
+                                <button onclick="navigateTo('certificates')" class="mt-3 text-sm text-red-600 hover:underline">View all →</button>
+                            </div>
+                            
+                            <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-2xl p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-orange-700 font-medium">Overdue</span>
+                                    <span class="w-8 h-8 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold">5</span>
+                                </div>
+                                <div class="text-3xl font-bold text-orange-700">Actions</div>
+                                <button onclick="navigateTo('actions')" class="mt-3 text-sm text-orange-600 hover:underline">View all →</button>
+                            </div>
+                            
+                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-blue-700 font-medium">Scheduled</span>
+                                    <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">8</span>
+                                </div>
+                                <div class="text-3xl font-bold text-blue-700">Audits Today</div>
+                                <button onclick="navigateTo('audits')" class="mt-3 text-sm text-blue-600 hover:underline">Schedule →</button>
+                            </div>
+                        </div>
+
+                        <!-- Team Workload -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="font-bold text-lg mb-4">Team Workload</h3>
+                            <div class="space-y-4" id="team-workload">
+                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-vna-blue rounded-full flex items-center justify-center text-white font-bold">JD</div>
+                                        <div>
+                                            <div class="font-medium">John Doe</div>
+                                            <div class="text-sm text-gray-500">Senior Officer</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-4 text-sm">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded">3 audits today</span>
+                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded">2 pending review</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 bg-vna-gold rounded-full flex items-center justify-center text-white font-bold">SM</div>
+                                        <div>
+                                            <div class="font-medium">Sarah Miller</div>
+                                            <div class="text-sm text-gray-500">Compliance Officer</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-4 text-sm">
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded">2 audits today</span>
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded">1 completed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Schedule -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="font-bold text-lg mb-4">Quick Schedule Audit</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <select id="quick-tenant" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                    <option>Select Tenant...</option>
+                                </select>
+                                <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                    <option>F&B Template</option>
+                                    <option>Retail Template</option>
+                                    <option>Late-night Template</option>
+                                </select>
+                                <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                                    <option>Assign Officer...</option>
+                                    <option>John Doe</option>
+                                    <option>Sarah Miller</option>
+                                </select>
+                                <input type="date" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
+                            </div>
+                            <button onclick="scheduleAudit()" class="mt-4 px-6 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Schedule Audit</button>
+                        </div>
+                    </div>
+
+                    <!-- Manager: Tenants -->
+                    <div id="mgr-tenants" class="page-section space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <h1 class="text-3xl font-bold">All Tenants</h1>
+                            <div class="flex space-x-2">
+                                <button onclick="filterTenants('all')" class="px-4 py-2 bg-vna-blue text-white rounded-lg text-sm">All</button>
+                                <button onclick="filterTenants('high-risk')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm">High Risk</button>
+                                <button onclick="filterTenants('expiring')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm">Expiring Soon</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-wrap gap-4">
+                                <select onchange="groupTenants(this.value)" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                                    <option value="precinct">Group by: Precinct</option>
+                                    <option value="category">Group by: Category</option>
+                                    <option value="risk">Group by: Risk Level</option>
+                                </select>
+                                <input type="text" placeholder="Search tenants..." class="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1 min-w-[200px]">
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50 dark:bg-gray-700 text-left">
+                                        <tr>
+                                            <th class="px-4 py-3 font-medium">Tenant</th>
+                                            <th class="px-4 py-3 font-medium">Precinct</th>
+                                            <th class="px-4 py-3 font-medium">Category</th>
+                                            <th class="px-4 py-3 font-medium text-center">Risk</th>
+                                            <th class="px-4 py-3 font-medium text-center">Compliance</th>
+                                            <th class="px-4 py-3 font-medium">Next Cert Expiry</th>
+                                            <th class="px-4 py-3 font-medium">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="mgr-tenants-list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Manager: Audits -->
+                    <div id="mgr-audits" class="page-section space-y-6">
+                        <h1 class="text-3xl font-bold">Audit Management</h1>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Pending Review -->
+                            <div class="lg:col-span-2 space-y-4">
+                                <h3 class="font-bold text-lg">Pending Review (<span id="pending-count">3</span>)</h3>
+                                <div id="pending-audits-list" class="space-y-3">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+
+                            <!-- Schedule New -->
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-fit">
+                                <h3 class="font-bold text-lg mb-4">Schedule New Audit</h3>
+                                <form onsubmit="event.preventDefault(); scheduleFullAudit();" class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Tenant</label>
+                                        <select id="new-audit-tenant" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                            <option>Select...</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Template</label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                            <option>F&B Full Audit</option>
+                                            <option>Retail Safety Audit</option>
+                                            <option>Late-night Compliance</option>
+                                            <option>Fire Safety Only</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Assign To</label>
+                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                            <option>John Doe</option>
+                                            <option>Sarah Miller</option>
+                                            <option>Unassigned</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Due Date</label>
+                                        <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                                    </div>
+                                    <button type="submit" class="w-full py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Create Audit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== OFFICER JOURNEY ==================== -->
+                    
+                    <!-- Officer: Home -->
+                    <div id="officer-home" class="page-section space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h1 class="text-3xl font-bold">My Work</h1>
+                            <span class="text-sm text-gray-500">Officer: John Doe</span>
+                        </div>
+
+                        <!-- Today's Assignments -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="font-bold text-lg mb-4 flex items-center">
+                                <i data-lucide="calendar" class="w-5 h-5 mr-2 text-vna-blue"></i>
+                                Today's Audits (3)
                             </h3>
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/10 rounded-lg">
-                                    <div class="flex items-center space-x-3">
-                                        <span class="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded">PORTS</span>
-                                        <span class="font-medium">Portswood - Fire suppression system offline</span>
+                            <div class="space-y-3" id="officer-today-list">
+                                <div class="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-l-4 border-vna-blue">
+                                    <div>
+                                        <div class="font-bold">Woolworths</div>
+                                        <div class="text-sm text-gray-500">Victoria Wharf • 10:00 AM</div>
                                     </div>
-                                    <span class="text-sm text-red-600 font-bold">2h ago</span>
+                                    <button onclick="startOfficerAudit(1)" class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Start</button>
                                 </div>
-                                <div class="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/10 rounded-lg">
-                                    <div class="flex items-center space-x-3">
-                                        <span class="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded">BREAK</span>
-                                        <span class="font-medium">Breakwater - Emergency exit blocked</span>
+                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border-l-4 border-gray-400">
+                                    <div>
+                                        <div class="font-bold">H&M</div>
+                                        <div class="text-sm text-gray-500">Clock Tower • 11:30 AM</div>
                                     </div>
-                                    <span class="text-sm text-red-600 font-bold">5h ago</span>
+                                    <button onclick="startOfficerAudit(3)" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Start</button>
                                 </div>
-                                <div class="flex items-center justify-between p-3 bg-orange-50 dark:bg-orange-900/10 rounded-lg">
-                                    <div class="flex items-center space-x-3">
-                                        <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs font-bold rounded">CLOCK</span>
-                                        <span class="font-medium">Clock Tower - HVAC maintenance overdue</span>
+                                <div class="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-l-4 border-red-500">
+                                    <div>
+                                        <div class="font-bold">Ocean Basket</div>
+                                        <div class="text-sm text-gray-500">Portswood • 02:00 PM • URGENT</div>
                                     </div>
-                                    <span class="text-sm text-orange-600 font-bold">1d ago</span>
+                                    <button onclick="startOfficerAudit(5)" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Start</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Drafts -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="font-bold text-lg mb-4">Draft Audits (1)</h3>
+                            <div class="flex items-center justify-between p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
+                                <div>
+                                    <div class="font-bold">Tiger's Milk</div>
+                                    <div class="text-sm text-gray-500">Water Shed • Saved 2h ago • 60% complete</div>
+                                </div>
+                                <button onclick="resumeDraft(6)" class="px-4 py-2 bg-vna-gold text-white rounded-lg hover:bg-yellow-600">Resume</button>
+                            </div>
+                        </div>
+
+                        <!-- This Week -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="font-bold text-lg mb-4">This Week (5)</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between p-3 border-b border-gray-100">
+                                    <span>Thursday: Cape Union Mart, News Cafe</span>
+                                    <span class="text-gray-500">Pierhead, Clock Tower</span>
+                                </div>
+                                <div class="flex justify-between p-3">
+                                    <span>Friday: Sunglass Hut, Ster-Kinekor</span>
+                                    <span class="text-gray-500">Alfred Mall, Canal Walk</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Store Performance Table -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <h3 class="font-bold text-lg mb-4">Store Performance Overview</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-gray-50 dark:bg-gray-700">
-                                <tr>
-                                    <th class="px-4 py-3 text-left font-medium">Store</th>
-                                    <th class="px-4 py-3 text-left font-medium">Zone</th>
-                                    <th class="px-4 py-3 text-center font-medium">Risk Score</th>
-                                    <th class="px-4 py-3 text-center font-medium">Compliance</th>
-                                    <th class="px-4 py-3 text-center font-medium">Last Audit</th>
-                                    <th class="px-4 py-3 text-center font-medium">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200 dark:divide-gray-700" id="managerStoreTable">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Role: Property Coordinator -->
-            <div id="dashboard-coordinator" class="hidden space-y-6 py-6">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <h1 class="text-3xl font-bold">Property Coordination</h1>
-                    <button onclick="startAudit()" class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy transition-colors flex items-center space-x-2">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        <span>New Audit</span>
-                    </button>
-                </div>
-
-                <!-- Audit Queue -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm text-gray-500">Scheduled Today</span>
-                            <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">5</span>
+                    <!-- Officer: Conduct Audit -->
+                    <div id="officer-audit" class="page-section space-y-6">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">My Work</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span class="font-medium text-gray-900">Conduct Audit</span>
                         </div>
-                        <div class="text-2xl font-bold">Victoria Wharf</div>
-                        <p class="text-xs text-gray-500 mt-1">Next: 10:00 AM - Woolworths</p>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm text-gray-500">Pending Review</span>
-                            <span class="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center font-bold">3</span>
+
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 sticky top-20 z-30">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div>
+                                    <h1 class="text-2xl font-bold" id="audit-tenant-name">Woolworths</h1>
+                                    <p class="text-gray-500" id="audit-tenant-zone">Victoria Wharf • F&B Full Audit</p>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="text-right">
+                                        <div class="text-sm text-gray-500">Progress</div>
+                                        <div class="text-xl font-bold" id="audit-progress">0/12</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm text-gray-500">Score</div>
+                                        <div class="text-2xl font-bold text-gray-400" id="audit-live-score">--</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 w-full bg-gray-200 rounded-full h-2">
+                                <div id="audit-progress-bar" class="bg-vna-blue h-2 rounded-full transition-all" style="width: 0%"></div>
+                            </div>
                         </div>
-                        <div class="text-2xl font-bold">Reports</div>
-                        <p class="text-xs text-gray-500 mt-1">Awaiting manager approval</p>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm text-gray-500">Overdue</span>
-                            <span class="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold">2</span>
+
+                        <!-- Checklist -->
+                        <div class="space-y-6" id="audit-checklist-container">
+                            <!-- Populated by JS -->
                         </div>
-                        <div class="text-2xl font-bold">Actions</div>
-                        <p class="text-xs text-gray-500 mt-1">Require immediate attention</p>
-                    </div>
-                </div>
 
-                <!-- Today's Schedule -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <h3 class="font-bold text-lg mb-4">Today's Audit Schedule</h3>
-                    <div class="space-y-3" id="coordinatorSchedule">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-
-                <!-- Certification Tracker -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <h3 class="font-bold text-lg mb-4">Certification & License Tracker</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="certTracker">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Role: Health & Safety Officer -->
-            <div id="dashboard-officer" class="hidden space-y-6 py-6">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <h1 class="text-3xl font-bold">Store Audit Interface</h1>
-                    <div class="flex space-x-2">
-                        <select id="storeSelector" onchange="loadStoreAudit(this.value)" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
-                            <option value="">Select Store...</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Quick Stats -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                        <div class="text-3xl font-bold text-vna-blue" id="officerCompleted">12</div>
-                        <div class="text-xs text-gray-500">Audits This Month</div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                        <div class="text-3xl font-bold text-risk-low" id="officerPassRate">94%</div>
-                        <div class="text-xs text-gray-500">Pass Rate</div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                        <div class="text-3xl font-bold text-risk-medium" id="officerFindings">8</div>
-                        <div class="text-xs text-gray-500">Open Findings</div>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                        <div class="text-3xl font-bold text-vna-gold" id="officerScore">8.4</div>
-                        <div class="text-xs text-gray-500">Avg Score</div>
-                    </div>
-                </div>
-
-                <!-- Audit Checklist (Shown when store selected) -->
-                <div id="auditInterface" class="hidden bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-                        <div>
-                            <h3 class="font-bold text-xl" id="auditStoreName">Store Name</h3>
-                            <p class="text-sm text-gray-500" id="auditStoreZone">Zone</p>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-sm text-gray-500">Overall:</span>
-                            <span class="text-2xl font-bold text-risk-low" id="auditOverallScore">--</span>
+                        <div class="flex justify-between sticky bottom-4 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                            <button onclick="saveDraft()" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
+                                <i data-lucide="save" class="w-4 h-4"></i>
+                                <span>Save Draft</span>
+                            </button>
+                            <button onclick="submitAudit()" class="px-6 py-3 bg-vna-blue text-white rounded-lg hover:bg-vna-navy flex items-center space-x-2">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                <span>Submit Audit</span>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="space-y-4 max-h-[60vh] overflow-y-auto pr-2" id="auditChecklist">
-                        <!-- Populated by JS -->
+                    <!-- ==================== TENANT JOURNEY ==================== -->
+                    
+                    <!-- Tenant: Home -->
+                    <div id="tenant-home" class="page-section space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h1 class="text-3xl font-bold">My Store Compliance</h1>
+                            <span class="px-3 py-1 bg-vna-blue text-white rounded-full text-sm">Ocean Basket</span>
+                        </div>
+
+                        <!-- Status Card -->
+                        <div class="bg-gradient-to-br from-vna-red to-red-700 rounded-2xl p-8 text-white">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="text-red-100 mb-2">Current Status</div>
+                                    <div class="text-4xl font-bold mb-2">AT RISK</div>
+                                    <div class="text-red-100">3 corrective actions required</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-6xl font-bold">54<span class="text-2xl">%</span></div>
+                                    <div class="text-red-100">Compliance Score</div>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex space-x-4">
+                                <button onclick="navigateTo('tenant-actions')" class="px-4 py-2 bg-white text-red-700 rounded-lg font-medium hover:bg-red-50">View Actions</button>
+                                <button onclick="navigateTo('tenant-certs')" class="px-4 py-2 bg-white/20 text-white rounded-lg font-medium hover:bg-white/30">Upload Certificate</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- What's Due -->
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                                <h3 class="font-bold text-lg mb-4 text-vna-red flex items-center">
+                                    <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
+                                    Immediate Action Required
+                                </h3>
+                                <div class="space-y-3" id="tenant-urgent-list">
+                                    <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-l-4 border-vna-red">
+                                        <div class="font-medium text-vna-red">Food Safety Certificate EXPIRED</div>
+                                        <div class="text-sm text-gray-600 mt-1">Expired: Feb 15, 2024 • Trading may be suspended</div>
+                                        <button class="mt-2 text-sm text-vna-red underline">Upload renewal →</button>
+                                    </div>
+                                    <div class="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl border-l-4 border-orange-500">
+                                        <div class="font-medium text-orange-700">Fire Safety Inspection Due</div>
+                                        <div class="text-sm text-gray-600 mt-1">Due: Jan 30, 2024 • 15 days overdue</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Upcoming -->
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                                <h3 class="font-bold text-lg mb-4">Coming Up</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                        <div>
+                                            <div class="font-medium">Liquor License Renewal</div>
+                                            <div class="text-sm text-gray-500">Expires: Jun 30, 2024</div>
+                                        </div>
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">120 days</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                        <div>
+                                            <div class="font-medium">Routine Audit Scheduled</div>
+                                            <div class="text-sm text-gray-500">Mar 15, 2024 • 10:00 AM</div>
+                                        </div>
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">Scheduled</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- History -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 class="font-bold text-lg mb-4">Audit History</h3>
+                            <div class="relative pl-8 space-y-6" id="tenant-timeline">
+                                <div class="timeline-line"></div>
+                                <div class="relative">
+                                    <div class="absolute -left-8 w-4 h-4 bg-red-500 rounded-full border-4 border-white dark:border-gray-800"></div>
+                                    <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <div class="font-bold text-red-700">FAILED AUDIT</div>
+                                                <div class="text-sm text-gray-600">Jan 20, 2024 • Score: 45%</div>
+                                                <div class="mt-2 text-sm">3 critical failures: Temperature logs, Hygiene standards, Pest control</div>
+                                            </div>
+                                            <button class="text-sm text-vna-blue hover:underline">View Report</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-8 w-4 h-4 bg-yellow-500 rounded-full border-4 border-white dark:border-gray-800"></div>
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <div class="font-bold">Corrective Action Completed</div>
+                                                <div class="text-sm text-gray-600">Jan 15, 2024 • Fire exit signage fixed</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="relative">
+                                    <div class="absolute -left-8 w-4 h-4 bg-green-500 rounded-full border-4 border-white dark:border-gray-800"></div>
+                                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <div class="font-bold text-green-700">PASSED AUDIT</div>
+                                                <div class="text-sm text-gray-600">Dec 10, 2023 • Score: 88%</div>
+                                            </div>
+                                            <button class="text-sm text-vna-blue hover:underline">View Report</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mt-6 flex flex-col sm:flex-row justify-end gap-3">
-                        <button onclick="saveDraft()" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-                            Save Draft
-                        </button>
-                        <button onclick="submitAudit()" class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">
-                            Submit Audit
-                        </button>
+                    <!-- Tenant: Actions -->
+                    <div id="tenant-actions" class="page-section space-y-6">
+                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
+                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">Dashboard</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            <span class="font-medium text-gray-900">Corrective Actions</span>
+                        </div>
+                        
+                        <h1 class="text-3xl font-bold">Open Actions (3)</h1>
+                        
+                        <div class="space-y-4" id="tenant-actions-list">
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border-l-4 border-vna-red">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <div class="risk-badge risk-critical mb-2">OVERDUE</div>
+                                        <h3 class="font-bold text-lg">Restore Food Safety Certificate</h3>
+                                        <p class="text-gray-500 text-sm mt-1">Raised: Jan 20, 2024 • Due: Jan 27, 2024</p>
+                                    </div>
+                                    <span class="text-vna-red font-bold">7 days overdue</span>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
+                                    <p class="text-sm">Certificate expired Feb 15. Upload renewed certificate from City Health or trading may be suspended.</p>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Upload Document</button>
+                                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Request Extension</button>
+                                </div>
+                            </div>
+
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border-l-4 border-orange-500">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <div class="risk-badge risk-high mb-2">HIGH</div>
+                                        <h3 class="font-bold text-lg">Fix Temperature Monitoring</h3>
+                                        <p class="text-gray-500 text-sm mt-1">Raised: Jan 20, 2024 • Due: Feb 3, 2024</p>
+                                    </div>
+                                    <span class="text-orange-600 font-bold">Due in 3 days</span>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
+                                    <p class="text-sm">Temperature logs missing for 3 days. Install automated monitoring system or maintain manual logs every 2 hours.</p>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Mark Complete</button>
+                                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Add Comment</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
-
-                <!-- Recent Audits -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <h3 class="font-bold text-lg mb-4">Recent Audits</h3>
-                    <div class="space-y-3" id="officerRecentAudits">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-            </div>
-
+            </main>
         </div>
     </div>
 
     <script>
-        // Initialize Lucide icons
+        // Initialize
         lucide.createIcons();
 
-        // V&A Waterfront Store Data
-        const stores = [
-            { id: 1, name: "Woolworths", zone: "Victoria Wharf", riskScore: 2.1, compliance: 96, lastAudit: "2024-02-15", status: "good", type: "Retail", certifications: [
-                { name: "Food Safety Certificate", expiry: "2024-06-15", status: "good" },
-                { name: "Fire Safety Inspection", expiry: "2024-03-20", status: "warning" },
-                { name: "Public Liability", expiry: "2024-12-31", status: "good" }
-            ]},
-            { id: 2, name: "Pick n Pay", zone: "Victoria Wharf", riskScore: 3.4, compliance: 92, lastAudit: "2024-02-10", status: "good", type: "Retail", certifications: [
-                { name: "Food Safety Certificate", expiry: "2024-05-10", status: "good" },
-                { name: "Occupational Health", expiry: "2024-02-28", status: "critical" }
-            ]},
-            { id: 3, name: "H&M", zone: "Clock Tower", riskScore: 5.8, compliance: 78, lastAudit: "2024-01-28", status: "warning", type: "Fashion", certifications: [
-                { name: "Fire Safety Inspection", expiry: "2024-03-01", status: "warning" },
-                { name: "Building Compliance", expiry: "2024-08-15", status: "good" }
-            ]},
-            { id: 4, name: "Cotton On", zone: "Breakwater", riskScore: 7.4, compliance: 65, lastAudit: "2024-01-15", status: "critical", type: "Fashion", certifications: [
-                { name: "Fire Safety Inspection", expiry: "2024-02-10", status: "critical" },
-                { name: "Public Liability", expiry: "2024-04-20", status: "warning" }
-            ]},
-            { id: 5, name: "Ocean Basket", zone: "Portswood", riskScore: 8.9, compliance: 54, lastAudit: "2024-01-20", status: "critical", type: "Restaurant", certifications: [
-                { name: "Food Safety Certificate", expiry: "2024-02-15", status: "critical" },
-                { name: "Liquor License", expiry: "2024-06-30", status: "good" },
-                { name: "Fire Safety Inspection", expiry: "2024-01-30", status: "critical" }
-            ]},
-            { id: 6, name: "Tiger's Milk", zone: "Water Shed", riskScore: 2.9, compliance: 94, lastAudit: "2024-02-18", status: "good", type: "Restaurant", certifications: [
-                { name: "Food Safety Certificate", expiry: "2024-07-20", status: "good" },
-                { name: "Liquor License", expiry: "2024-09-15", status: "good" }
-            ]},
-            { id: 7, name: "Sunglass Hut", zone: "Alfred Mall", riskScore: 4.2, compliance: 88, lastAudit: "2024-02-05", status: "good", type: "Retail", certifications: [
-                { name: "Public Liability", expiry: "2024-11-30", status: "good" }
-            ]},
-            { id: 8, name: "Ster-Kinekor", zone: "Canal Walk", riskScore: 5.5, compliance: 82, lastAudit: "2024-01-25", status: "warning", type: "Entertainment", certifications: [
-                { name: "Fire Safety Inspection", expiry: "2024-04-15", status: "good" },
-                { name: "Occupational Health", expiry: "2024-03-01", status: "warning" }
-            ]},
-            { id: 9, name: "Cape Union Mart", zone: "Pierhead", riskScore: 3.1, compliance: 91, lastAudit: "2024-02-12", status: "good", type: "Retail", certifications: [
-                { name: "Public Liability", expiry: "2024-10-15", status: "good" }
-            ]},
-            { id: 10, name: "News Cafe", zone: "Clock Tower", riskScore: 6.1, compliance: 73, lastAudit: "2024-01-30", status: "warning", type: "Restaurant", certifications: [
-                { name: "Food Safety Certificate", expiry: "2024-03-10", status: "warning" },
-                { name: "Music License", expiry: "2024-05-01", status: "good" }
-            ]}
-        ];
+        // Data Store
+        const data = {
+            precincts: [
+                { id: 'victoria', name: 'Victoria Wharf', tenants: 45, risk: 3.2, compliance: 94, trend: 'stable' },
+                { id: 'clock', name: 'Clock Tower', tenants: 18, risk: 5.8, compliance: 81, trend: 'up' },
+                { id: 'breakwater', name: 'Breakwater', tenants: 12, risk: 7.4, compliance: 72, trend: 'up' },
+                { id: 'portswood', name: 'Portswood', tenants: 8, risk: 8.4, compliance: 64, trend: 'up' },
+                { id: 'shed', name: 'Water Shed', tenants: 15, risk: 2.9, compliance: 95, trend: 'stable' },
+                { id: 'alfred', name: 'Alfred Mall', tenants: 6, risk: 4.2, compliance: 88, trend: 'down' },
+                { id: 'pierhead', name: 'Pierhead', tenants: 4, risk: 3.1, compliance: 91, trend: 'stable' }
+            ],
+            tenants: stores, // Using the stores array from previous
+            currentUser: null,
+            currentView: null
+        };
 
-        // Audit Checklist Template
-        const auditCategories = [
-            { category: "Fire Safety", items: [
-                { id: "fs1", text: "Fire extinguishers accessible and inspected", weight: 10 },
-                { id: "fs2", text: "Emergency exits clearly marked and unobstructed", weight: 15 },
-                { id: "fs3", text: "Smoke detectors functional", weight: 10 },
-                { id: "fs4", text: "Fire assembly point signage visible", weight: 5 }
-            ]},
-            { category: "Occupational Health", items: [
-                { id: "oh1", text: "First aid kit stocked and accessible", weight: 10 },
-                { id: "oh2", text: "Staff trained on emergency procedures", weight: 15 },
-                { id: "oh3", text: "Hazardous materials properly stored", weight: 10 },
-                { id: "oh4", text: "Slip/trip hazards identified and mitigated", weight: 10 }
-            ]},
-            { category: "Food Safety (if applicable)", items: [
-                { id: "fd1", text: "Temperature logs maintained", weight: 10 },
-                { id: "fd2", text: "Hygiene standards compliant", weight: 10 },
-                { id: "fd3", text: "Pest control up to date", weight: 5 }
-            ]}
-        ];
-
-        let currentUser = null;
-        let currentAuditScores = {};
-
-        // Login Function
+        // Login System
         function login(role) {
-            currentUser = role;
+            data.currentUser = role;
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
             
-            // Set role display
             const roleNames = {
-                'executive': 'ESG Executive',
-                'manager': 'Risk & Safety Manager',
-                'coordinator': 'Property Coordinator',
-                'officer': 'Health & Safety Officer'
+                'executive': 'Mall Leadership',
+                'manager': 'Operations Manager',
+                'officer': 'Compliance Officer',
+                'tenant': 'Store Portal'
             };
             document.getElementById('user-role-display').textContent = roleNames[role];
             
-            // Show appropriate dashboard
-            document.querySelectorAll('[id^="dashboard-"]').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`dashboard-${role}`).classList.remove('hidden');
-            
-            // Initialize role-specific content
-            if (role === 'executive') initExecutiveDashboard();
-            if (role === 'manager') initManagerDashboard();
-            if (role === 'coordinator') initCoordinatorDashboard();
-            if (role === 'officer') initOfficerDashboard();
-            
-            lucide.createIcons();
+            setupSidebar(role);
+            navigateTo('home');
         }
 
         function logout() {
             location.reload();
         }
 
-        // Executive Dashboard
-        function initExecutiveDashboard() {
-            // Risk Trend Chart
-            const riskCtx = document.getElementById('executiveRiskChart');
-            if (riskCtx) {
-                new Chart(riskCtx, {
+        // Sidebar Setup
+        function setupSidebar(role) {
+            const nav = document.getElementById('sidebar-nav');
+            nav.innerHTML = '';
+            
+            const menus = {
+                'executive': [
+                    { id: 'home', label: 'Risk Overview', icon: 'layout-dashboard' },
+                    { id: 'precincts', label: 'All Precincts', icon: 'map-pin' },
+                    { id: 'tenants', label: 'Tenant Directory', icon: 'building-2' }
+                ],
+                'manager': [
+                    { id: 'home', label: 'Priorities', icon: 'alert-circle' },
+                    { id: 'tenants', label: 'Tenants', icon: 'building-2' },
+                    { id: 'audits', label: 'Audits', icon: 'clipboard-check' },
+                    { id: 'certificates', label: 'Certificates', icon: 'file-check' },
+                    { id: 'actions', label: 'Actions', icon: 'check-square' },
+                    { id: 'team', label: 'Team', icon: 'users' }
+                ],
+                'officer': [
+                    { id: 'home', label: 'My Work', icon: 'clipboard-list' },
+                    { id: 'drafts', label: 'Drafts', icon: 'file-edit' },
+                    { id: 'history', label: 'History', icon: 'history' }
+                ],
+                'tenant': [
+                    { id: 'home', label: 'Dashboard', icon: 'layout-dashboard' },
+                    { id: 'actions', label: 'Actions', icon: 'alert-circle' },
+                    { id: 'certificates', label: 'Certificates', icon: 'file-check' },
+                    { id: 'audits', label: 'Audit History', icon: 'clipboard-check' }
+                ]
+            };
+            
+            menus[role].forEach(item => {
+                nav.innerHTML += `
+                    <div class="nav-item" onclick="navigateTo('${item.id}')" data-page="${item.id}">
+                        <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                        <span>${item.label}</span>
+                    </div>
+                `;
+            });
+            
+            lucide.createIcons();
+        }
+
+        // Navigation
+        function navigateTo(page) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show target page with role prefix
+            const role = data.currentUser;
+            let targetId = '';
+            
+            if (role === 'executive') {
+                if (page === 'home') targetId = 'exec-home';
+                else if (page === 'precincts') targetId = 'exec-precincts';
+                else if (page === 'tenants') targetId = 'mgr-tenants'; // Shared
+            } else if (role === 'manager') {
+                if (page === 'home') targetId = 'mgr-home';
+                else if (page === 'tenants') targetId = 'mgr-tenants';
+                else if (page === 'audits') targetId = 'mgr-audits';
+            } else if (role === 'officer') {
+                if (page === 'home') targetId = 'officer-home';
+            } else if (role === 'tenant') {
+                if (page === 'home') targetId = 'tenant-home';
+                else if (page === 'actions') targetId = 'tenant-actions';
+            }
+            
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+            
+            // Update sidebar active state
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active');
+                if (el.dataset.page === page) el.classList.add('active');
+            });
+            
+            // Initialize page-specific content
+            if (targetId === 'exec-home') initExecHome();
+            else if (targetId === 'exec-precincts') initExecPrecincts();
+            else if (targetId === 'mgr-tenants') initMgrTenants();
+            else if (targetId === 'mgr-audits') initMgrAudits();
+        }
+
+        function navigateToPrecinct(precinctId) {
+            const precinct = data.precincts.find(p => p.id === precinctId);
+            if (!precinct) return;
+            
+            document.getElementById('precinct-breadcrumb-name').textContent = precinct.name;
+            document.getElementById('precinct-detail-name').textContent = precinct.name;
+            document.getElementById('precinct-tenant-count').textContent = precinct.tenants;
+            document.getElementById('precinct-compliance').textContent = precinct.compliance + '%';
+            document.getElementById('precinct-compliance').className = 'font-bold ' + (precinct.compliance > 80 ? 'text-risk-low' : precinct.compliance > 60 ? 'text-risk-medium' : 'text-risk-critical');
+            document.getElementById('precinct-risk-score').textContent = precinct.risk;
+            document.getElementById('precinct-risk-score').className = 'text-4xl font-bold ' + (precinct.risk > 7 ? 'text-risk-critical' : precinct.risk > 5 ? 'text-risk-high' : 'text-risk-low');
+            
+            // Populate tenants list for this precinct
+            const tbody = document.getElementById('precinct-tenants-list');
+            tbody.innerHTML = '';
+            const precinctTenants = data.tenants.filter(t => t.zone.toLowerCase().includes(precinct.name.toLowerCase().split(' ')[0]));
+            
+            precinctTenants.sort((a, b) => b.riskScore - a.riskScore).forEach(tenant => {
+                const statusClass = tenant.status === 'good' ? 'risk-low' : tenant.status === 'warning' ? 'risk-medium' : 'risk-critical';
+                const statusText = tenant.status === 'good' ? 'Compliant' : tenant.status === 'warning' ? 'Attention' : 'Critical';
+                
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="navigateToTenant(${tenant.id})">
+                        <td class="px-4 py-3 font-medium">${tenant.name}</td>
+                        <td class="px-4 py-3 text-gray-500">${tenant.type}</td>
+                        <td class="px-4 py-3 text-center font-bold ${tenant.riskScore > 7 ? 'text-red-600' : tenant.riskScore > 5 ? 'text-orange-600' : 'text-green-600'}">${tenant.riskScore}</td>
+                        <td class="px-4 py-3 text-center">${tenant.compliance}%</td>
+                        <td class="px-4 py-3 text-gray-500">${tenant.lastAudit}</td>
+                        <td class="px-4 py-3"><span class="risk-badge ${statusClass}">${statusText}</span></td>
+                    </tr>
+                `;
+            });
+            
+            // Show page
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('exec-precinct-detail').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function navigateToTenant(tenantId) {
+            const tenant = data.tenants.find(t => t.id === tenantId);
+            if (!tenant) return;
+            
+            // Update breadcrumbs
+            document.getElementById('tenant-breadcrumb-name').textContent = tenant.name;
+            document.getElementById('tenant-breadcrumb-precinct').textContent = tenant.zone;
+            
+            // Update content
+            document.getElementById('exec-tenant-name').textContent = tenant.name;
+            document.getElementById('exec-tenant-zone').textContent = `${tenant.zone} • ${tenant.type}`;
+            document.getElementById('exec-tenant-risk').textContent = tenant.riskScore;
+            document.getElementById('exec-tenant-risk').className = 'text-4xl font-bold ' + (tenant.riskScore > 7 ? 'text-risk-critical' : tenant.riskScore > 5 ? 'text-risk-high' : 'text-risk-low');
+            document.getElementById('exec-tenant-compliance').textContent = tenant.compliance + '%';
+            document.getElementById('exec-tenant-compliance').className = 'text-2xl font-bold ' + (tenant.compliance > 80 ? 'text-risk-low' : tenant.compliance > 60 ? 'text-risk-medium' : 'text-risk-critical');
+            
+            // Latest audit failures
+            const failuresDiv = document.getElementById('latest-audit-failures');
+            failuresDiv.innerHTML = '';
+            if (tenant.riskScore > 7) {
+                failuresDiv.innerHTML = `
+                    <div class="flex items-start space-x-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 mt-0.5"></i>
+                        <div>
+                            <div class="font-medium text-red-700">Temperature logs missing (3 days)</div>
+                            <div class="text-sm text-gray-600">Critical for food safety compliance</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 mt-0.5"></i>
+                        <div>
+                            <div class="font-medium text-red-700">Fire exit obstructed</div>
+                            <div class="text-sm text-gray-600">Safety hazard - immediate action</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                failuresDiv.innerHTML = '<p class="text-gray-500">No critical failures in latest audit.</p>';
+            }
+            
+            // Certificate timeline
+            const timeline = document.getElementById('cert-timeline');
+            timeline.innerHTML = '<div class="timeline-line"></div>';
+            tenant.certifications.forEach((cert, idx) => {
+                const daysUntil = Math.ceil((new Date(cert.expiry) - new Date()) / (1000 * 60 * 60 * 24));
+                const color = daysUntil < 0 ? 'bg-red-500' : daysUntil < 30 ? 'bg-orange-500' : 'bg-green-500';
+                const status = daysUntil < 0 ? 'EXPIRED' : daysUntil < 30 ? 'EXPIRING SOON' : 'Valid';
+                
+                timeline.innerHTML += `
+                    <div class="relative">
+                        <div class="absolute -left-8 w-4 h-4 ${color} rounded-full border-4 border-white dark:border-gray-800"></div>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="font-bold">${cert.name}</div>
+                                    <div class="text-sm text-gray-500">Expires: ${cert.expiry}</div>
+                                    <span class="inline-block mt-2 px-2 py-1 rounded text-xs ${daysUntil < 0 ? 'bg-red-100 text-red-700' : daysUntil < 30 ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}">${status}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Actions
+            const actionsDiv = document.getElementById('tenant-actions-list');
+            actionsDiv.innerHTML = '';
+            if (tenant.riskScore > 7) {
+                actionsDiv.innerHTML = `
+                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="risk-badge risk-critical">CRITICAL</span>
+                            <span class="text-xs text-gray-500">Due: Jan 27</span>
+                        </div>
+                        <div class="font-medium mb-1">Restore Food Safety Certificate</div>
+                        <div class="text-sm text-gray-600 mb-3">Owner: Store Manager • 7 days overdue</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 shadow-sm">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="risk-badge risk-high">HIGH</span>
+                            <span class="text-xs text-gray-500">Due: Feb 3</span>
+                        </div>
+                        <div class="font-medium mb-1">Fix Temperature Monitoring</div>
+                        <div class="text-sm text-gray-600 mb-3">Owner: Store Manager • Due in 3 days</div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-orange-500 h-2 rounded-full" style="width: 30%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            lucide.createIcons();
+            
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('exec-tenant-detail').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize Executive Home
+        function initExecHome() {
+            // Top precincts
+            const topPrecincts = [...data.precincts].sort((a, b) => b.risk - a.risk).slice(0, 3);
+            const precinctsList = document.getElementById('top-precincts-list');
+            precinctsList.innerHTML = '';
+            topPrecincts.forEach(p => {
+                precinctsList.innerHTML += `
+                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" onclick="navigateToPrecinct('${p.id}')">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full ${p.risk > 7 ? 'bg-red-100 text-red-600' : p.risk > 5 ? 'bg-orange-100 text-orange-600' : 'bg-yellow-100 text-yellow-600'} flex items-center justify-center font-bold">
+                                ${p.risk}
+                            </div>
+                            <div>
+                                <div class="font-medium">${p.name}</div>
+                                <div class="text-sm text-gray-500">${p.tenants} tenants • ${p.compliance}% compliance</div>
+                            </div>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                `;
+            });
+            
+            // Expiring certs
+            const expiringList = document.getElementById('expiring-certs-list');
+            expiringList.innerHTML = '';
+            let expiringCount = 0;
+            data.tenants.forEach(t => {
+                t.certifications.forEach(c => {
+                    const days = Math.ceil((new Date(c.expiry) - new Date()) / (1000 * 60 * 60 * 24));
+                    if (days < 30) {
+                        expiringCount++;
+                        expiringList.innerHTML += `
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div>
+                                    <div class="font-medium text-sm">${t.name}</div>
+                                    <div class="text-xs text-gray-500">${c.name}</div>
+                                </div>
+                                <span class="text-xs font-bold ${days < 0 ? 'text-red-600' : days < 7 ? 'text-orange-600' : 'text-yellow-600'}">
+                                    ${days < 0 ? 'EXPIRED' : days + ' days'}
+                                </span>
+                            </div>
+                        `;
+                    }
+                });
+            });
+            document.getElementById('expiring-30-count').textContent = expiringCount;
+            document.getElementById('expiring-badge').textContent = expiringCount;
+            
+            // Chart
+            const ctx = document.getElementById('complianceTrendChart');
+            if (ctx) {
+                new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'],
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
                         datasets: [{
-                            label: 'Property Risk Score',
-                            data: [7.2, 6.8, 6.5, 6.4, 6.5, 6.2],
+                            label: 'Mall Compliance %',
+                            data: [84, 85, 86, 87],
                             borderColor: '#003366',
                             backgroundColor: 'rgba(0,51,102,0.1)',
                             fill: true,
                             tension: 0.4
                         }]
                     },
-                    options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } }
-                    }
-                });
-            }
-
-            // Compliance Chart
-            const compCtx = document.getElementById('executiveComplianceChart');
-            if (compCtx) {
-                new Chart(compCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Fire Safety', 'Food Safety', 'Occupational Health', 'Building', 'Environmental'],
-                        datasets: [{
-                            label: 'Compliance %',
-                            data: [82, 91, 78, 88, 94],
-                            backgroundColor: ['#ef4444', '#22c55e', '#eab308', '#3b82f6', '#22c55e']
-                        }]
-                    },
-                    options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false, 
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true, max: 100 } } 
-                    }
-                });
-            }
-        }
-
-        // Manager Dashboard
-        function initManagerDashboard() {
-            // Risk Radar Chart
-            const radarCtx = document.getElementById('riskRadarChart');
-            if (radarCtx) {
-                new Chart(radarCtx, {
-                    type: 'radar',
-                    data: {
-                        labels: ['Fire Safety', 'Occupational Health', 'Food Safety', 'Building', 'Security', 'Environmental'],
-                        datasets: [{
-                            label: 'Current Risk',
-                            data: [65, 45, 80, 30, 25, 20],
-                            borderColor: '#ef4444',
-                            backgroundColor: 'rgba(239,68,68,0.2)'
-                        }, {
-                            label: 'Target',
-                            data: [20, 20, 30, 20, 15, 15],
-                            borderColor: '#22c55e',
-                            backgroundColor: 'rgba(34,197,94,0.1)'
-                        }]
-                    },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        scales: { r: { beginAtZero: true, max: 100 } }
+                        plugins: { legend: { display: false } },
+                        scales: { y: { min: 70, max: 100 } }
                     }
                 });
             }
-
-            // Populate store table
-            const tbody = document.getElementById('managerStoreTable');
-            if (tbody) {
-                tbody.innerHTML = '';
-                stores.forEach(store => {
-                    const statusColor = store.status === 'good' ? 'bg-green-100 text-green-700' : 
-                                       store.status === 'warning' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700';
-                    const statusText = store.status === 'good' ? 'Compliant' : store.status === 'warning' ? 'Attention' : 'Critical';
-                    
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-4 py-3 font-medium">${store.name}</td>
-                            <td class="px-4 py-3 text-gray-500">${store.zone}</td>
-                            <td class="px-4 py-3 text-center">
-                                <span class="font-bold ${store.riskScore > 7 ? 'text-red-600' : store.riskScore > 5 ? 'text-orange-600' : 'text-green-600'}">
-                                    ${store.riskScore}
-                                </span>
-                            </td>
-                            <td class="px-4 py-3 text-center">${store.compliance}%</td>
-                            <td class="px-4 py-3 text-center text-gray-500">${store.lastAudit}</td>
-                            <td class="px-4 py-3 text-center">
-                                <span class="px-2 py-1 rounded-full text-xs font-medium ${statusColor}">${statusText}</span>
-                            </td>
-                        </tr>
-                    `;
-                });
-            }
+            
+            lucide.createIcons();
         }
 
-        // Coordinator Dashboard
-        function initCoordinatorDashboard() {
-            // Today's schedule
-            const schedule = [
-                { time: "10:00 AM", store: "Woolworths", zone: "Victoria Wharf", type: "Routine", status: "pending" },
-                { time: "11:30 AM", store: "H&M", zone: "Clock Tower", type: "Follow-up", status: "pending" },
-                { time: "02:00 PM", store: "Ocean Basket", zone: "Portswood", type: "Critical", status: "urgent" },
-                { time: "04:00 PM", store: "Tiger's Milk", zone: "Water Shed", type: "Routine", status: "pending" }
-            ];
-            
-            const schedContainer = document.getElementById('coordinatorSchedule');
-            if (schedContainer) {
-                schedContainer.innerHTML = '';
-                schedule.forEach(item => {
-                    const statusColor = item.status === 'urgent' ? 'border-l-red-500 bg-red-50' : 'border-l-blue-500';
-                    schedContainer.innerHTML += `
-                        <div class="flex items-center justify-between p-4 border-l-4 ${statusColor} rounded-lg bg-gray-50 dark:bg-gray-700">
-                            <div class="flex items-center space-x-4">
-                                <div class="text-sm font-bold text-gray-500">${item.time}</div>
-                                <div>
-                                    <div class="font-medium">${item.store}</div>
-                                    <div class="text-xs text-gray-500">${item.zone} • ${item.type}</div>
-                                </div>
-                            </div>
-                            <button class="px-3 py-1 bg-vna-blue text-white text-sm rounded hover:bg-vna-navy">Start</button>
+        function initExecPrecincts() {
+            const grid = document.getElementById('precincts-grid');
+            grid.innerHTML = '';
+            data.precincts.forEach(p => {
+                grid.innerHTML += `
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer card-hover" onclick="navigateToPrecinct('${p.id}')">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-bold text-lg">${p.name}</h3>
+                            <span class="text-2xl font-bold ${p.risk > 7 ? 'text-red-600' : p.risk > 5 ? 'text-orange-600' : 'text-green-600'}">${p.risk}</span>
                         </div>
-                    `;
-                });
-            }
-
-            // Certification tracker
-            const certContainer = document.getElementById('certTracker');
-            if (certContainer) {
-                certContainer.innerHTML = '';
-                stores.forEach(store => {
-                    store.certifications.forEach(cert => {
-                        const daysUntil = Math.ceil((new Date(cert.expiry) - new Date()) / (1000 * 60 * 60 * 24));
-                        const statusClass = daysUntil < 0 ? 'expiry-critical' : daysUntil < 30 ? 'expiry-warning' : 'expiry-good';
-                        const statusText = daysUntil < 0 ? 'EXPIRED' : daysUntil < 30 ? `${daysUntil} days left` : 'Valid';
-                        
-                        certContainer.innerHTML += `
-                            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg ${statusClass}">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <div class="font-medium text-sm">${store.name}</div>
-                                        <div class="text-xs text-gray-500">${cert.name}</div>
-                                    </div>
-                                    <span class="text-xs font-bold ${daysUntil < 30 ? 'text-red-600' : 'text-green-600'}">${statusText}</span>
-                                </div>
-                                <div class="text-xs text-gray-400 mt-1">Expires: ${cert.expiry}</div>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Tenants</span>
+                                <span class="font-medium">${p.tenants}</span>
                             </div>
-                        `;
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Compliance</span>
+                                <span class="font-medium ${p.compliance > 80 ? 'text-green-600' : p.compliance > 60 ? 'text-yellow-600' : 'text-red-600'}">${p.compliance}%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">Trend</span>
+                                <span class="flex items-center ${p.trend === 'up' ? 'text-red-600' : p.trend === 'down' ? 'text-green-600' : 'text-gray-600'}">
+                                    <i data-lucide="trending-${p.trend}" class="w-4 h-4 mr-1"></i>
+                                    ${p.trend === 'up' ? 'Rising' : p.trend === 'down' ? 'Improving' : 'Stable'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function initMgrTenants() {
+            const tbody = document.getElementById('mgr-tenants-list');
+            tbody.innerHTML = '';
+            data.tenants.forEach(t => {
+                const nextExpiry = t.certifications.sort((a, b) => new Date(a.expiry) - new Date(b.expiry))[0];
+                const daysUntil = Math.ceil((new Date(nextExpiry.expiry) - new Date()) / (1000 * 60 * 60 * 24));
+                
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td class="px-4 py-3 font-medium">${t.name}</td>
+                        <td class="px-4 py-3 text-gray-500">${t.zone}</td>
+                        <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 rounded text-xs">${t.type}</span></td>
+                        <td class="px-4 py-3 text-center"><span class="font-bold ${t.riskScore > 7 ? 'text-red-600' : t.riskScore > 5 ? 'text-orange-600' : 'text-green-600'}">${t.riskScore}</span></td>
+                        <td class="px-4 py-3 text-center">${t.compliance}%</td>
+                        <td class="px-4 py-3">
+                            <span class="text-xs ${daysUntil < 30 ? 'text-red-600 font-bold' : 'text-gray-500'}">
+                                ${nextExpiry.name} (${daysUntil}d)
+                            </span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <button class="text-vna-blue hover:underline text-sm" onclick="navigateToTenant(${t.id})">View</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function initMgrAudits() {
+            const pending = document.getElementById('pending-audits-list');
+            pending.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="font-bold">Woolworths - Routine Audit</div>
+                            <div class="text-sm text-gray-500">Submitted by John Doe • Feb 15, 10:30 AM</div>
+                            <div class="mt-2 flex space-x-2">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">PASS (94%)</span>
+                                <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">2 minor findings</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">Review</button>
+                            <button class="px-3 py-1 bg-vna-blue text-white rounded text-sm hover:bg-vna-navy">Approve</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="font-bold">Cotton On - Follow-up</div>
+                            <div class="text-sm text-gray-500">Submitted by Sarah Miller • Feb 14, 3:45 PM</div>
+                            <div class="mt-2 flex space-x-2">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">FAIL (54%)</span>
+                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">3 critical actions</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">Review</button>
+                            <button class="px-3 py-1 bg-vna-blue text-white rounded text-sm hover:bg-vna-navy">Approve & Generate Actions</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Populate tenant selector
+            const selectors = ['quick-tenant', 'new-audit-tenant'];
+            selectors.forEach(id => {
+                const sel = document.getElementById(id);
+                if (sel) {
+                    sel.innerHTML = '<option>Select Tenant...</option>';
+                    data.tenants.forEach(t => {
+                        sel.innerHTML += `<option value="${t.id}">${t.name} - ${t.zone}</option>`;
                     });
-                });
-            }
+                }
+            });
         }
 
-        // Officer Dashboard
-        function initOfficerDashboard() {
-            // Populate store selector
-            const selector = document.getElementById('storeSelector');
-            if (selector) {
-                selector.innerHTML = '<option value="">Select Store...</option>';
-                stores.forEach(store => {
-                    selector.innerHTML += `<option value="${store.id}">${store.name} - ${store.zone}</option>`;
-                });
-            }
-
-            // Recent audits
-            const recent = [
-                { store: "Woolworths", date: "2024-02-15", score: 9.2, status: "pass" },
-                { store: "Tiger's Milk", date: "2024-02-14", score: 8.8, status: "pass" },
-                { store: "Cotton On", date: "2024-02-12", score: 5.4, status: "fail" }
-            ];
-            
-            const recentContainer = document.getElementById('officerRecentAudits');
-            if (recentContainer) {
-                recentContainer.innerHTML = '';
-                recent.forEach(audit => {
-                    recentContainer.innerHTML += `
-                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <div>
-                                <div class="font-medium">${audit.store}</div>
-                                <div class="text-xs text-gray-500">${audit.date}</div>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="text-lg font-bold ${audit.score > 7 ? 'text-green-600' : 'text-red-600'}">${audit.score}</span>
-                                <span class="px-2 py-1 rounded text-xs ${audit.status === 'pass' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
-                                    ${audit.status.toUpperCase()}
-                                </span>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-        }
-
-        function loadStoreAudit(storeId) {
-            if (!storeId) {
-                document.getElementById('auditInterface').classList.add('hidden');
-                return;
-            }
-            
-            const store = stores.find(s => s.id == storeId);
-            document.getElementById('auditStoreName').textContent = store.name;
-            document.getElementById('auditStoreZone').textContent = store.zone;
-            document.getElementById('auditInterface').classList.remove('hidden');
+        // Officer Functions
+        function startOfficerAudit(tenantId) {
+            const tenant = data.tenants.find(t => t.id === tenantId);
+            document.getElementById('audit-tenant-name').textContent = tenant.name;
+            document.getElementById('audit-tenant-zone').textContent = `${tenant.zone} • F&B Full Audit`;
             
             // Generate checklist
-            const container = document.getElementById('auditChecklist');
+            const container = document.getElementById('audit-checklist-container');
             container.innerHTML = '';
-            currentAuditScores = {};
             
-            auditCategories.forEach(cat => {
-                container.innerHTML += `<div class="font-bold text-gray-700 dark:text-gray-300 mb-2 mt-4">${cat.category}</div>`;
-                cat.items.forEach(item => {
-                    currentAuditScores[item.id] = 0;
-                    container.innerHTML += `
-                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg gap-3">
-                            <span class="text-sm flex-1">${item.text}</span>
-                            <div class="flex space-x-2 flex-wrap">
-                                <button onclick="setScore('${item.id}', 0, ${item.weight}, this)" class="score-btn px-3 py-1 text-xs rounded border border-gray-300 hover:bg-red-100">Fail</button>
-                                <button onclick="setScore('${item.id}', 0.5, ${item.weight}, this)" class="score-btn px-3 py-1 text-xs rounded border border-gray-300 hover:bg-yellow-100">Partial</button>
-                                <button onclick="setScore('${item.id}', 1, ${item.weight}, this)" class="score-btn px-3 py-1 text-xs rounded border border-gray-300 hover:bg-green-100">Pass</button>
-                                <button onclick="setScore('${item.id}', 1.5, ${item.weight}, this)" class="score-btn px-3 py-1 text-xs rounded border border-gray-300 hover:bg-blue-100">Exceed</button>
-                            </div>
+            const categories = [
+                { name: 'Fire Safety', items: ['Extinguishers accessible', 'Exits marked & clear', 'Alarm functional', 'Assembly point known'] },
+                { name: 'Food Safety', items: ['Temperature logs current', 'Cold chain maintained', 'Hygiene standards met', 'Pest control active'] },
+                { name: 'Occupational Health', items: ['First aid kit stocked', 'Staff trained', 'PPE available', 'Incident book current'] }
+            ];
+            
+            categories.forEach((cat, idx) => {
+                container.innerHTML += `
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        <h3 class="font-bold text-lg mb-4 flex items-center">
+                            <span class="w-8 h-8 bg-vna-blue text-white rounded-full flex items-center justify-center text-sm mr-3">${idx + 1}</span>
+                            ${cat.name}
+                        </h3>
+                        <div class="space-y-3">
+                            ${cat.items.map((item, i) => `
+                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                                    <span class="flex-1">${item}</span>
+                                    <div class="flex space-x-2">
+                                        <button onclick="setAuditItem(this, 'pass')" class="audit-btn px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 text-sm font-medium transition-all" data-score="1">PASS</button>
+                                        <button onclick="setAuditItem(this, 'fail')" class="audit-btn px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-red-500 hover:bg-red-50 text-sm font-medium transition-all" data-score="0">FAIL</button>
+                                        <button onclick="setAuditItem(this, 'na')" class="audit-btn px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-gray-500 text-sm font-medium transition-all" data-score="0.5">N/A</button>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
-                    `;
-                });
+                    </div>
+                `;
             });
             
-            updateOverallScore();
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('officer-audit').classList.add('active');
+            window.scrollTo(0, 0);
+            updateAuditProgress();
         }
 
-        function setScore(itemId, multiplier, weight, btn) {
-            currentAuditScores[itemId] = multiplier * weight;
-            
-            // Visual feedback
-            const buttons = btn.parentElement.querySelectorAll('.score-btn');
+        function setAuditItem(btn, status) {
+            const buttons = btn.parentElement.querySelectorAll('.audit-btn');
             buttons.forEach(b => {
-                b.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-red-500', 'bg-blue-500', 'text-white');
+                b.classList.remove('bg-green-500', 'bg-red-500', 'bg-gray-500', 'text-white', 'border-green-500', 'border-red-500');
+                b.classList.add('border-gray-300');
             });
             
-            const colors = { 0: 'bg-red-500', 0.5: 'bg-yellow-500', 1: 'bg-green-500', 1.5: 'bg-blue-500' };
-            btn.classList.add(colors[multiplier], 'text-white');
+            if (status === 'pass') {
+                btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
+                btn.classList.remove('border-gray-300');
+            } else if (status === 'fail') {
+                btn.classList.add('bg-red-500', 'text-white', 'border-red-500');
+                btn.classList.remove('border-gray-300');
+            } else {
+                btn.classList.add('bg-gray-500', 'text-white');
+                btn.classList.remove('border-gray-300');
+            }
             
-            updateOverallScore();
+            updateAuditProgress();
         }
 
-        function updateOverallScore() {
-            const total = Object.values(currentAuditScores).reduce((a, b) => a + b, 0);
-            const max = 100;
-            const score = (total / max * 10).toFixed(1);
+        function updateAuditProgress() {
+            const total = document.querySelectorAll('.audit-btn[data-score="1"], .audit-btn[data-score="0"]').length / 3; // Approximate
+            const answered = document.querySelectorAll('.audit-btn.bg-green-500, .audit-btn.bg-red-500, .audit-btn.bg-gray-500').length / 3;
+            const passed = document.querySelectorAll('.audit-btn.bg-green-500').length;
             
-            const scoreEl = document.getElementById('auditOverallScore');
-            scoreEl.textContent = score;
-            scoreEl.className = `text-2xl font-bold ${score > 7 ? 'text-risk-low' : score > 5 ? 'text-risk-medium' : 'text-risk-critical'}`;
+            document.getElementById('audit-progress').textContent = `${Math.round(answered)}/12`;
+            document.getElementById('audit-progress-bar').style.width = `${(answered / 12) * 100}%`;
+            
+            if (answered > 0) {
+                const score = ((passed / answered) * 10).toFixed(1);
+                document.getElementById('audit-live-score').textContent = score;
+                document.getElementById('audit-live-score').className = 'text-2xl font-bold ' + (score > 7 ? 'text-green-600' : score > 5 ? 'text-yellow-600' : 'text-red-600');
+            }
         }
 
         function saveDraft() {
-            alert('Draft saved successfully!');
+            alert('Draft saved! You can resume from "My Work" page.');
+            navigateTo('home');
         }
 
         function submitAudit() {
-            const score = parseFloat(document.getElementById('auditOverallScore').textContent);
-            if (score > 0) {
-                alert(`Audit submitted! Overall score: ${score}/10`);
-                document.getElementById('auditInterface').classList.add('hidden');
-                document.getElementById('storeSelector').value = '';
-            } else {
-                alert('Please complete the checklist before submitting.');
+            const score = document.getElementById('audit-live-score').textContent;
+            if (confirm(`Submit audit with score ${score}/10?`)) {
+                alert('Audit submitted! Manager will review shortly.');
+                navigateTo('home');
             }
         }
 
-        function startAudit() {
-            document.getElementById('storeSelector').focus();
+        // Utility Functions
+        function setTrendPeriod(days) {
+            // Update chart data based on period
+            alert(`Switched to ${days} day view`);
+        }
+
+        function filterTenants(filter) {
+            alert(`Filtering by: ${filter}`);
+        }
+
+        function groupTenants(by) {
+            alert(`Grouping by: ${by}`);
+        }
+
+        function scheduleAudit() {
+            alert('Audit scheduled successfully!');
+        }
+
+        function scheduleFullAudit() {
+            alert('Audit created and assigned!');
+            navigateTo('audits');
         }
 
         function exportReport() {
-            alert('Generating executive report... Download will start shortly.');
+            alert('Generating executive PDF report...');
         }
 
         function showNotifications() {
-            alert('You have 3 critical alerts and 5 upcoming expirations.');
+            alert('You have 5 notifications:\n\n• 3 certificates expiring\n• 1 audit pending review\n• 1 critical risk alert');
         }
+
+        function toggleMobileNav() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('fixed');
+            sidebar.classList.toggle('inset-0');
+            sidebar.classList.toggle('z-50');
+            sidebar.classList.toggle('w-full');
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
