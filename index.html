@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Compliance Engine | Next-Gen Audit Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        accent: {
+                            cyan: '#06b6d4',
+                            purple: '#8b5cf6',
+                            rose: '#f43f5e',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .dark .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+        }
+        .grid-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.15) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 10s ease-in-out infinite;
+        }
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
+
+    <!-- Animated Background -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="blob bg-purple-400 w-96 h-96 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="blob bg-cyan-400 w-96 h-96 rounded-full bottom-0 right-0 translate-x-1/2 translate-y-1/2 animation-delay-2000"></div>
+        <div class="blob bg-blue-400 w-64 h-64 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animation-delay-4000"></div>
+        <div class="absolute inset-0 grid-pattern opacity-30"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 group cursor-pointer">
+                    <div class="relative w-10 h-10 bg-gradient-to-br from-primary-600 to-accent-purple rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-accent-purple bg-clip-text text-transparent">
+                        Nexus
+                    </span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Features</a>
+                    <a href="#dashboard" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Dashboard</a>
+                    <a href="#compliance" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Compliance</a>
+                    <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                        <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                    </button>
+                    <button onclick="openLogin()" class="px-6 py-2.5 bg-gradient-to-r from-primary-600 to-accent-purple text-white rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                        <span>Get Started</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <button class="md:hidden p-2" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass border-t border-gray-200 dark:border-gray-800">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Features</a>
+                <a href="#dashboard" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Dashboard</a>
+                <a href="#compliance" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Compliance</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 animate-fade-in">
+                    <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 text-sm font-medium">
+                        <span class="flex h-2 w-2 rounded-full bg-primary-600 animate-pulse"></span>
+                        <span>v2.0 Now Available</span>
+                    </div>
+                    
+                    <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
+                        Operational <br>
+                        <span class="gradient-text">Compliance Engine</span>
+                    </h1>
+                    
+                    <p class="text-xl text-gray-600 dark:text-gray-400 max-w-lg leading-relaxed">
+                        Streamline your audit and compliance workflows with AI-powered automation, real-time analytics, and enterprise-grade security.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="openLogin()" class="px-8 py-4 bg-gradient-to-r from-primary-600 to-accent-purple text-white rounded-2xl font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group">
+                            <span>Start Free Trial</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                        <button class="px-8 py-4 glass rounded-2xl font-semibold hover:bg-white/50 dark:hover:bg-gray-800/50 transition-all duration-300 flex items-center justify-center space-x-2">
+                            <i data-lucide="play-circle" class="w-5 h-5"></i>
+                            <span>Watch Demo</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center space-x-8 pt-4">
+                        <div class="flex -space-x-3">
+                            <img src="https://i.pravatar.cc/150?img=1" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-900" alt="User">
+                            <img src="https://i.pravatar.cc/150?img=2" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-900" alt="User">
+                            <img src="https://i.pravatar.cc/150?img=3" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-900" alt="User">
+                            <div class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-900 bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-xs font-bold text-primary-700 dark:text-primary-300">+2k</div>
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-bold text-gray-900 dark:text-white">2,000+</span> companies trust Nexus
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative lg:h-[600px] flex items-center justify-center">
+                    <!-- Abstract Dashboard Preview -->
+                    <div class="relative w-full max-w-lg animate-float">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-accent-purple rounded-3xl blur-2xl opacity-20"></div>
+                        <div class="relative glass rounded-3xl p-6 shadow-2xl border border-white/20">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                                </div>
+                                <i data-lucide="more-horizontal" class="w-5 h-5 text-gray-400"></i>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="h-32 bg-gradient-to-br from-primary-100 to-primary-50 dark:from-primary-900/20 dark:to-primary-800/20 rounded-2xl p-4 flex items-end justify-between">
+                                    <div class="space-y-2">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Compliance Score</div>
+                                        <div class="text-3xl font-bold text-primary-600 dark:text-primary-400">94%</div>
+                                    </div>
+                                    <div class="flex space-x-1 items-end h-20">
+                                        <div class="w-4 bg-primary-400 rounded-t h-8"></div>
+                                        <div class="w-4 bg-primary-500 rounded-t h-12"></div>
+                                        <div class="w-4 bg-primary-600 rounded-t h-16"></div>
+                                        <div class="w-4 bg-primary-500 rounded-t h-10"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="h-24 bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <i data-lucide="check-circle" class="w-4 h-4 text-green-500"></i>
+                                            <span class="text-xs font-medium">Audits</span>
+                                        </div>
+                                        <div class="text-xl font-bold">127</div>
+                                    </div>
+                                    <div class="h-24 bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <i data-lucide="alert-circle" class="w-4 h-4 text-yellow-500"></i>
+                                            <span class="text-xs font-medium">Pending</span>
+                                        </div>
+                                        <div class="text-xl font-bold">23</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass rounded-3xl p-8 lg:p-12 border border-white/20">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center space-y-2">
+                        <div class="text-4xl lg:text-5xl font-bold gradient-text counter" data-target="99.9">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">% Uptime SLA</div>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <div class="text-4xl lg:text-5xl font-bold gradient-text counter" data-target="500">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">+ Enterprise Clients</div>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <div class="text-4xl lg:text-5xl font-bold gradient-text counter" data-target="50">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">+ Countries</div>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <div class="text-4xl lg:text-5xl font-bold gradient-text counter" data-target="10">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">M+ Audits Processed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section id="features" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-4xl lg:text-5xl font-bold">Everything you need for <span class="gradient-text">compliance</span></h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Powerful features to manage your entire compliance lifecycle in one platform.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="users" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Role-Based Access</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Granular permissions and custom roles ensure the right people have access to the right data.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="clipboard-check" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Audit Management</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">End-to-end audit workflows with automated scheduling, evidence collection, and reporting.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="store" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Store Tracking</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Real-time monitoring of compliance status across all your retail locations and facilities.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="file-text" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Template Workflows</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Pre-built and customizable templates for ISO, SOC2, GDPR, and industry-specific standards.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="brain" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">AI-Powered Insights</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Machine learning algorithms detect anomalies and predict compliance risks before they occur.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="shield" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Enterprise Security</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Bank-grade encryption, SSO integration, and complete audit trails for maximum security.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Dashboard Preview -->
+    <section id="dashboard" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-primary-50/50 to-transparent dark:via-primary-900/10"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl lg:text-5xl font-bold mb-4">Powerful <span class="gradient-text">Dashboard</span></h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Real-time visibility into your compliance posture</p>
+            </div>
+
+            <div class="glass rounded-3xl p-4 lg:p-8 shadow-2xl border border-white/20">
+                <div class="grid lg:grid-cols-4 gap-6">
+                    <!-- Sidebar -->
+                    <div class="hidden lg:block space-y-2">
+                        <div class="flex items-center space-x-3 p-3 rounded-xl bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300">
+                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                            <span class="font-medium">Overview</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <i data-lucide="clipboard-list" class="w-5 h-5 text-gray-500"></i>
+                            <span class="font-medium text-gray-600 dark:text-gray-400">Audits</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <i data-lucide="building-2" class="w-5 h-5 text-gray-500"></i>
+                            <span class="font-medium text-gray-600 dark:text-gray-400">Stores</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <i data-lucide="users" class="w-5 h-5 text-gray-500"></i>
+                            <span class="font-medium text-gray-600 dark:text-gray-400">Team</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <i data-lucide="settings" class="w-5 h-5 text-gray-500"></i>
+                            <span class="font-medium text-gray-600 dark:text-gray-400">Settings</span>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="lg:col-span-3 space-y-6">
+                        <!-- Top Stats -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-500">Compliance</span>
+                                    <span class="text-xs text-green-500 flex items-center">
+                                        <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i>+2.4%
+                                    </span>
+                                </div>
+                                <div class="text-2xl font-bold">94.2%</div>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-500">Active Audits</span>
+                                    <span class="text-xs text-blue-500">12</span>
+                                </div>
+                                <div class="text-2xl font-bold">24</div>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-500">Issues</span>
+                                    <span class="text-xs text-red-500 flex items-center">
+                                        <i data-lucide="alert-circle" class="w-3 h-3 mr-1"></i>3 urgent
+                                    </span>
+                                </div>
+                                <div class="text-2xl font-bold">7</div>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-500">Stores</span>
+                                    <span class="text-xs text-gray-400">Total</span>
+                                </div>
+                                <div class="text-2xl font-bold">156</div>
+                            </div>
+                        </div>
+
+                        <!-- Chart Area -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="font-bold text-lg">Compliance Trend</h3>
+                                <select class="text-sm border rounded-lg px-3 py-1 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
+                                    <option>Last 30 days</option>
+                                    <option>Last 90 days</option>
+                                    <option>This year</option>
+                                </select>
+                            </div>
+                            <div class="h-64 flex items-end justify-between space-x-2">
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 60%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">60%</div>
+                                </div>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 75%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">75%</div>
+                                </div>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 85%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">85%</div>
+                                </div>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 70%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">70%</div>
+                                </div>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 90%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">90%</div>
+                                </div>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 95%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">95%</div>
+                                </div>
+                                <div class="flex-1 bg-gradient-to-t from-primary-600 to-primary-400 rounded-t-lg relative group cursor-pointer shadow-lg shadow-primary-500/30" style="height: 94%">
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-100 transition-opacity">94%</div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-4 text-xs text-gray-500">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative rounded-3xl overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-accent-purple"></div>
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.1%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+                
+                <div class="relative z-10 px-8 py-16 lg:px-16 lg:py-20 text-center text-white">
+                    <h2 class="text-4xl lg:text-5xl font-bold mb-6">Ready to streamline compliance?</h2>
+                    <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">Join thousands of companies using Nexus to simplify their audit and compliance workflows.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button onclick="openLogin()" class="px-8 py-4 bg-white text-primary-600 rounded-2xl font-bold hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                            Get Started Free
+                        </button>
+                        <button class="px-8 py-4 bg-white/10 backdrop-blur text-white border border-white/30 rounded-2xl font-bold hover:bg-white/20 transition-all duration-300">
+                            Contact Sales
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-primary-600 to-accent-purple rounded-lg flex items-center justify-center">
+                            <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <span class="text-xl font-bold">Nexus</span>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">The modern compliance platform for enterprise teams. Secure, scalable, and simple to use.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary-600 transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary-600 transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary-600 transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Features</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Integrations</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Pricing</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Privacy</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Terms</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Security</a></li>
+                        <li><a href="#" class="hover:text-primary-600 transition-colors">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-200 dark:border-gray-800 mt-12 pt-8 text-center text-sm text-gray-500">
+                © 2024 Nexus Compliance Engine. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeLogin()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl w-full max-w-md p-8 transform transition-all scale-100 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary-600 to-accent-purple"></div>
+                <button onclick="closeLogin()" class="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary-600 to-accent-purple rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">Welcome back</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Sign in to your Nexus account</p>
+                </div>
+
+                <form class="space-y-4" onsubmit="event.preventDefault(); handleLogin();">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Email address</label>
+                        <div class="relative">
+                            <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
+                            <input type="email" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" placeholder="you@company.com" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Password</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
+                            <input type="password" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                            <span class="text-gray-600 dark:text-gray-400">Remember me</span>
+                        </label>
+                        <a href="#" class="text-primary-600 hover:text-primary-700 font-medium">Forgot password?</a>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary-600 to-accent-purple text-white rounded-xl font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Don't have an account? <a href="#" class="text-primary-600 font-medium hover:underline">Get started</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Theme Toggle
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+
+        // Check for saved theme preference or prefer-color-scheme
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Login Modal
+        function openLogin() {
+            const modal = document.getElementById('login-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLogin() {
+            const modal = document.getElementById('login-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function handleLogin() {
+            // Simulate login
+            const btn = document.querySelector('#login-modal button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = 'Signing in...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.innerText = 'Success!';
+                btn.classList.add('bg-green-500');
+                setTimeout(() => {
+                    closeLogin();
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('bg-green-500');
+                }, 500);
+            }, 1500);
+        }
+
+        // Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(animateCounters, 20);
+                } else {
+                    counter.innerText = target + (target === 99.9 ? '%' : target === 10 ? 'M+' : '+');
+                }
+            });
+        };
+
+        // Intersection Observer for counters
+        const observerOptions = {
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.counter').parentElement.parentElement.parentElement;
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
