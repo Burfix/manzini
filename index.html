@@ -3,1522 +3,472 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>V&A Waterfront Compliance Hub</title>
+    <title>Nexus Compliance Engine | Next-Gen Audit Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
                     colors: {
-                        vna: { blue: '#003366', navy: '#001a33', gold: '#c9a227', light: '#f8f9fa', red: '#dc2626' },
-                        risk: { low: '#22c55e', medium: '#eab308', high: '#f97316', critical: '#ef4444' }
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        accent: {
+                            cyan: '#06b6d4',
+                            purple: '#8b5cf6',
+                            rose: '#f43f5e',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' },
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        * { box-sizing: border-box; }
-        html, body { height: 100%; overflow-x: hidden; }
-        .glass { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); }
-        .dark .glass { background: rgba(15,23,42,0.95); }
-        .gradient-text { background: linear-gradient(135deg, #003366 0%, #c9a227 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .risk-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        .nav-item { @apply flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-vna-blue transition-all cursor-pointer; }
-        .nav-item.active { @apply bg-vna-blue text-white hover:bg-vna-navy hover:text-white; }
-        .card-hover { transition: all 0.2s ease; }
-        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
-        .dashboard-content { min-height: calc(100vh - 64px); overflow-y: auto; }
-        .page-section { display: none; animation: fadeIn 0.3s ease; }
-        .page-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .risk-badge { @apply px-2 py-1 rounded-full text-xs font-bold; }
-        .risk-critical { @apply bg-red-100 text-red-700; }
-        .risk-high { @apply bg-orange-100 text-orange-700; }
-        .risk-medium { @apply bg-yellow-100 text-yellow-700; }
-        .risk-low { @apply bg-green-100 text-green-700; }
-        .status-dot { @apply w-2 h-2 rounded-full; }
-        .timeline-line { @apply absolute left-4 top-8 bottom-0 w-0.5 bg-gray-200; }
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .dark .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+        }
+        .grid-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(99, 102, 241, 0.15) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 10s ease-in-out infinite;
+        }
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
     </style>
 </head>
-<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 overflow-x-hidden">
 
-    <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="fixed inset-0 z-50 bg-gradient-to-br from-vna-blue to-vna-navy flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden my-auto">
-            <div class="grid md:grid-cols-2">
-                <div class="p-8 md:p-12 bg-gradient-to-br from-vna-blue to-vna-navy text-white flex flex-col justify-center">
-                    <div class="mb-8">
-                        <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4">
-                            <i data-lucide="anchor" class="w-8 h-8 text-vna-gold"></i>
-                        </div>
-                        <h1 class="text-3xl font-bold mb-2">V&A Waterfront</h1>
-                        <p class="text-white/80 text-lg">Compliance & Risk Management Hub</p>
+    <!-- Animated Background -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="blob bg-purple-400 w-96 h-96 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="blob bg-cyan-400 w-96 h-96 rounded-full bottom-0 right-0 translate-x-1/2 translate-y-1/2 animation-delay-2000"></div>
+        <div class="blob bg-blue-400 w-64 h-64 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animation-delay-4000"></div>
+        <div class="absolute inset-0 grid-pattern opacity-30"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3 group cursor-pointer">
+                    <div class="relative w-10 h-10 bg-gradient-to-br from-primary-600 to-accent-purple rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
                     </div>
-                    <div class="space-y-4 text-sm text-white/70">
-                        <div class="flex items-center space-x-3"><i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i><span>Real-time Risk Monitoring</span></div>
-                        <div class="flex items-center space-x-3"><i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i><span>Automated Compliance Tracking</span></div>
-                        <div class="flex items-center space-x-3"><i data-lucide="check-circle" class="w-5 h-5 text-vna-gold"></i><span>Smart Audit Workflows</span></div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-accent-purple bg-clip-text text-transparent">
+                        Nexus
+                    </span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Features</a>
+                    <a href="#dashboard" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Dashboard</a>
+                    <a href="#compliance" class="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Compliance</a>
+                    <button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                        <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                    </button>
+                    <button onclick="openLogin()" class="px-6 py-2.5 bg-gradient-to-r from-primary-600 to-accent-purple text-white rounded-full font-medium hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center space-x-2">
+                        <span>Get Started</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <button class="md:hidden p-2" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass border-t border-gray-200 dark:border-gray-800">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#features" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Features</a>
+                <a href="#dashboard" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Dashboard</a>
+                <a href="#compliance" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 dark:hover:bg-gray-800">Compliance</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 animate-fade-in">
+                    <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300 text-sm font-medium">
+                        <span class="flex h-2 w-2 rounded-full bg-primary-600 animate-pulse"></span>
+                        <span>v2.0 Now Available</span>
+                    </div>
+                    
+                    <h1 class="text-5xl lg:text-7xl font-bold leading-tight">
+                        Operational <br>
+                        <span class="gradient-text">Compliance Engine</span>
+                    </h1>
+                    
+                    <p class="text-xl text-gray-600 dark:text-gray-400 max-w-lg leading-relaxed">
+                        Streamline your audit and compliance workflows with AI-powered automation, real-time analytics, and enterprise-grade security.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="openLogin()" class="px-8 py-4 bg-gradient-to-r from-primary-600 to-accent-purple text-white rounded-2xl font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2 group">
+                            <span>Start Free Trial</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                        <button class="px-8 py-4 glass rounded-2xl font-semibold hover:bg-white/50 dark:hover:bg-gray-800/50 transition-all duration-300 flex items-center justify-center space-x-2">
+                            <i data-lucide="play-circle" class="w-5 h-5"></i>
+                            <span>Watch Demo</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center space-x-8 pt-4">
+                        <div class="flex -space-x-3">
+                            <img src="https://i.pravatar.cc/150?img=1" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-900" alt="User">
+                            <img src="https://i.pravatar.cc/150?img=2" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-900" alt="User">
+                            <img src="https://i.pravatar.cc/150?img=3" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-900" alt="User">
+                            <div class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-900 bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-xs font-bold text-primary-700 dark:text-primary-300">+2k</div>
+                        </div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-bold text-gray-900 dark:text-white">2,000+</span> companies trust Nexus
+                        </div>
                     </div>
                 </div>
-                
-                <div class="p-8 md:p-12 overflow-y-auto max-h-[80vh]">
-                    <h2 class="text-2xl font-bold mb-2">Select Your Role</h2>
-                    <p class="text-gray-500 mb-6 text-sm">Demo mode - no password required</p>
-                    
-                    <div class="space-y-3">
-                        <button onclick="login('executive')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group card-hover">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="font-bold text-lg group-hover:text-vna-blue">Mall Leadership</div>
-                                    <div class="text-sm text-gray-500">Risk overview, trends, intervention points</div>
+
+                <div class="relative lg:h-[600px] flex items-center justify-center">
+                    <!-- Abstract Dashboard Preview -->
+                    <div class="relative w-full max-w-lg animate-float">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-accent-purple rounded-3xl blur-2xl opacity-20"></div>
+                        <div class="relative glass rounded-3xl p-6 shadow-2xl border border-white/20">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
                                 </div>
-                                <i data-lucide="trending-up" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
+                                <i data-lucide="more-horizontal" class="w-5 h-5 text-gray-400"></i>
                             </div>
-                        </button>
-                        
-                        <button onclick="login('manager')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group card-hover">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="font-bold text-lg group-hover:text-vna-blue">Operations Manager</div>
-                                    <div class="text-sm text-gray-500">Audits, certificates, team workflow</div>
+                            
+                            <div class="space-y-4">
+                                <div class="h-32 bg-gradient-to-br from-primary-100 to-primary-50 dark:from-primary-900/20 dark:to-primary-800/20 rounded-2xl p-4 flex items-end justify-between">
+                                    <div class="space-y-2">
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Compliance Score</div>
+                                        <div class="text-3xl font-bold text-primary-600 dark:text-primary-400">94%</div>
+                                    </div>
+                                    <div class="flex space-x-1 items-end h-20">
+                                        <div class="w-4 bg-primary-400 rounded-t h-8"></div>
+                                        <div class="w-4 bg-primary-500 rounded-t h-12"></div>
+                                        <div class="w-4 bg-primary-600 rounded-t h-16"></div>
+                                        <div class="w-4 bg-primary-500 rounded-t h-10"></div>
+                                    </div>
                                 </div>
-                                <i data-lucide="users" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
-                            </div>
-                        </button>
-                        
-                        <button onclick="login('officer')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group card-hover">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="font-bold text-lg group-hover:text-vna-blue">Compliance Officer</div>
-                                    <div class="text-sm text-gray-500">Field audits, checklists, evidence</div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="h-24 bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <i data-lucide="check-circle" class="w-4 h-4 text-green-500"></i>
+                                            <span class="text-xs font-medium">Audits</span>
+                                        </div>
+                                        <div class="text-xl font-bold">127</div>
+                                    </div>
+                                    <div class="h-24 bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
+                                        <div class="flex items-center space-x-2 mb-2">
+                                            <i data-lucide="alert-circle" class="w-4 h-4 text-yellow-500"></i>
+                                            <span class="text-xs font-medium">Pending</span>
+                                        </div>
+                                        <div class="text-xl font-bold">23</div>
+                                    </div>
                                 </div>
-                                <i data-lucide="clipboard-check" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
                             </div>
-                        </button>
-                        
-                        <button onclick="login('tenant')" class="w-full p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl hover:border-vna-blue hover:bg-vna-blue/5 transition-all text-left group card-hover">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="font-bold text-lg group-hover:text-vna-blue">Store / Tenant</div>
-                                    <div class="text-sm text-gray-500">Compliance status, actions, certificates</div>
-                                </div>
-                                <i data-lucide="store" class="w-6 h-6 text-gray-400 group-hover:text-vna-blue"></i>
-                            </div>
-                        </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- MAIN APP -->
-    <div id="main-app" class="hidden min-h-screen flex flex-col">
-        
-        <!-- Top Navigation -->
-        <nav class="fixed w-full z-40 glass border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('home')">
-                        <div class="w-10 h-10 bg-gradient-to-br from-vna-blue to-vna-navy rounded-xl flex items-center justify-center">
-                            <i data-lucide="anchor" class="w-6 h-6 text-vna-gold"></i>
-                        </div>
-                        <div>
-                            <span class="text-xl font-bold text-vna-blue dark:text-white">V&A Waterfront</span>
-                            <span id="user-role-display" class="ml-2 text-xs px-2 py-1 bg-vna-gold/20 text-vna-blue rounded-full font-medium"></span>
-                        </div>
+    <!-- Stats Section -->
+    <section class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass rounded-3xl p-8 lg:p-12 border border-white/20">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center space-y-2">
+                        <div class="text-4xl lg:text-5xl font-bold gradient-text counter" data-target="99.9">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">% Uptime SLA</div>
                     </div>
-                    
-                    <div class="flex items-center space-x-4">
-                        <button onclick="showNotifications()" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
-                            <i data-lucide="bell" class="w-5 h-5"></i>
-                            <span id="notif-badge" class="absolute top-1 right-1 w-2 h-2 bg-vna-red rounded-full risk-pulse"></span>
-                        </button>
-                        <button onclick="logout()" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white flex items-center space-x-2">
-                            <i data-lucide="log-out" class="w-4 h-4"></i>
-                            <span class="hidden sm:inline">Switch Role</span>
-                        </button>
+                    <div class="text-center space-y-2">
+                        <div class="text-4xl lg:text-5xl font-bold gradient-text counter" data-target="500">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">+ Enterprise Clients</div>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <div class="text-4xl lg:text-5xl font-bold gradient-text counter" data-target="50">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">+ Countries</div>
+                    </div>
+                    <div class="text-center space-y-2">
+                        <div class="text-4xl lg:text-5xl font-bold gradient-text counter" data-target="10">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">M+ Audits Processed</div>
                     </div>
                 </div>
             </div>
-        </nav>
+        </div>
+    </section>
 
-        <!-- Layout: Sidebar + Content -->
-        <div class="flex flex-1 pt-16">
-            
-            <!-- Sidebar Navigation -->
-            <aside id="sidebar" class="w-64 glass border-r border-gray-200 dark:border-gray-800 hidden lg:block fixed h-full overflow-y-auto pb-20">
-                <div class="p-4 space-y-1" id="sidebar-nav">
-                    <!-- Populated by JS based on role -->
+    <!-- Features Grid -->
+    <section id="features" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-4xl lg:text-5xl font-bold">Everything you need for <span class="gradient-text">compliance</span></h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Powerful features to manage your entire compliance lifecycle in one platform.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="users" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Role-Based Access</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Granular permissions and custom roles ensure the right people have access to the right data.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
                 </div>
-            </aside>
 
-            <!-- Mobile Nav Toggle -->
-            <button onclick="toggleMobileNav()" class="lg:hidden fixed bottom-4 right-4 z-50 w-14 h-14 bg-vna-blue text-white rounded-full shadow-lg flex items-center justify-center">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
+                <!-- Feature 2 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="clipboard-check" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Audit Management</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">End-to-end audit workflows with automated scheduling, evidence collection, and reporting.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
 
-            <!-- Main Content Area -->
-            <main class="flex-1 lg:ml-64 dashboard-content p-4 sm:p-6 lg:p-8">
-                <div class="max-w-7xl mx-auto">
-                    
-                    <!-- ==================== EXECUTIVE JOURNEY ==================== -->
-                    
-                    <!-- Exec: Home / Dashboard -->
-                    <div id="exec-home" class="page-section active space-y-6">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                            <div>
-                                <h1 class="text-3xl font-bold">Mall Risk Overview</h1>
-                                <p class="text-gray-500 mt-1">Last updated: <span id="last-updated">Just now</span></p>
+                <!-- Feature 3 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="store" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Store Tracking</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Real-time monitoring of compliance status across all your retail locations and facilities.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="file-text" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Template Workflows</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Pre-built and customizable templates for ISO, SOC2, GDPR, and industry-specific standards.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="brain" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">AI-Powered Insights</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Machine learning algorithms detect anomalies and predict compliance risks before they occur.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="glass rounded-2xl p-6 card-hover group cursor-pointer border border-white/20">
+                    <div class="w-12 h-12 bg-gradient-to-br from-rose-500 to-pink-400 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                        <i data-lucide="shield" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Enterprise Security</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Bank-grade encryption, SSO integration, and complete audit trails for maximum security.</p>
+                    <div class="mt-4 flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium group-hover:translate-x-2 transition-transform">
+                        <span>Learn more</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Dashboard Preview -->
+    <section id="dashboard" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-primary-50/50 to-transparent dark:via-primary-900/10"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl lg:text-5xl font-bold mb-4">Powerful <span class="gradient-text">Dashboard</span></h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Real-time visibility into your compliance posture</p>
+            </div>
+
+            <div class="glass rounded-3xl p-4 lg:p-8 shadow-2xl border border-white/20">
+                <div class="grid lg:grid-cols-4 gap-6">
+                    <!-- Sidebar -->
+                    <div class="hidden lg:block space-y-2">
+                        <div class="flex items-center space-x-3 p-3 rounded-xl bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300">
+                            <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                            <span class="font-medium">Overview</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <i data-lucide="clipboard-list" class="w-5 h-5 text-gray-500"></i>
+                            <span class="font-medium text-gray-600 dark:text-gray-400">Audits</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <i data-lucide="building-2" class="w-5 h-5 text-gray-500"></i>
+                            <span class="font-medium text-gray-600 dark:text-gray-400">Stores</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <i data-lucide="users" class="w-5 h-5 text-gray-500"></i>
+                            <span class="font-medium text-gray-600 dark:text-gray-400">Team</span>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                            <i data-lucide="settings" class="w-5 h-5 text-gray-500"></i>
+                            <span class="font-medium text-gray-600 dark:text-gray-400">Settings</span>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="lg:col-span-3 space-y-6">
+                        <!-- Top Stats -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-500">Compliance</span>
+                                    <span class="text-xs text-green-500 flex items-center">
+                                        <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i>+2.4%
+                                    </span>
+                                </div>
+                                <div class="text-2xl font-bold">94.2%</div>
                             </div>
-                            <button onclick="exportReport()" class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy transition-colors flex items-center space-x-2">
-                                <i data-lucide="download" class="w-4 h-4"></i>
-                                <span>Export Executive Summary</span>
-                            </button>
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-500">Active Audits</span>
+                                    <span class="text-xs text-blue-500">12</span>
+                                </div>
+                                <div class="text-2xl font-bold">24</div>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-500">Issues</span>
+                                    <span class="text-xs text-red-500 flex items-center">
+                                        <i data-lucide="alert-circle" class="w-3 h-3 mr-1"></i>3 urgent
+                                    </span>
+                                </div>
+                                <div class="text-2xl font-bold">7</div>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-medium text-gray-500">Stores</span>
+                                    <span class="text-xs text-gray-400">Total</span>
+                                </div>
+                                <div class="text-2xl font-bold">156</div>
+                            </div>
                         </div>
 
-                        <!-- Big Number: Overall Risk -->
-                        <div class="bg-gradient-to-br from-vna-blue to-vna-navy rounded-2xl p-8 text-white">
-                            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                                <div class="text-center md:text-left">
-                                    <div class="text-white/80 text-lg mb-2">Overall Mall Risk Score</div>
-                                    <div class="text-6xl font-bold" id="overall-risk-score">6.2<span class="text-3xl text-white/60">/10</span></div>
-                                    <div class="mt-2 inline-flex items-center px-3 py-1 bg-white/20 rounded-full text-sm">
-                                        <i data-lucide="trending-down" class="w-4 h-4 mr-1 text-green-300"></i>
-                                        <span>0.3 improvement vs last month</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4 text-center">
-                                    <div class="bg-white/10 rounded-xl p-4">
-                                        <div class="text-3xl font-bold" id="total-tenants">108</div>
-                                        <div class="text-sm text-white/70">Active Tenants</div>
-                                    </div>
-                                    <div class="bg-white/10 rounded-xl p-4">
-                                        <div class="text-3xl font-bold text-yellow-300" id="critical-count">5</div>
-                                        <div class="text-sm text-white/70">Critical Risk</div>
-                                    </div>
-                                    <div class="bg-white/10 rounded-xl p-4">
-                                        <div class="text-3xl font-bold text-orange-300" id="high-count">12</div>
-                                        <div class="text-sm text-white/70">High Risk</div>
-                                    </div>
-                                    <div class="bg-white/10 rounded-xl p-4">
-                                        <div class="text-3xl font-bold text-red-300" id="expiring-30-count">8</div>
-                                        <div class="text-sm text-white/70">Expiring ≤30d</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Highest Risk Precincts -->
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="font-bold text-lg flex items-center">
-                                        <i data-lucide="alert-triangle" class="w-5 h-5 mr-2 text-vna-red"></i>
-                                        Highest Risk Precincts
-                                    </h3>
-                                    <button onclick="navigateTo('precincts')" class="text-sm text-vna-blue hover:underline">View All</button>
-                                </div>
-                                <div class="space-y-3" id="top-precincts-list">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-
-                            <!-- Certifications Expiring -->
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="font-bold text-lg flex items-center">
-                                        <i data-lucide="calendar" class="w-5 h-5 mr-2 text-vna-gold"></i>
-                                        Certifications Expiring ≤30 Days
-                                    </h3>
-                                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-bold" id="expiring-badge">8</span>
-                                </div>
-                                <div class="space-y-3 max-h-[300px] overflow-y-auto" id="expiring-certs-list">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Compliance Trend -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <div class="flex justify-between items-center mb-4">
+                        <!-- Chart Area -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+                            <div class="flex items-center justify-between mb-6">
                                 <h3 class="font-bold text-lg">Compliance Trend</h3>
-                                <div class="flex space-x-2">
-                                    <button onclick="setTrendPeriod(30)" class="px-3 py-1 text-sm rounded-lg bg-vna-blue text-white">30d</button>
-                                    <button onclick="setTrendPeriod(90)" class="px-3 py-1 text-sm rounded-lg bg-gray-200 hover:bg-gray-300">90d</button>
-                                </div>
-                            </div>
-                            <div class="h-[250px]">
-                                <canvas id="complianceTrendChart"></canvas>
-                            </div>
-                        </div>
-
-                        <!-- Quick Actions -->
-                        <div class="bg-vna-gold/10 border border-vna-gold/30 rounded-2xl p-6">
-                            <h3 class="font-bold text-lg mb-4 text-vna-navy">Executive Actions Needed</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="exec-actions">
-                                <div class="bg-white rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onclick="navigateToPrecinct('portswood')">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="risk-badge risk-critical">CRITICAL</span>
-                                        <span class="text-xs text-gray-500">2h ago</span>
-                                    </div>
-                                    <div class="font-medium">Portswood Precinct</div>
-                                    <div class="text-sm text-gray-500 mt-1">Fire system offline - immediate intervention required</div>
-                                </div>
-                                <div class="bg-white rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onclick="navigateToTenant(5)">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="risk-badge risk-high">HIGH</span>
-                                        <span class="text-xs text-gray-500">5h ago</span>
-                                    </div>
-                                    <div class="font-medium">Ocean Basket</div>
-                                    <div class="text-sm text-gray-500 mt-1">Food safety cert expired - trading at risk</div>
-                                </div>
-                                <div class="bg-white rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow" onclick="navigateToPrecinct('breakwater')">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="risk-badge risk-medium">MEDIUM</span>
-                                        <span class="text-xs text-gray-500">1d ago</span>
-                                    </div>
-                                    <div class="font-medium">Breakwater Precinct</div>
-                                    <div class="text-sm text-gray-500 mt-1">3 tenants with compliance declining</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Exec: Precincts List -->
-                    <div id="exec-precincts" class="page-section space-y-6">
-                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">Dashboard</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            <span class="font-medium text-gray-900">All Precincts</span>
-                        </div>
-                        <h1 class="text-3xl font-bold mb-6">Precinct Risk Overview</h1>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="precincts-grid">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Exec: Single Precinct View -->
-                    <div id="exec-precinct-detail" class="page-section space-y-6">
-                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">Dashboard</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('precincts')">Precincts</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            <span class="font-medium text-gray-900" id="precinct-breadcrumb-name">Portswood</span>
-                        </div>
-
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                                <div>
-                                    <h1 class="text-3xl font-bold" id="precinct-detail-name">Portswood</h1>
-                                    <p class="text-gray-500 mt-1"><span id="precinct-tenant-count">12</span> tenants • Avg compliance: <span id="precinct-compliance" class="font-bold text-risk-critical">64%</span></p>
-                                </div>
-                                <div class="flex items-center space-x-4">
-                                    <div class="text-right">
-                                        <div class="text-sm text-gray-500">Precinct Risk Score</div>
-                                        <div class="text-4xl font-bold text-risk-critical" id="precinct-risk-score">8.4</div>
-                                    </div>
-                                    <div class="w-16 h-16 rounded-full border-4 border-red-500 flex items-center justify-center">
-                                        <i data-lucide="alert-triangle" class="w-8 h-8 text-red-500"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Open Actions -->
-                            <div class="mb-6">
-                                <h3 class="font-bold text-lg mb-3">Open Actions (<span id="precinct-open-actions">5</span>)</h3>
-                                <div class="space-y-2" id="precinct-actions-list">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Worst Tenants -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="font-bold text-lg mb-4">Tenants by Risk (Highest First)</h3>
-                            <div class="overflow-x-auto">
-                                <table class="w-full">
-                                    <thead class="bg-gray-50 dark:bg-gray-700 text-left">
-                                        <tr>
-                                            <th class="px-4 py-3 font-medium">Tenant</th>
-                                            <th class="px-4 py-3 font-medium">Category</th>
-                                            <th class="px-4 py-3 font-medium text-center">Risk Score</th>
-                                            <th class="px-4 py-3 font-medium text-center">Compliance</th>
-                                            <th class="px-4 py-3 font-medium">Last Audit</th>
-                                            <th class="px-4 py-3 font-medium">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="precinct-tenants-list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                                        <!-- Populated by JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Exec: Tenant Detail -->
-                    <div id="exec-tenant-detail" class="page-section space-y-6">
-                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">Dashboard</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('precincts')">Precincts</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            <span class="cursor-pointer hover:text-vna-blue" id="tenant-breadcrumb-precinct">Portswood</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            <span class="font-medium text-gray-900" id="tenant-breadcrumb-name">Ocean Basket</span>
-                        </div>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <!-- Left: Summary -->
-                            <div class="lg:col-span-2 space-y-6">
-                                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div>
-                                            <h1 class="text-3xl font-bold" id="exec-tenant-name">Ocean Basket</h1>
-                                            <p class="text-gray-500" id="exec-tenant-zone">Portswood • Restaurant</p>
-                                        </div>
-                                        <div class="text-right">
-                                            <div class="text-4xl font-bold text-risk-critical" id="exec-tenant-risk">8.9</div>
-                                            <div class="text-sm text-gray-500">Risk Score</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="grid grid-cols-3 gap-4 mb-6">
-                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                                            <div class="text-2xl font-bold text-risk-critical" id="exec-tenant-compliance">54%</div>
-                                            <div class="text-xs text-gray-500">Compliance</div>
-                                        </div>
-                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                                            <div class="text-2xl font-bold" id="exec-tenant-audits">12</div>
-                                            <div class="text-xs text-gray-500">Audits YTD</div>
-                                        </div>
-                                        <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                                            <div class="text-2xl font-bold text-vna-red" id="exec-tenant-open">3</div>
-                                            <div class="text-xs text-gray-500">Open Actions</div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Latest Audit -->
-                                    <div class="border-t pt-4">
-                                        <h3 class="font-bold mb-3">Latest Audit: <span id="latest-audit-date">Jan 20, 2024</span></h3>
-                                        <div class="space-y-2" id="latest-audit-failures">
-                                            <!-- Populated by JS -->
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Certificate Timeline -->
-                                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                                    <h3 class="font-bold text-lg mb-4">Certificate Timeline</h3>
-                                    <div class="relative space-y-6 pl-8" id="cert-timeline">
-                                        <!-- Populated by JS -->
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Right: Actions -->
-                            <div class="space-y-6">
-                                <div class="bg-vna-red/10 border border-vna-red/30 rounded-2xl p-6">
-                                    <h3 class="font-bold text-vna-red mb-4 flex items-center">
-                                        <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
-                                        Open Corrective Actions
-                                    </h3>
-                                    <div class="space-y-3" id="tenant-actions-list">
-                                        <!-- Populated by JS -->
-                                    </div>
-                                </div>
-
-                                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                                    <h3 class="font-bold mb-4">Contact</h3>
-                                    <div class="space-y-3 text-sm">
-                                        <div class="flex items-center space-x-3">
-                                            <i data-lucide="user" class="w-4 h-4 text-gray-400"></i>
-                                            <span>Store Manager: Sarah Johnson</span>
-                                        </div>
-                                        <div class="flex items-center space-x-3">
-                                            <i data-lucide="mail" class="w-4 h-4 text-gray-400"></i>
-                                            <span>sarah@oceanbasket.co.za</span>
-                                        </div>
-                                        <div class="flex items-center space-x-3">
-                                            <i data-lucide="phone" class="w-4 h-4 text-gray-400"></i>
-                                            <span>+27 21 123 4567</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ==================== MANAGER JOURNEY ==================== -->
-                    
-                    <!-- Manager: Home / Priorities -->
-                    <div id="mgr-home" class="page-section space-y-6">
-                        <h1 class="text-3xl font-bold">Today's Priorities</h1>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-6">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-red-700 font-medium">Expiring Today</span>
-                                    <span class="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold">3</span>
-                                </div>
-                                <div class="text-3xl font-bold text-red-700">Certificates</div>
-                                <button onclick="navigateTo('certificates')" class="mt-3 text-sm text-red-600 hover:underline">View all →</button>
-                            </div>
-                            
-                            <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-2xl p-6">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-orange-700 font-medium">Overdue</span>
-                                    <span class="w-8 h-8 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold">5</span>
-                                </div>
-                                <div class="text-3xl font-bold text-orange-700">Actions</div>
-                                <button onclick="navigateTo('actions')" class="mt-3 text-sm text-orange-600 hover:underline">View all →</button>
-                            </div>
-                            
-                            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-blue-700 font-medium">Scheduled</span>
-                                    <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">8</span>
-                                </div>
-                                <div class="text-3xl font-bold text-blue-700">Audits Today</div>
-                                <button onclick="navigateTo('audits')" class="mt-3 text-sm text-blue-600 hover:underline">Schedule →</button>
-                            </div>
-                        </div>
-
-                        <!-- Team Workload -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="font-bold text-lg mb-4">Team Workload</h3>
-                            <div class="space-y-4" id="team-workload">
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-vna-blue rounded-full flex items-center justify-center text-white font-bold">JD</div>
-                                        <div>
-                                            <div class="font-medium">John Doe</div>
-                                            <div class="text-sm text-gray-500">Senior Officer</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-4 text-sm">
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded">3 audits today</span>
-                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded">2 pending review</span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-10 h-10 bg-vna-gold rounded-full flex items-center justify-center text-white font-bold">SM</div>
-                                        <div>
-                                            <div class="font-medium">Sarah Miller</div>
-                                            <div class="text-sm text-gray-500">Compliance Officer</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-4 text-sm">
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded">2 audits today</span>
-                                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded">1 completed</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Quick Schedule -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="font-bold text-lg mb-4">Quick Schedule Audit</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <select id="quick-tenant" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
-                                    <option>Select Tenant...</option>
+                                <select class="text-sm border rounded-lg px-3 py-1 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
+                                    <option>Last 30 days</option>
+                                    <option>Last 90 days</option>
+                                    <option>This year</option>
                                 </select>
-                                <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
-                                    <option>F&B Template</option>
-                                    <option>Retail Template</option>
-                                    <option>Late-night Template</option>
-                                </select>
-                                <select class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
-                                    <option>Assign Officer...</option>
-                                    <option>John Doe</option>
-                                    <option>Sarah Miller</option>
-                                </select>
-                                <input type="date" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
                             </div>
-                            <button onclick="scheduleAudit()" class="mt-4 px-6 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Schedule Audit</button>
-                        </div>
-                    </div>
-
-                    <!-- Manager: Tenants -->
-                    <div id="mgr-tenants" class="page-section space-y-6">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                            <h1 class="text-3xl font-bold">All Tenants</h1>
-                            <div class="flex space-x-2">
-                                <button onclick="filterTenants('all')" class="px-4 py-2 bg-vna-blue text-white rounded-lg text-sm">All</button>
-                                <button onclick="filterTenants('high-risk')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm">High Risk</button>
-                                <button onclick="filterTenants('expiring')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm">Expiring Soon</button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-wrap gap-4">
-                                <select onchange="groupTenants(this.value)" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                    <option value="precinct">Group by: Precinct</option>
-                                    <option value="category">Group by: Category</option>
-                                    <option value="risk">Group by: Risk Level</option>
-                                </select>
-                                <input type="text" placeholder="Search tenants..." class="px-3 py-2 border border-gray-300 rounded-lg text-sm flex-1 min-w-[200px]">
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full">
-                                    <thead class="bg-gray-50 dark:bg-gray-700 text-left">
-                                        <tr>
-                                            <th class="px-4 py-3 font-medium">Tenant</th>
-                                            <th class="px-4 py-3 font-medium">Precinct</th>
-                                            <th class="px-4 py-3 font-medium">Category</th>
-                                            <th class="px-4 py-3 font-medium text-center">Risk</th>
-                                            <th class="px-4 py-3 font-medium text-center">Compliance</th>
-                                            <th class="px-4 py-3 font-medium">Next Cert Expiry</th>
-                                            <th class="px-4 py-3 font-medium">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="mgr-tenants-list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                                        <!-- Populated by JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Manager: Audits -->
-                    <div id="mgr-audits" class="page-section space-y-6">
-                        <h1 class="text-3xl font-bold">Audit Management</h1>
-                        
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <!-- Pending Review -->
-                            <div class="lg:col-span-2 space-y-4">
-                                <h3 class="font-bold text-lg">Pending Review (<span id="pending-count">3</span>)</h3>
-                                <div id="pending-audits-list" class="space-y-3">
-                                    <!-- Populated by JS -->
+                            <div class="h-64 flex items-end justify-between space-x-2">
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 60%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">60%</div>
                                 </div>
-                            </div>
-
-                            <!-- Schedule New -->
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-fit">
-                                <h3 class="font-bold text-lg mb-4">Schedule New Audit</h3>
-                                <form onsubmit="event.preventDefault(); scheduleFullAudit();" class="space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Tenant</label>
-                                        <select id="new-audit-tenant" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                            <option>Select...</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Template</label>
-                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                            <option>F&B Full Audit</option>
-                                            <option>Retail Safety Audit</option>
-                                            <option>Late-night Compliance</option>
-                                            <option>Fire Safety Only</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Assign To</label>
-                                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                            <option>John Doe</option>
-                                            <option>Sarah Miller</option>
-                                            <option>Unassigned</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium mb-1">Due Date</label>
-                                        <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                                    </div>
-                                    <button type="submit" class="w-full py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Create Audit</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ==================== OFFICER JOURNEY ==================== -->
-                    
-                    <!-- Officer: Home -->
-                    <div id="officer-home" class="page-section space-y-6">
-                        <div class="flex justify-between items-center">
-                            <h1 class="text-3xl font-bold">My Work</h1>
-                            <span class="text-sm text-gray-500">Officer: John Doe</span>
-                        </div>
-
-                        <!-- Today's Assignments -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="font-bold text-lg mb-4 flex items-center">
-                                <i data-lucide="calendar" class="w-5 h-5 mr-2 text-vna-blue"></i>
-                                Today's Audits (3)
-                            </h3>
-                            <div class="space-y-3" id="officer-today-list">
-                                <div class="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-l-4 border-vna-blue">
-                                    <div>
-                                        <div class="font-bold">Woolworths</div>
-                                        <div class="text-sm text-gray-500">Victoria Wharf • 10:00 AM</div>
-                                    </div>
-                                    <button onclick="startOfficerAudit(1)" class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Start</button>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 75%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">75%</div>
                                 </div>
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border-l-4 border-gray-400">
-                                    <div>
-                                        <div class="font-bold">H&M</div>
-                                        <div class="text-sm text-gray-500">Clock Tower • 11:30 AM</div>
-                                    </div>
-                                    <button onclick="startOfficerAudit(3)" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Start</button>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 85%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">85%</div>
                                 </div>
-                                <div class="flex items-center justify-between p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-l-4 border-red-500">
-                                    <div>
-                                        <div class="font-bold">Ocean Basket</div>
-                                        <div class="text-sm text-gray-500">Portswood • 02:00 PM • URGENT</div>
-                                    </div>
-                                    <button onclick="startOfficerAudit(5)" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Start</button>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 70%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">70%</div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- Drafts -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="font-bold text-lg mb-4">Draft Audits (1)</h3>
-                            <div class="flex items-center justify-between p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
-                                <div>
-                                    <div class="font-bold">Tiger's Milk</div>
-                                    <div class="text-sm text-gray-500">Water Shed • Saved 2h ago • 60% complete</div>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 90%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">90%</div>
                                 </div>
-                                <button onclick="resumeDraft(6)" class="px-4 py-2 bg-vna-gold text-white rounded-lg hover:bg-yellow-600">Resume</button>
-                            </div>
-                        </div>
-
-                        <!-- This Week -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="font-bold text-lg mb-4">This Week (5)</h3>
-                            <div class="space-y-2 text-sm">
-                                <div class="flex justify-between p-3 border-b border-gray-100">
-                                    <span>Thursday: Cape Union Mart, News Cafe</span>
-                                    <span class="text-gray-500">Pierhead, Clock Tower</span>
-                                </div>
-                                <div class="flex justify-between p-3">
-                                    <span>Friday: Sunglass Hut, Ster-Kinekor</span>
-                                    <span class="text-gray-500">Alfred Mall, Canal Walk</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Officer: Conduct Audit -->
-                    <div id="officer-audit" class="page-section space-y-6">
-                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">My Work</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            <span class="font-medium text-gray-900">Conduct Audit</span>
-                        </div>
-
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 sticky top-20 z-30">
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                                <div>
-                                    <h1 class="text-2xl font-bold" id="audit-tenant-name">Woolworths</h1>
-                                    <p class="text-gray-500" id="audit-tenant-zone">Victoria Wharf • F&B Full Audit</p>
-                                </div>
-                                <div class="flex items-center space-x-4">
-                                    <div class="text-right">
-                                        <div class="text-sm text-gray-500">Progress</div>
-                                        <div class="text-xl font-bold" id="audit-progress">0/12</div>
-                                    </div>
-                                    <div class="text-right">
-                                        <div class="text-sm text-gray-500">Score</div>
-                                        <div class="text-2xl font-bold text-gray-400" id="audit-live-score">--</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-4 w-full bg-gray-200 rounded-full h-2">
-                                <div id="audit-progress-bar" class="bg-vna-blue h-2 rounded-full transition-all" style="width: 0%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Checklist -->
-                        <div class="space-y-6" id="audit-checklist-container">
-                            <!-- Populated by JS -->
-                        </div>
-
-                        <div class="flex justify-between sticky bottom-4 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
-                            <button onclick="saveDraft()" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center space-x-2">
-                                <i data-lucide="save" class="w-4 h-4"></i>
-                                <span>Save Draft</span>
-                            </button>
-                            <button onclick="submitAudit()" class="px-6 py-3 bg-vna-blue text-white rounded-lg hover:bg-vna-navy flex items-center space-x-2">
-                                <i data-lucide="check-circle" class="w-4 h-4"></i>
-                                <span>Submit Audit</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- ==================== TENANT JOURNEY ==================== -->
-                    
-                    <!-- Tenant: Home -->
-                    <div id="tenant-home" class="page-section space-y-6">
-                        <div class="flex justify-between items-center">
-                            <h1 class="text-3xl font-bold">My Store Compliance</h1>
-                            <span class="px-3 py-1 bg-vna-blue text-white rounded-full text-sm">Ocean Basket</span>
-                        </div>
-
-                        <!-- Status Card -->
-                        <div class="bg-gradient-to-br from-vna-red to-red-700 rounded-2xl p-8 text-white">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <div class="text-red-100 mb-2">Current Status</div>
-                                    <div class="text-4xl font-bold mb-2">AT RISK</div>
-                                    <div class="text-red-100">3 corrective actions required</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-6xl font-bold">54<span class="text-2xl">%</span></div>
-                                    <div class="text-red-100">Compliance Score</div>
-                                </div>
-                            </div>
-                            <div class="mt-6 flex space-x-4">
-                                <button onclick="navigateTo('tenant-actions')" class="px-4 py-2 bg-white text-red-700 rounded-lg font-medium hover:bg-red-50">View Actions</button>
-                                <button onclick="navigateTo('tenant-certs')" class="px-4 py-2 bg-white/20 text-white rounded-lg font-medium hover:bg-white/30">Upload Certificate</button>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- What's Due -->
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                                <h3 class="font-bold text-lg mb-4 text-vna-red flex items-center">
-                                    <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
-                                    Immediate Action Required
-                                </h3>
-                                <div class="space-y-3" id="tenant-urgent-list">
-                                    <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-l-4 border-vna-red">
-                                        <div class="font-medium text-vna-red">Food Safety Certificate EXPIRED</div>
-                                        <div class="text-sm text-gray-600 mt-1">Expired: Feb 15, 2024 • Trading may be suspended</div>
-                                        <button class="mt-2 text-sm text-vna-red underline">Upload renewal →</button>
-                                    </div>
-                                    <div class="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-xl border-l-4 border-orange-500">
-                                        <div class="font-medium text-orange-700">Fire Safety Inspection Due</div>
-                                        <div class="text-sm text-gray-600 mt-1">Due: Jan 30, 2024 • 15 days overdue</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Upcoming -->
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                                <h3 class="font-bold text-lg mb-4">Coming Up</h3>
-                                <div class="space-y-3">
-                                    <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                        <div>
-                                            <div class="font-medium">Liquor License Renewal</div>
-                                            <div class="text-sm text-gray-500">Expires: Jun 30, 2024</div>
-                                        </div>
-                                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">120 days</span>
-                                    </div>
-                                    <div class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                        <div>
-                                            <div class="font-medium">Routine Audit Scheduled</div>
-                                            <div class="text-sm text-gray-500">Mar 15, 2024 • 10:00 AM</div>
-                                        </div>
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">Scheduled</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- History -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                            <h3 class="font-bold text-lg mb-4">Audit History</h3>
-                            <div class="relative pl-8 space-y-6" id="tenant-timeline">
-                                <div class="timeline-line"></div>
-                                <div class="relative">
-                                    <div class="absolute -left-8 w-4 h-4 bg-red-500 rounded-full border-4 border-white dark:border-gray-800"></div>
-                                    <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <div class="font-bold text-red-700">FAILED AUDIT</div>
-                                                <div class="text-sm text-gray-600">Jan 20, 2024 • Score: 45%</div>
-                                                <div class="mt-2 text-sm">3 critical failures: Temperature logs, Hygiene standards, Pest control</div>
-                                            </div>
-                                            <button class="text-sm text-vna-blue hover:underline">View Report</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="relative">
-                                    <div class="absolute -left-8 w-4 h-4 bg-yellow-500 rounded-full border-4 border-white dark:border-gray-800"></div>
-                                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <div class="font-bold">Corrective Action Completed</div>
-                                                <div class="text-sm text-gray-600">Jan 15, 2024 • Fire exit signage fixed</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="relative">
-                                    <div class="absolute -left-8 w-4 h-4 bg-green-500 rounded-full border-4 border-white dark:border-gray-800"></div>
-                                    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <div class="font-bold text-green-700">PASSED AUDIT</div>
-                                                <div class="text-sm text-gray-600">Dec 10, 2023 • Score: 88%</div>
-                                            </div>
-                                            <button class="text-sm text-vna-blue hover:underline">View Report</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tenant: Actions -->
-                    <div id="tenant-actions" class="page-section space-y-6">
-                        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-                            <span class="cursor-pointer hover:text-vna-blue" onclick="navigateTo('home')">Dashboard</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                            <span class="font-medium text-gray-900">Corrective Actions</span>
-                        </div>
-                        
-                        <h1 class="text-3xl font-bold">Open Actions (3)</h1>
-                        
-                        <div class="space-y-4" id="tenant-actions-list">
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border-l-4 border-vna-red">
-                                <div class="flex justify-between items-start mb-4">
-                                    <div>
-                                        <div class="risk-badge risk-critical mb-2">OVERDUE</div>
-                                        <h3 class="font-bold text-lg">Restore Food Safety Certificate</h3>
-                                        <p class="text-gray-500 text-sm mt-1">Raised: Jan 20, 2024 • Due: Jan 27, 2024</p>
-                                    </div>
-                                    <span class="text-vna-red font-bold">7 days overdue</span>
-                                </div>
-                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
-                                    <p class="text-sm">Certificate expired Feb 15. Upload renewed certificate from City Health or trading may be suspended.</p>
-                                </div>
-                                <div class="flex space-x-3">
-                                    <button class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Upload Document</button>
-                                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Request Extension</button>
-                                </div>
-                            </div>
-
-                            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border-l-4 border-orange-500">
-                                <div class="flex justify-between items-start mb-4">
-                                    <div>
-                                        <div class="risk-badge risk-high mb-2">HIGH</div>
-                                        <h3 class="font-bold text-lg">Fix Temperature Monitoring</h3>
-                                        <p class="text-gray-500 text-sm mt-1">Raised: Jan 20, 2024 • Due: Feb 3, 2024</p>
-                                    </div>
-                                    <span class="text-orange-600 font-bold">Due in 3 days</span>
-                                </div>
-                                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
-                                    <p class="text-sm">Temperature logs missing for 3 days. Install automated monitoring system or maintain manual logs every 2 hours.</p>
-                                </div>
-                                <div class="flex space-x-3">
-                                    <button class="px-4 py-2 bg-vna-blue text-white rounded-lg hover:bg-vna-navy">Mark Complete</button>
-                                    <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Add Comment</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <script>
-        // Initialize
-        lucide.createIcons();
-
-        // Data Store
-        const data = {
-            precincts: [
-                { id: 'victoria', name: 'Victoria Wharf', tenants: 45, risk: 3.2, compliance: 94, trend: 'stable' },
-                { id: 'clock', name: 'Clock Tower', tenants: 18, risk: 5.8, compliance: 81, trend: 'up' },
-                { id: 'breakwater', name: 'Breakwater', tenants: 12, risk: 7.4, compliance: 72, trend: 'up' },
-                { id: 'portswood', name: 'Portswood', tenants: 8, risk: 8.4, compliance: 64, trend: 'up' },
-                { id: 'shed', name: 'Water Shed', tenants: 15, risk: 2.9, compliance: 95, trend: 'stable' },
-                { id: 'alfred', name: 'Alfred Mall', tenants: 6, risk: 4.2, compliance: 88, trend: 'down' },
-                { id: 'pierhead', name: 'Pierhead', tenants: 4, risk: 3.1, compliance: 91, trend: 'stable' }
-            ],
-            tenants: stores, // Using the stores array from previous
-            currentUser: null,
-            currentView: null
-        };
-
-        // Login System
-        function login(role) {
-            data.currentUser = role;
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-            
-            const roleNames = {
-                'executive': 'Mall Leadership',
-                'manager': 'Operations Manager',
-                'officer': 'Compliance Officer',
-                'tenant': 'Store Portal'
-            };
-            document.getElementById('user-role-display').textContent = roleNames[role];
-            
-            setupSidebar(role);
-            navigateTo('home');
-        }
-
-        function logout() {
-            location.reload();
-        }
-
-        // Sidebar Setup
-        function setupSidebar(role) {
-            const nav = document.getElementById('sidebar-nav');
-            nav.innerHTML = '';
-            
-            const menus = {
-                'executive': [
-                    { id: 'home', label: 'Risk Overview', icon: 'layout-dashboard' },
-                    { id: 'precincts', label: 'All Precincts', icon: 'map-pin' },
-                    { id: 'tenants', label: 'Tenant Directory', icon: 'building-2' }
-                ],
-                'manager': [
-                    { id: 'home', label: 'Priorities', icon: 'alert-circle' },
-                    { id: 'tenants', label: 'Tenants', icon: 'building-2' },
-                    { id: 'audits', label: 'Audits', icon: 'clipboard-check' },
-                    { id: 'certificates', label: 'Certificates', icon: 'file-check' },
-                    { id: 'actions', label: 'Actions', icon: 'check-square' },
-                    { id: 'team', label: 'Team', icon: 'users' }
-                ],
-                'officer': [
-                    { id: 'home', label: 'My Work', icon: 'clipboard-list' },
-                    { id: 'drafts', label: 'Drafts', icon: 'file-edit' },
-                    { id: 'history', label: 'History', icon: 'history' }
-                ],
-                'tenant': [
-                    { id: 'home', label: 'Dashboard', icon: 'layout-dashboard' },
-                    { id: 'actions', label: 'Actions', icon: 'alert-circle' },
-                    { id: 'certificates', label: 'Certificates', icon: 'file-check' },
-                    { id: 'audits', label: 'Audit History', icon: 'clipboard-check' }
-                ]
-            };
-            
-            menus[role].forEach(item => {
-                nav.innerHTML += `
-                    <div class="nav-item" onclick="navigateTo('${item.id}')" data-page="${item.id}">
-                        <i data-lucide="${item.icon}" class="w-5 h-5"></i>
-                        <span>${item.label}</span>
-                    </div>
-                `;
-            });
-            
-            lucide.createIcons();
-        }
-
-        // Navigation
-        function navigateTo(page) {
-            // Hide all pages
-            document.querySelectorAll('.page-section').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            // Show target page with role prefix
-            const role = data.currentUser;
-            let targetId = '';
-            
-            if (role === 'executive') {
-                if (page === 'home') targetId = 'exec-home';
-                else if (page === 'precincts') targetId = 'exec-precincts';
-                else if (page === 'tenants') targetId = 'mgr-tenants'; // Shared
-            } else if (role === 'manager') {
-                if (page === 'home') targetId = 'mgr-home';
-                else if (page === 'tenants') targetId = 'mgr-tenants';
-                else if (page === 'audits') targetId = 'mgr-audits';
-            } else if (role === 'officer') {
-                if (page === 'home') targetId = 'officer-home';
-            } else if (role === 'tenant') {
-                if (page === 'home') targetId = 'tenant-home';
-                else if (page === 'actions') targetId = 'tenant-actions';
-            }
-            
-            const target = document.getElementById(targetId);
-            if (target) {
-                target.classList.add('active');
-                window.scrollTo(0, 0);
-            }
-            
-            // Update sidebar active state
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.classList.remove('active');
-                if (el.dataset.page === page) el.classList.add('active');
-            });
-            
-            // Initialize page-specific content
-            if (targetId === 'exec-home') initExecHome();
-            else if (targetId === 'exec-precincts') initExecPrecincts();
-            else if (targetId === 'mgr-tenants') initMgrTenants();
-            else if (targetId === 'mgr-audits') initMgrAudits();
-        }
-
-        function navigateToPrecinct(precinctId) {
-            const precinct = data.precincts.find(p => p.id === precinctId);
-            if (!precinct) return;
-            
-            document.getElementById('precinct-breadcrumb-name').textContent = precinct.name;
-            document.getElementById('precinct-detail-name').textContent = precinct.name;
-            document.getElementById('precinct-tenant-count').textContent = precinct.tenants;
-            document.getElementById('precinct-compliance').textContent = precinct.compliance + '%';
-            document.getElementById('precinct-compliance').className = 'font-bold ' + (precinct.compliance > 80 ? 'text-risk-low' : precinct.compliance > 60 ? 'text-risk-medium' : 'text-risk-critical');
-            document.getElementById('precinct-risk-score').textContent = precinct.risk;
-            document.getElementById('precinct-risk-score').className = 'text-4xl font-bold ' + (precinct.risk > 7 ? 'text-risk-critical' : precinct.risk > 5 ? 'text-risk-high' : 'text-risk-low');
-            
-            // Populate tenants list for this precinct
-            const tbody = document.getElementById('precinct-tenants-list');
-            tbody.innerHTML = '';
-            const precinctTenants = data.tenants.filter(t => t.zone.toLowerCase().includes(precinct.name.toLowerCase().split(' ')[0]));
-            
-            precinctTenants.sort((a, b) => b.riskScore - a.riskScore).forEach(tenant => {
-                const statusClass = tenant.status === 'good' ? 'risk-low' : tenant.status === 'warning' ? 'risk-medium' : 'risk-critical';
-                const statusText = tenant.status === 'good' ? 'Compliant' : tenant.status === 'warning' ? 'Attention' : 'Critical';
-                
-                tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer" onclick="navigateToTenant(${tenant.id})">
-                        <td class="px-4 py-3 font-medium">${tenant.name}</td>
-                        <td class="px-4 py-3 text-gray-500">${tenant.type}</td>
-                        <td class="px-4 py-3 text-center font-bold ${tenant.riskScore > 7 ? 'text-red-600' : tenant.riskScore > 5 ? 'text-orange-600' : 'text-green-600'}">${tenant.riskScore}</td>
-                        <td class="px-4 py-3 text-center">${tenant.compliance}%</td>
-                        <td class="px-4 py-3 text-gray-500">${tenant.lastAudit}</td>
-                        <td class="px-4 py-3"><span class="risk-badge ${statusClass}">${statusText}</span></td>
-                    </tr>
-                `;
-            });
-            
-            // Show page
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('exec-precinct-detail').classList.add('active');
-            window.scrollTo(0, 0);
-        }
-
-        function navigateToTenant(tenantId) {
-            const tenant = data.tenants.find(t => t.id === tenantId);
-            if (!tenant) return;
-            
-            // Update breadcrumbs
-            document.getElementById('tenant-breadcrumb-name').textContent = tenant.name;
-            document.getElementById('tenant-breadcrumb-precinct').textContent = tenant.zone;
-            
-            // Update content
-            document.getElementById('exec-tenant-name').textContent = tenant.name;
-            document.getElementById('exec-tenant-zone').textContent = `${tenant.zone} • ${tenant.type}`;
-            document.getElementById('exec-tenant-risk').textContent = tenant.riskScore;
-            document.getElementById('exec-tenant-risk').className = 'text-4xl font-bold ' + (tenant.riskScore > 7 ? 'text-risk-critical' : tenant.riskScore > 5 ? 'text-risk-high' : 'text-risk-low');
-            document.getElementById('exec-tenant-compliance').textContent = tenant.compliance + '%';
-            document.getElementById('exec-tenant-compliance').className = 'text-2xl font-bold ' + (tenant.compliance > 80 ? 'text-risk-low' : tenant.compliance > 60 ? 'text-risk-medium' : 'text-risk-critical');
-            
-            // Latest audit failures
-            const failuresDiv = document.getElementById('latest-audit-failures');
-            failuresDiv.innerHTML = '';
-            if (tenant.riskScore > 7) {
-                failuresDiv.innerHTML = `
-                    <div class="flex items-start space-x-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 mt-0.5"></i>
-                        <div>
-                            <div class="font-medium text-red-700">Temperature logs missing (3 days)</div>
-                            <div class="text-sm text-gray-600">Critical for food safety compliance</div>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                        <i data-lucide="x-circle" class="w-5 h-5 text-red-500 mt-0.5"></i>
-                        <div>
-                            <div class="font-medium text-red-700">Fire exit obstructed</div>
-                            <div class="text-sm text-gray-600">Safety hazard - immediate action</div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                failuresDiv.innerHTML = '<p class="text-gray-500">No critical failures in latest audit.</p>';
-            }
-            
-            // Certificate timeline
-            const timeline = document.getElementById('cert-timeline');
-            timeline.innerHTML = '<div class="timeline-line"></div>';
-            tenant.certifications.forEach((cert, idx) => {
-                const daysUntil = Math.ceil((new Date(cert.expiry) - new Date()) / (1000 * 60 * 60 * 24));
-                const color = daysUntil < 0 ? 'bg-red-500' : daysUntil < 30 ? 'bg-orange-500' : 'bg-green-500';
-                const status = daysUntil < 0 ? 'EXPIRED' : daysUntil < 30 ? 'EXPIRING SOON' : 'Valid';
-                
-                timeline.innerHTML += `
-                    <div class="relative">
-                        <div class="absolute -left-8 w-4 h-4 ${color} rounded-full border-4 border-white dark:border-gray-800"></div>
-                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <div class="font-bold">${cert.name}</div>
-                                    <div class="text-sm text-gray-500">Expires: ${cert.expiry}</div>
-                                    <span class="inline-block mt-2 px-2 py-1 rounded text-xs ${daysUntil < 0 ? 'bg-red-100 text-red-700' : daysUntil < 30 ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'}">${status}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            // Actions
-            const actionsDiv = document.getElementById('tenant-actions-list');
-            actionsDiv.innerHTML = '';
-            if (tenant.riskScore > 7) {
-                actionsDiv.innerHTML = `
-                    <div class="bg-white rounded-xl p-4 shadow-sm">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="risk-badge risk-critical">CRITICAL</span>
-                            <span class="text-xs text-gray-500">Due: Jan 27</span>
-                        </div>
-                        <div class="font-medium mb-1">Restore Food Safety Certificate</div>
-                        <div class="text-sm text-gray-600 mb-3">Owner: Store Manager • 7 days overdue</div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-red-500 h-2 rounded-full" style="width: 0%"></div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl p-4 shadow-sm">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="risk-badge risk-high">HIGH</span>
-                            <span class="text-xs text-gray-500">Due: Feb 3</span>
-                        </div>
-                        <div class="font-medium mb-1">Fix Temperature Monitoring</div>
-                        <div class="text-sm text-gray-600 mb-3">Owner: Store Manager • Due in 3 days</div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-orange-500 h-2 rounded-full" style="width: 30%"></div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            lucide.createIcons();
-            
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('exec-tenant-detail').classList.add('active');
-            window.scrollTo(0, 0);
-        }
-
-        // Initialize Executive Home
-        function initExecHome() {
-            // Top precincts
-            const topPrecincts = [...data.precincts].sort((a, b) => b.risk - a.risk).slice(0, 3);
-            const precinctsList = document.getElementById('top-precincts-list');
-            precinctsList.innerHTML = '';
-            topPrecincts.forEach(p => {
-                precinctsList.innerHTML += `
-                    <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors" onclick="navigateToPrecinct('${p.id}')">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-full ${p.risk > 7 ? 'bg-red-100 text-red-600' : p.risk > 5 ? 'bg-orange-100 text-orange-600' : 'bg-yellow-100 text-yellow-600'} flex items-center justify-center font-bold">
-                                ${p.risk}
-                            </div>
-                            <div>
-                                <div class="font-medium">${p.name}</div>
-                                <div class="text-sm text-gray-500">${p.tenants} tenants • ${p.compliance}% compliance</div>
-                            </div>
-                        </div>
-                        <i data-lucide="chevron-right" class="w-5 h-5 text-gray-400"></i>
-                    </div>
-                `;
-            });
-            
-            // Expiring certs
-            const expiringList = document.getElementById('expiring-certs-list');
-            expiringList.innerHTML = '';
-            let expiringCount = 0;
-            data.tenants.forEach(t => {
-                t.certifications.forEach(c => {
-                    const days = Math.ceil((new Date(c.expiry) - new Date()) / (1000 * 60 * 60 * 24));
-                    if (days < 30) {
-                        expiringCount++;
-                        expiringList.innerHTML += `
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                <div>
-                                    <div class="font-medium text-sm">${t.name}</div>
-                                    <div class="text-xs text-gray-500">${c.name}</div>
-                                </div>
-                                <span class="text-xs font-bold ${days < 0 ? 'text-red-600' : days < 7 ? 'text-orange-600' : 'text-yellow-600'}">
-                                    ${days < 0 ? 'EXPIRED' : days + ' days'}
-                                </span>
-                            </div>
-                        `;
-                    }
-                });
-            });
-            document.getElementById('expiring-30-count').textContent = expiringCount;
-            document.getElementById('expiring-badge').textContent = expiringCount;
-            
-            // Chart
-            const ctx = document.getElementById('complianceTrendChart');
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                        datasets: [{
-                            label: 'Mall Compliance %',
-                            data: [84, 85, 86, 87],
-                            borderColor: '#003366',
-                            backgroundColor: 'rgba(0,51,102,0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { min: 70, max: 100 } }
-                    }
-                });
-            }
-            
-            lucide.createIcons();
-        }
-
-        function initExecPrecincts() {
-            const grid = document.getElementById('precincts-grid');
-            grid.innerHTML = '';
-            data.precincts.forEach(p => {
-                grid.innerHTML += `
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer card-hover" onclick="navigateToPrecinct('${p.id}')">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="font-bold text-lg">${p.name}</h3>
-                            <span class="text-2xl font-bold ${p.risk > 7 ? 'text-red-600' : p.risk > 5 ? 'text-orange-600' : 'text-green-600'}">${p.risk}</span>
-                        </div>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Tenants</span>
-                                <span class="font-medium">${p.tenants}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Compliance</span>
-                                <span class="font-medium ${p.compliance > 80 ? 'text-green-600' : p.compliance > 60 ? 'text-yellow-600' : 'text-red-600'}">${p.compliance}%</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Trend</span>
-                                <span class="flex items-center ${p.trend === 'up' ? 'text-red-600' : p.trend === 'down' ? 'text-green-600' : 'text-gray-600'}">
-                                    <i data-lucide="trending-${p.trend}" class="w-4 h-4 mr-1"></i>
-                                    ${p.trend === 'up' ? 'Rising' : p.trend === 'down' ? 'Improving' : 'Stable'}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            lucide.createIcons();
-        }
-
-        function initMgrTenants() {
-            const tbody = document.getElementById('mgr-tenants-list');
-            tbody.innerHTML = '';
-            data.tenants.forEach(t => {
-                const nextExpiry = t.certifications.sort((a, b) => new Date(a.expiry) - new Date(b.expiry))[0];
-                const daysUntil = Math.ceil((new Date(nextExpiry.expiry) - new Date()) / (1000 * 60 * 60 * 24));
-                
-                tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td class="px-4 py-3 font-medium">${t.name}</td>
-                        <td class="px-4 py-3 text-gray-500">${t.zone}</td>
-                        <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 rounded text-xs">${t.type}</span></td>
-                        <td class="px-4 py-3 text-center"><span class="font-bold ${t.riskScore > 7 ? 'text-red-600' : t.riskScore > 5 ? 'text-orange-600' : 'text-green-600'}">${t.riskScore}</span></td>
-                        <td class="px-4 py-3 text-center">${t.compliance}%</td>
-                        <td class="px-4 py-3">
-                            <span class="text-xs ${daysUntil < 30 ? 'text-red-600 font-bold' : 'text-gray-500'}">
-                                ${nextExpiry.name} (${daysUntil}d)
-                            </span>
-                        </td>
-                        <td class="px-4 py-3">
-                            <button class="text-vna-blue hover:underline text-sm" onclick="navigateToTenant(${t.id})">View</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function initMgrAudits() {
-            const pending = document.getElementById('pending-audits-list');
-            pending.innerHTML = `
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="font-bold">Woolworths - Routine Audit</div>
-                            <div class="text-sm text-gray-500">Submitted by John Doe • Feb 15, 10:30 AM</div>
-                            <div class="mt-2 flex space-x-2">
-                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">PASS (94%)</span>
-                                <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">2 minor findings</span>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">Review</button>
-                            <button class="px-3 py-1 bg-vna-blue text-white rounded text-sm hover:bg-vna-navy">Approve</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="font-bold">Cotton On - Follow-up</div>
-                            <div class="text-sm text-gray-500">Submitted by Sarah Miller • Feb 14, 3:45 PM</div>
-                            <div class="mt-2 flex space-x-2">
-                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">FAIL (54%)</span>
-                                <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">3 critical actions</span>
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">Review</button>
-                            <button class="px-3 py-1 bg-vna-blue text-white rounded text-sm hover:bg-vna-navy">Approve & Generate Actions</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Populate tenant selector
-            const selectors = ['quick-tenant', 'new-audit-tenant'];
-            selectors.forEach(id => {
-                const sel = document.getElementById(id);
-                if (sel) {
-                    sel.innerHTML = '<option>Select Tenant...</option>';
-                    data.tenants.forEach(t => {
-                        sel.innerHTML += `<option value="${t.id}">${t.name} - ${t.zone}</option>`;
-                    });
-                }
-            });
-        }
-
-        // Officer Functions
-        function startOfficerAudit(tenantId) {
-            const tenant = data.tenants.find(t => t.id === tenantId);
-            document.getElementById('audit-tenant-name').textContent = tenant.name;
-            document.getElementById('audit-tenant-zone').textContent = `${tenant.zone} • F&B Full Audit`;
-            
-            // Generate checklist
-            const container = document.getElementById('audit-checklist-container');
-            container.innerHTML = '';
-            
-            const categories = [
-                { name: 'Fire Safety', items: ['Extinguishers accessible', 'Exits marked & clear', 'Alarm functional', 'Assembly point known'] },
-                { name: 'Food Safety', items: ['Temperature logs current', 'Cold chain maintained', 'Hygiene standards met', 'Pest control active'] },
-                { name: 'Occupational Health', items: ['First aid kit stocked', 'Staff trained', 'PPE available', 'Incident book current'] }
-            ];
-            
-            categories.forEach((cat, idx) => {
-                container.innerHTML += `
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <h3 class="font-bold text-lg mb-4 flex items-center">
-                            <span class="w-8 h-8 bg-vna-blue text-white rounded-full flex items-center justify-center text-sm mr-3">${idx + 1}</span>
-                            ${cat.name}
-                        </h3>
-                        <div class="space-y-3">
-                            ${cat.items.map((item, i) => `
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                                    <span class="flex-1">${item}</span>
-                                    <div class="flex space-x-2">
-                                        <button onclick="setAuditItem(this, 'pass')" class="audit-btn px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 text-sm font-medium transition-all" data-score="1">PASS</button>
-                                        <button onclick="setAuditItem(this, 'fail')" class="audit-btn px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-red-500 hover:bg-red-50 text-sm font-medium transition-all" data-score="0">FAIL</button>
-                                        <button onclick="setAuditItem(this, 'na')" class="audit-btn px-4 py-2 border-2 border-gray-300 rounded-lg hover:border-gray-500 text-sm font-medium transition-all" data-score="0.5">N/A</button>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            });
-            
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('officer-audit').classList.add('active');
-            window.scrollTo(0, 0);
-            updateAuditProgress();
-        }
-
-        function setAuditItem(btn, status) {
-            const buttons = btn.parentElement.querySelectorAll('.audit-btn');
-            buttons.forEach(b => {
-                b.classList.remove('bg-green-500', 'bg-red-500', 'bg-gray-500', 'text-white', 'border-green-500', 'border-red-500');
-                b.classList.add('border-gray-300');
-            });
-            
-            if (status === 'pass') {
-                btn.classList.add('bg-green-500', 'text-white', 'border-green-500');
-                btn.classList.remove('border-gray-300');
-            } else if (status === 'fail') {
-                btn.classList.add('bg-red-500', 'text-white', 'border-red-500');
-                btn.classList.remove('border-gray-300');
-            } else {
-                btn.classList.add('bg-gray-500', 'text-white');
-                btn.classList.remove('border-gray-300');
-            }
-            
-            updateAuditProgress();
-        }
-
-        function updateAuditProgress() {
-            const total = document.querySelectorAll('.audit-btn[data-score="1"], .audit-btn[data-score="0"]').length / 3; // Approximate
-            const answered = document.querySelectorAll('.audit-btn.bg-green-500, .audit-btn.bg-red-500, .audit-btn.bg-gray-500').length / 3;
-            const passed = document.querySelectorAll('.audit-btn.bg-green-500').length;
-            
-            document.getElementById('audit-progress').textContent = `${Math.round(answered)}/12`;
-            document.getElementById('audit-progress-bar').style.width = `${(answered / 12) * 100}%`;
-            
-            if (answered > 0) {
-                const score = ((passed / answered) * 10).toFixed(1);
-                document.getElementById('audit-live-score').textContent = score;
-                document.getElementById('audit-live-score').className = 'text-2xl font-bold ' + (score > 7 ? 'text-green-600' : score > 5 ? 'text-yellow-600' : 'text-red-600');
-            }
-        }
-
-        function saveDraft() {
-            alert('Draft saved! You can resume from "My Work" page.');
-            navigateTo('home');
-        }
-
-        function submitAudit() {
-            const score = document.getElementById('audit-live-score').textContent;
-            if (confirm(`Submit audit with score ${score}/10?`)) {
-                alert('Audit submitted! Manager will review shortly.');
-                navigateTo('home');
-            }
-        }
-
-        // Utility Functions
-        function setTrendPeriod(days) {
-            // Update chart data based on period
-            alert(`Switched to ${days} day view`);
-        }
-
-        function filterTenants(filter) {
-            alert(`Filtering by: ${filter}`);
-        }
-
-        function groupTenants(by) {
-            alert(`Grouping by: ${by}`);
-        }
-
-        function scheduleAudit() {
-            alert('Audit scheduled successfully!');
-        }
-
-        function scheduleFullAudit() {
-            alert('Audit created and assigned!');
-            navigateTo('audits');
-        }
-
-        function exportReport() {
-            alert('Generating executive PDF report...');
-        }
-
-        function showNotifications() {
-            alert('You have 5 notifications:\n\n• 3 certificates expiring\n• 1 audit pending review\n• 1 critical risk alert');
-        }
-
-        function toggleMobileNav() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden');
-            sidebar.classList.toggle('fixed');
-            sidebar.classList.toggle('inset-0');
-            sidebar.classList.toggle('z-50');
-            sidebar.classList.toggle('w-full');
-        }
-
-        // Initialize on load
-        window.addEventListener('load', () => {
-            lucide.createIcons();
-        });
-    </script>
-</body>
-</html>
+                                <div class="flex-1 bg-primary-100 dark:bg-primary-900/20 rounded-t-lg relative group cursor-pointer" style="height: 95%">
+                                    <div class="absolute bottom-0 w-full bg-primary-500 rounded-t-lg transition-all duration-300 group-hover:bg-primary-400" style="height: 100%"></div>
+                                    <div class="absolute -
