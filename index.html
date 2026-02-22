@@ -5,78 +5,328 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>V&A Waterfront - Compliance Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'va-yellow': '#FFCC32',
+                        'va-yellow-light': '#FFE066',
+                        'va-yellow-dark': '#E6B800',
+                        'va-blue': '#236192',
+                        'va-blue-light': '#4A9FD4',
+                        'va-blue-dark': '#1A4A6E',
+                        'va-coral': '#F4A261',
+                        'va-teal': '#5E8982',
+                        'va-sand': '#EEE6CB',
+                        'va-slate': '#9FAFBE'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                        '5xl': '2.5rem',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .nav-item { transition: all 0.2s; }
-        .nav-item:hover { background-color: #f3f4f6; }
-        .nav-item.active { background-color: #e5e7eb; border-right: 3px solid #1e3a5f; }
-        .calendar-day { min-height: 120px; }
-        .calendar-day:hover { background-color: #f9fafb; }
-        .audit-card { transition: transform 0.2s, box-shadow 0.2s; }
-        .audit-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .role-badge { background-color: #fef3c7; color: #92400e; }
-        .fade-in { animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .priority-high { border-left: 4px solid #dc2626; }
-        .priority-medium { border-left: 4px solid #6b7280; }
-        .priority-low { border-left: 4px solid #1e3a5f; }
-        .status-urgent { background-color: #fee2e2; color: #dc2626; }
-        .status-normal { background-color: #f3f4f6; color: #374151; }
-        .status-completed { background-color: #d1fae5; color: #065f46; }
+        body { 
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F9FA;
+        }
+        .nav-item { 
+            transition: all 0.3s ease;
+            border-radius: 1rem;
+            margin: 0.25rem 0.75rem;
+        }
+        .nav-item:hover { 
+            background-color: #FFF8E1;
+            color: #236192;
+        }
+        .nav-item.active { 
+            background-color: #FFCC32;
+            color: #1A4A6E;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(255, 204, 50, 0.3);
+        }
+        .nav-item.active i {
+            color: #236192;
+        }
+        .calendar-day { 
+            min-height: 120px;
+            border-radius: 1rem;
+        }
+        .calendar-day:hover { 
+            background-color: #FFF8E1;
+        }
+        .audit-card { 
+            transition: all 0.3s ease;
+            border-radius: 1.5rem;
+        }
+        .audit-card:hover { 
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .role-badge { 
+            background-color: #FFCC32;
+            color: #1A4A6E;
+            font-weight: 600;
+        }
+        .fade-in { 
+            animation: fadeIn 0.4s ease-out;
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        .priority-high { border-left: 5px solid #EF4444; }
+        .priority-medium { border-left: 5px solid #F59E0B; }
+        .priority-low { border-left: 5px solid #236192; }
+        .cert-card { 
+            transition: all 0.3s ease;
+            border-radius: 1.5rem;
+        }
+        .cert-card:hover { 
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .upload-area { 
+            border: 3px dashed #CBD5E1; 
+            transition: all 0.3s ease;
+            border-radius: 1.5rem;
+        }
+        .upload-area:hover { 
+            border-color: #FFCC32; 
+            background-color: #FFF8E1;
+        }
+        .upload-area.dragover { 
+            border-color: #236192; 
+            background-color: #EFF6FF;
+        }
+        .btn-primary {
+            background-color: #FFCC32;
+            color: #1A4A6E;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 1rem;
+        }
+        .btn-primary:hover {
+            background-color: #E6B800;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(255, 204, 50, 0.4);
+        }
+        .btn-secondary {
+            background-color: #236192;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 1rem;
+        }
+        .btn-secondary:hover {
+            background-color: #1A4A6E;
+            transform: translateY(-2px);
+        }
+        .card {
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid #F1F5F9;
+        }
+        .gradient-hero {
+            background: linear-gradient(135deg, #236192 0%, #4A9FD4 100%);
+        }
+        .gradient-warm {
+            background: linear-gradient(135deg, #FFCC32 0%, #F4A261 100%);
+        }
+        .soft-shadow {
+            box-shadow: 0 10px 40px -10px rgba(35, 97, 146, 0.15);
+        }
+        .icon-circle {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .status-pill {
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
     </style>
 </head>
-<body class="bg-gray-50 h-screen flex flex-col overflow-hidden">
+<body class="bg-slate-50 h-screen flex flex-col overflow-hidden">
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 shadow-sm z-10">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-[#1e3a5f] rounded-lg flex items-center justify-center text-white">
-                <i class="fas fa-anchor text-lg"></i>
-            </div>
-            <h1 class="text-xl font-bold text-[#1e3a5f]">V&A Waterfront</h1>
-            <span id="currentRoleBadge" class="role-badge px-3 py-1 rounded-full text-sm font-medium ml-2">Compliance Officer</span>
-        </div>
+    <header class="bg-white border-b border-slate-100 h-20 flex items-center justify-between px-8 shadow-sm z-10">
         <div class="flex items-center gap-4">
-            <button class="relative p-2 text-gray-600 hover:text-gray-800">
+            <div class="w-12 h-12 bg-va-yellow rounded-2xl flex items-center justify-center text-va-blue-dark shadow-lg transform -rotate-3">
+                <i class="fas fa-anchor text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-va-blue-dark tracking-tight">V&A Waterfront</h1>
+                <p class="text-xs text-slate-400 font-medium tracking-wider uppercase">Compliance Portal</p>
+            </div>
+            <span id="currentRoleBadge" class="role-badge px-4 py-1.5 rounded-full text-sm ml-4 shadow-sm">Compliance Officer</span>
+        </div>
+        <div class="flex items-center gap-6">
+            <button class="relative p-3 text-slate-400 hover:text-va-blue transition-colors rounded-xl hover:bg-slate-50">
                 <i class="fas fa-bell text-xl"></i>
-                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                <span id="notificationBadge" class="absolute top-2 right-2 w-2.5 h-2.5 bg-va-coral rounded-full border-2 border-white"></span>
             </button>
-            <button onclick="toggleRoleMenu()" class="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
-                <i class="fas fa-exchange-alt"></i>
-                <span>Switch Role</span>
-            </button>
+            <div class="flex items-center gap-3 pl-6 border-l border-slate-200 cursor-pointer" onclick="toggleRoleMenu()">
+                <div class="text-right hidden md:block">
+                    <p class="text-sm font-semibold text-slate-700" id="userName">John Doe</p>
+                    <p class="text-xs text-slate-400">Switch Role</p>
+                </div>
+                <div class="w-12 h-12 bg-gradient-to-br from-va-blue to-va-blue-light rounded-2xl flex items-center justify-center text-white shadow-lg">
+                    <i class="fas fa-user text-lg"></i>
+                </div>
+                <i class="fas fa-chevron-down text-slate-400 text-sm"></i>
+            </div>
         </div>
     </header>
 
     <!-- Role Switcher Dropdown -->
-    <div id="roleMenu" class="hidden absolute top-16 right-6 bg-white border border-gray-200 rounded-lg shadow-lg z-50 w-48">
-        <button onclick="switchRole('compliance')" class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center gap-2 border-b border-gray-100">
-            <i class="fas fa-clipboard-check text-[#1e3a5f]"></i>
-            <span>Compliance Officer</span>
-        </button>
-        <button onclick="switchRole('operations')" class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center gap-2 border-b border-gray-100">
-            <i class="fas fa-hard-hat text-orange-600"></i>
-            <span>Operations Manager</span>
-        </button>
-        <button onclick="switchRole('leadership')" class="w-full text-left px-4 py-3 hover:bg-gray-50 flex items-center gap-2">
-            <i class="fas fa-chart-line text-purple-600"></i>
-            <span>Mall Leadership</span>
-        </button>
+    <div id="roleMenu" class="hidden absolute top-24 right-8 bg-white rounded-3xl shadow-2xl z-50 w-72 overflow-hidden border border-slate-100">
+        <div class="px-6 py-4 bg-gradient-to-r from-va-yellow to-va-yellow-light">
+            <p class="text-sm font-bold text-va-blue-dark uppercase tracking-wider">Select Portal</p>
+        </div>
+        <div class="p-2">
+            <button onclick="switchRole('compliance')" class="w-full text-left px-4 py-4 hover:bg-slate-50 flex items-center gap-4 rounded-2xl transition-all group">
+                <div class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-clipboard-check text-lg"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-slate-800">Compliance Officer</p>
+                    <p class="text-xs text-slate-400">Field Operations</p>
+                </div>
+            </button>
+            <button onclick="switchRole('operations')" class="w-full text-left px-4 py-4 hover:bg-slate-50 flex items-center gap-4 rounded-2xl transition-all group">
+                <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-hard-hat text-lg"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-slate-800">Operations Manager</p>
+                    <p class="text-xs text-slate-400">Facility Management</p>
+                </div>
+            </button>
+            <button onclick="switchRole('leadership')" class="w-full text-left px-4 py-4 hover:bg-slate-50 flex items-center gap-4 rounded-2xl transition-all group">
+                <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-chart-line text-lg"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-slate-800">Mall Leadership</p>
+                    <p class="text-xs text-slate-400">Executive View</p>
+                </div>
+            </button>
+            <button onclick="switchRole('store')" class="w-full text-left px-4 py-4 hover:bg-slate-50 flex items-center gap-4 rounded-2xl transition-all group">
+                <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-store text-lg"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-slate-800">Store Manager</p>
+                    <p class="text-xs text-slate-400">Tenant Portal</p>
+                </div>
+            </button>
+        </div>
     </div>
 
     <div class="flex flex-1 overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
-            <nav id="sidebarNav" class="flex-1 py-4">
+        <aside class="w-72 bg-white border-r border-slate-100 flex flex-col">
+            <div class="p-6 border-b border-slate-100" id="storeInfo" style="display: none;">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                        W
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-800">Woolworths</p>
+                        <p class="text-xs text-slate-400">Victoria Wharf</p>
+                    </div>
+                </div>
+            </div>
+            <nav id="sidebarNav" class="flex-1 py-6 px-2">
                 <!-- Dynamic sidebar content -->
             </nav>
+            <div class="p-6 border-t border-slate-100">
+                <button class="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-2xl transition-all text-sm font-medium">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </button>
+                <button class="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-red-50 hover:text-red-500 rounded-2xl transition-all text-sm font-medium mt-2">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
         </aside>
 
         <!-- Main Content -->
-        <main id="mainContent" class="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <main id="mainContent" class="flex-1 overflow-y-auto p-8 bg-slate-50">
             <!-- Dynamic content -->
         </main>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="hidden fixed inset-0 bg-slate-900 bg-opacity-50 z-50 flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg mx-4 overflow-hidden transform transition-all scale-100">
+            <div class="px-8 py-6 bg-gradient-to-r from-va-yellow to-va-yellow-light flex justify-between items-center">
+                <h3 class="font-bold text-xl text-va-blue-dark">Upload Certificate</h3>
+                <button onclick="closeUploadModal()" class="text-va-blue-dark hover:text-va-blue-dark/70 transition-colors w-10 h-10 rounded-full hover:bg-white/20 flex items-center justify-center">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-8">
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-slate-700 mb-3">Certificate Type</label>
+                    <select id="certType" class="w-full px-4 py-3 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-va-yellow/20 focus:border-va-yellow transition-all outline-none bg-slate-50">
+                        <option value="health">Health & Safety Certificate</option>
+                        <option value="fire">Fire Safety Compliance</option>
+                        <option value="liquor">Liquor License</option>
+                        <option value="insurance">Public Liability Insurance</option>
+                        <option value="food">Food Safety Certificate</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-slate-700 mb-3">Expiry Date</label>
+                    <input type="date" id="certExpiry" class="w-full px-4 py-3 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-va-yellow/20 focus:border-va-yellow transition-all outline-none bg-slate-50">
+                </div>
+                <div class="mb-8">
+                    <label class="block text-sm font-semibold text-slate-700 mb-3">Upload File</label>
+                    <div class="upload-area p-8 text-center cursor-pointer" onclick="document.getElementById('fileInput').click()" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                        <input type="file" id="fileInput" class="hidden" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(event)">
+                        <div class="w-20 h-20 bg-va-yellow/20 rounded-full flex items-center justify-center text-va-yellow mx-auto mb-4">
+                            <i class="fas fa-cloud-upload-alt text-3xl"></i>
+                        </div>
+                        <p class="text-slate-600 font-medium mb-1">Click to upload or drag and drop</p>
+                        <p class="text-sm text-slate-400">PDF, JPG, PNG up to 10MB</p>
+                        <p id="selectedFile" class="text-sm text-va-blue font-semibold mt-4 hidden bg-va-yellow/10 py-2 px-4 rounded-full inline-block"></p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="closeUploadModal()" class="flex-1 px-6 py-3 border-2 border-slate-200 text-slate-600 rounded-2xl hover:bg-slate-50 font-semibold transition-all">Cancel</button>
+                    <button onclick="submitCertificate()" class="flex-1 px-6 py-3 btn-primary rounded-2xl">Upload Certificate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 z-50 transform transition-all duration-300 translate-y-10 opacity-0">
+        <div id="toastIcon" class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+            <i class="fas fa-check"></i>
+        </div>
+        <div>
+            <p class="font-semibold" id="toastTitle">Success</p>
+            <p class="text-sm text-slate-300" id="toastMessage">Operation completed</p>
+        </div>
     </div>
 
     <script>
@@ -84,6 +334,7 @@
         let currentRole = 'compliance';
         let currentView = 'work';
         let selectedWeekStart = new Date();
+        let selectedFile = null;
         
         // Sample Data
         const audits = [
@@ -103,6 +354,73 @@
             'Sun': []
         };
 
+        // Store-specific data
+        const storeData = {
+            name: 'Woolworths',
+            location: 'Victoria Wharf, Shop 102-108',
+            leaseStart: '2019-03-01',
+            leaseEnd: '2026-02-28',
+            manager: 'Sarah Johnson',
+            contact: 'sarah.j@woolworths.co.za',
+            squareMeters: 850,
+            monthlyRent: 'R125,000',
+            complianceScore: 87,
+            lastAudit: '2026-01-15',
+            nextAudit: '2026-04-15',
+            certificates: [
+                { 
+                    id: 1, 
+                    type: 'health', 
+                    name: 'Health & Safety Certificate', 
+                    status: 'valid', 
+                    issued: '2025-06-01', 
+                    expires: '2026-05-31',
+                    docUrl: '#',
+                    verified: true
+                },
+                { 
+                    id: 2, 
+                    type: 'fire', 
+                    name: 'Fire Safety Compliance', 
+                    status: 'valid', 
+                    issued: '2025-08-15', 
+                    expires: '2026-08-14',
+                    docUrl: '#',
+                    verified: true
+                },
+                { 
+                    id: 3, 
+                    type: 'insurance', 
+                    name: 'Public Liability Insurance', 
+                    status: 'warning', 
+                    issued: '2025-01-01', 
+                    expires: '2026-02-28',
+                    docUrl: '#',
+                    verified: true
+                },
+                { 
+                    id: 4, 
+                    type: 'food', 
+                    name: 'Food Safety Certificate', 
+                    status: 'expired', 
+                    issued: '2024-01-10', 
+                    expires: '2025-01-09',
+                    docUrl: '#',
+                    verified: false
+                }
+            ],
+            auditHistory: [
+                { date: '2026-01-15', type: 'Routine', score: 92, findings: 2, status: 'passed' },
+                { date: '2025-10-20', type: 'Follow-up', score: 88, findings: 1, status: 'passed' },
+                { date: '2025-07-12', type: 'Routine', score: 85, findings: 3, status: 'passed' },
+                { date: '2025-04-05', type: 'Complaint', score: 78, findings: 5, status: 'conditional' }
+            ],
+            upcoming: [
+                { date: '2026-04-15', type: 'Quarterly Audit', status: 'scheduled' },
+                { date: '2026-03-01', type: 'Fire Safety Check', status: 'pending' }
+            ]
+        };
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             render();
@@ -115,8 +433,21 @@
 
         function switchRole(role) {
             currentRole = role;
-            currentView = role === 'compliance' ? 'work' : role === 'operations' ? 'priorities' : 'risk';
+            currentView = role === 'compliance' ? 'work' : 
+                         role === 'operations' ? 'priorities' : 
+                         role === 'leadership' ? 'risk' : 'dashboard';
+            
             document.getElementById('roleMenu').classList.add('hidden');
+            document.getElementById('storeInfo').style.display = role === 'store' ? 'block' : 'none';
+            
+            const names = {
+                'compliance': 'John Doe',
+                'operations': 'Mike Smith',
+                'leadership': 'Amanda Peters',
+                'store': 'Sarah Johnson'
+            };
+            document.getElementById('userName').textContent = names[role];
+            
             render();
         }
 
@@ -129,12 +460,13 @@
         function updateHeader() {
             const badge = document.getElementById('currentRoleBadge');
             const roles = {
-                'compliance': { text: 'Compliance Officer', color: 'bg-amber-100 text-amber-800' },
-                'operations': { text: 'Operations Manager', color: 'bg-orange-100 text-orange-800' },
-                'leadership': { text: 'Mall Leadership', color: 'bg-purple-100 text-purple-800' }
+                'compliance': { text: 'Compliance Officer', color: 'bg-va-yellow text-va-blue-dark' },
+                'operations': { text: 'Operations Manager', color: 'bg-orange-400 text-white' },
+                'leadership': { text: 'Mall Leadership', color: 'bg-purple-500 text-white' },
+                'store': { text: 'Store Manager', color: 'bg-emerald-500 text-white' }
             };
             badge.textContent = roles[currentRole].text;
-            badge.className = `px-3 py-1 rounded-full text-sm font-medium ml-2 ${roles[currentRole].color}`;
+            badge.className = `px-4 py-1.5 rounded-full text-sm font-semibold ml-4 shadow-sm ${roles[currentRole].color}`;
         }
 
         function renderSidebar() {
@@ -160,16 +492,26 @@
                     { id: 'precincts', icon: 'fa-map-marker-alt', label: 'All Precincts' },
                     { id: 'analytics', icon: 'fa-chart-line', label: 'Analytics' },
                     { id: 'reports', icon: 'fa-file-alt', label: 'Reports' }
+                ],
+                'store': [
+                    { id: 'dashboard', icon: 'fa-tachometer-alt', label: 'Dashboard' },
+                    { id: 'compliance', icon: 'fa-clipboard-check', label: 'Compliance Status' },
+                    { id: 'certificates', icon: 'fa-certificate', label: 'Certificates' },
+                    { id: 'audits', icon: 'fa-search', label: 'Audit History' },
+                    { id: 'messages', icon: 'fa-comments', label: 'Messages' }
                 ]
             };
 
             menus[currentRole].forEach(item => {
                 const btn = document.createElement('button');
-                btn.className = `nav-item w-full flex items-center gap-3 px-6 py-3 text-gray-700 ${currentView === item.id ? 'active' : ''}`;
+                btn.className = `nav-item w-full flex items-center gap-4 px-6 py-4 text-slate-600 ${currentView === item.id ? 'active' : ''}`;
                 btn.onclick = () => { currentView = item.id; render(); };
                 btn.innerHTML = `
-                    <i class="fas ${item.icon} w-5"></i>
+                    <div class="w-10 h-10 rounded-xl ${currentView === item.id ? 'bg-white/50' : 'bg-slate-100'} flex items-center justify-center transition-colors">
+                        <i class="fas ${item.icon} text-lg"></i>
+                    </div>
                     <span class="font-medium">${item.label}</span>
+                    ${item.id === 'messages' ? '<span class="ml-auto bg-va-coral text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">2</span>' : ''}
                 `;
                 nav.appendChild(btn);
             });
@@ -195,51 +537,805 @@
                 else if (currentView === 'precincts') renderPrecincts(main);
                 else if (currentView === 'analytics') renderAnalytics(main);
                 else if (currentView === 'reports') renderReports(main);
+            } else if (currentRole === 'store') {
+                if (currentView === 'dashboard') renderStoreDashboard(main);
+                else if (currentView === 'compliance') renderStoreCompliance(main);
+                else if (currentView === 'certificates') renderStoreCertificates(main);
+                else if (currentView === 'audits') renderStoreAudits(main);
+                else if (currentView === 'messages') renderStoreMessages(main);
             }
+        }
+
+        // STORE MANAGER VIEWS
+        function renderStoreDashboard(container) {
+            const certStats = {
+                valid: storeData.certificates.filter(c => c.status === 'valid').length,
+                warning: storeData.certificates.filter(c => c.status === 'warning').length,
+                expired: storeData.certificates.filter(c => c.status === 'expired').length
+            };
+
+            container.innerHTML = `
+                <div class="fade-in max-w-6xl mx-auto">
+                    <div class="mb-8">
+                        <h2 class="text-4xl font-bold text-va-blue-dark mb-2">Welcome back, ${storeData.manager.split(' ')[0]}! 👋</h2>
+                        <p class="text-slate-500 text-lg">Here's what's happening with <span class="font-semibold text-va-blue">${storeData.name}</span></p>
+                    </div>
+
+                    <!-- Compliance Score Hero -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                        <div class="lg:col-span-2 gradient-hero rounded-[2.5rem] p-10 text-white relative overflow-hidden soft-shadow">
+                            <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-10 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+                            <div class="absolute bottom-0 left-0 w-64 h-64 bg-va-yellow opacity-20 rounded-full -ml-32 -mb-32 blur-2xl"></div>
+                            
+                            <div class="relative z-10 flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <span class="px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">Good Standing</span>
+                                        <span class="px-4 py-1.5 bg-va-yellow text-va-blue-dark rounded-full text-sm font-bold">Next: Apr 15</span>
+                                    </div>
+                                    <p class="text-blue-100 text-sm font-medium mb-2 uppercase tracking-wider">Compliance Score</p>
+                                    <h3 class="text-7xl font-bold mb-4">${storeData.complianceScore}<span class="text-4xl opacity-60">%</span></h3>
+                                    <p class="text-blue-50 text-lg">Based on latest audit • <span class="font-semibold">Jan 15, 2026</span></p>
+                                    
+                                    <div class="flex gap-4 mt-8">
+                                        <button onclick="currentView='certificates'; render();" class="px-6 py-3 bg-va-yellow text-va-blue-dark rounded-2xl font-bold hover:bg-va-yellow-light transition-all transform hover:-translate-y-1 shadow-lg">
+                                            Upload Certificate
+                                        </button>
+                                        <button onclick="currentView='audits'; render();" class="px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-2xl font-semibold hover:bg-white/30 transition-all">
+                                            View History
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="relative hidden lg:block">
+                                    <svg class="w-48 h-48 transform -rotate-90 drop-shadow-2xl">
+                                        <circle cx="96" cy="96" r="80" stroke="rgba(255,255,255,0.2)" stroke-width="16" fill="none"/>
+                                        <circle cx="96" cy="96" r="80" stroke="#FFCC32" stroke-width="16" fill="none" 
+                                            stroke-dasharray="${2 * Math.PI * 80}" 
+                                            stroke-dashoffset="${2 * Math.PI * 80 * (1 - storeData.complianceScore/100)}"
+                                            stroke-linecap="round"/>
+                                    </svg>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                        <i class="fas fa-award text-5xl text-va-yellow drop-shadow-lg"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="card p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="icon-circle bg-emerald-100 text-emerald-600">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <span class="text-3xl font-bold text-slate-800">${certStats.valid}</span>
+                                </div>
+                                <p class="text-slate-600 font-medium">Valid Certificates</p>
+                                <p class="text-sm text-emerald-600 font-semibold mt-1">Up to date ✓</p>
+                            </div>
+                            
+                            <div class="card p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="icon-circle bg-amber-100 text-amber-600">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <span class="text-3xl font-bold text-slate-800">${certStats.warning}</span>
+                                </div>
+                                <p class="text-slate-600 font-medium">Expiring Soon</p>
+                                <p class="text-sm text-amber-600 font-semibold mt-1">Action needed</p>
+                            </div>
+                            
+                            <div class="card p-6 hover:shadow-lg transition-shadow border-red-200">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="icon-circle bg-red-100 text-red-600">
+                                        <i class="fas fa-exclamation"></i>
+                                    </div>
+                                    <span class="text-3xl font-bold text-slate-800">${certStats.expired}</span>
+                                </div>
+                                <p class="text-slate-600 font-medium">Expired</p>
+                                <p class="text-sm text-red-600 font-semibold mt-1">Urgent renewal!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions & Upcoming -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="card p-8">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6">Quick Actions</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="currentView='certificates'; render();" class="group p-6 border-2 border-slate-100 rounded-3xl hover:border-va-yellow hover:bg-va-yellow/5 transition-all text-left">
+                                    <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-va-blue text-2xl mb-4 group-hover:scale-110 group-hover:bg-va-yellow transition-all">
+                                        <i class="fas fa-upload"></i>
+                                    </div>
+                                    <p class="font-bold text-slate-800 mb-1">Upload</p>
+                                    <p class="text-sm text-slate-500">Add new compliance docs</p>
+                                </button>
+                                
+                                <button onclick="currentView='audits'; render();" class="group p-6 border-2 border-slate-100 rounded-3xl hover:border-va-yellow hover:bg-va-yellow/5 transition-all text-left">
+                                    <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-2xl mb-4 group-hover:scale-110 transition-all">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <p class="font-bold text-slate-800 mb-1">History</p>
+                                    <p class="text-sm text-slate-500">Past inspections</p>
+                                </button>
+                                
+                                <button class="group p-6 border-2 border-slate-100 rounded-3xl hover:border-va-yellow hover:bg-va-yellow/5 transition-all text-left">
+                                    <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl mb-4 group-hover:scale-110 transition-all">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <p class="font-bold text-slate-800 mb-1">Schedule</p>
+                                    <p class="text-sm text-slate-500">Book meeting</p>
+                                </button>
+                                
+                                <button class="group p-6 border-2 border-slate-100 rounded-3xl hover:border-va-yellow hover:bg-va-yellow/5 transition-all text-left">
+                                    <div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 text-2xl mb-4 group-hover:scale-110 transition-all">
+                                        <i class="fas fa-file-download"></i>
+                                    </div>
+                                    <p class="font-bold text-slate-800 mb-1">Reports</p>
+                                    <p class="text-sm text-slate-500">Export data</p>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card p-8">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-bold text-xl text-slate-800">Upcoming Events</h3>
+                                <button class="text-va-blue font-semibold hover:underline text-sm">View Calendar →</button>
+                            </div>
+                            <div class="space-y-4">
+                                ${storeData.upcoming.map(event => `
+                                    <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 transition-colors">
+                                        <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center">
+                                            <span class="text-xs font-bold text-va-blue uppercase">${new Date(event.date).toLocaleDateString('en-US', {month: 'short'})}</span>
+                                            <span class="text-2xl font-bold text-slate-800">${new Date(event.date).getDate()}</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-bold text-slate-800">${event.type}</p>
+                                            <p class="text-sm text-slate-500">Scheduled audit visit</p>
+                                        </div>
+                                        <span class="px-4 py-1.5 bg-blue-100 text-va-blue rounded-full text-xs font-bold">${event.status}</span>
+                                    </div>
+                                `).join('')}
+                                
+                                <div class="flex items-center gap-4 p-4 bg-red-50 rounded-2xl border-2 border-red-100">
+                                    <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-red-200 flex flex-col items-center justify-center">
+                                        <span class="text-xs font-bold text-red-500 uppercase">MAR</span>
+                                        <span class="text-2xl font-bold text-red-600">01</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-bold text-red-800">Insurance Renewal Due</p>
+                                        <p class="text-sm text-red-600">Expires in 7 days</p>
+                                    </div>
+                                    <button onclick="openUploadModal()" class="px-4 py-2 bg-red-500 text-white rounded-xl text-sm font-bold hover:bg-red-600 transition-colors">Renew</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStoreCompliance(container) {
+            const score = storeData.complianceScore;
+            let statusColor = score >= 90 ? 'emerald' : score >= 75 ? 'amber' : 'red';
+            let statusText = score >= 90 ? 'Excellent' : score >= 75 ? 'Good' : 'Needs Improvement';
+
+            container.innerHTML = `
+                <div class="fade-in max-w-5xl mx-auto">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold text-va-blue-dark">Compliance Status</h2>
+                            <p class="text-slate-500 mt-2 text-lg">Track your store's compliance requirements</p>
+                        </div>
+                        <button onclick="openUploadModal()" class="px-8 py-4 btn-primary rounded-2xl flex items-center gap-3 text-lg shadow-lg">
+                            <i class="fas fa-plus"></i> Upload Document
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                        <!-- Overall Score -->
+                        <div class="card p-8 text-center">
+                            <h3 class="font-bold text-slate-700 mb-6 text-lg">Overall Compliance</h3>
+                            <div class="relative inline-block">
+                                <svg class="w-48 h-48 transform -rotate-90 drop-shadow-xl">
+                                    <circle cx="96" cy="96" r="80" stroke="#F1F5F9" stroke-width="16" fill="none"/>
+                                    <circle cx="96" cy="96" r="80" stroke="${statusColor === 'emerald' ? '#10B981' : statusColor === 'amber' ? '#F59E0B' : '#EF4444'}" stroke-width="16" fill="none" 
+                                        stroke-dasharray="${2 * Math.PI * 80}" 
+                                        stroke-dashoffset="${2 * Math.PI * 80 * (1 - score/100)}"
+                                        stroke-linecap="round"/>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-6xl font-bold text-slate-800">${score}%</span>
+                                    <span class="text-lg text-slate-500 mt-2 font-medium">${statusText}</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-400 mt-6 font-medium">Last updated: ${storeData.lastAudit}</p>
+                        </div>
+
+                        <!-- Requirements Checklist -->
+                        <div class="lg:col-span-2 card p-8">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6">Compliance Requirements</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-200">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-lg">Operating License</p>
+                                            <p class="text-slate-500">Valid until March 2027</p>
+                                        </div>
+                                    </div>
+                                    <span class="status-pill bg-emerald-100 text-emerald-700">Compliant</span>
+                                </div>
+
+                                <div class="flex items-center justify-between p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-200">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-lg">Health & Safety Certificate</p>
+                                            <p class="text-slate-500">Valid until May 2026</p>
+                                        </div>
+                                    </div>
+                                    <span class="status-pill bg-emerald-100 text-emerald-700">Compliant</span>
+                                </div>
+
+                                <div class="flex items-center justify-between p-5 bg-amber-50 rounded-2xl border-2 border-amber-200">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-lg">Public Liability Insurance</p>
+                                            <p class="text-amber-700 font-medium">Expires in 7 days (Feb 28)</p>
+                                        </div>
+                                    </div>
+                                    <button onclick="openUploadModal()" class="px-6 py-2.5 bg-amber-500 text-white rounded-xl font-bold hover:bg-amber-600 transition-colors shadow-lg">Renew Now</button>
+                                </div>
+
+                                <div class="flex items-center justify-between p-5 bg-red-50 rounded-2xl border-2 border-red-200">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
+                                            <i class="fas fa-exclamation"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-lg">Food Safety Certificate</p>
+                                            <p class="text-red-600 font-medium">Expired 43 days ago</p>
+                                        </div>
+                                    </div>
+                                    <button onclick="openUploadModal()" class="px-6 py-2.5 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-colors shadow-lg">Upload Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card p-8">
+                        <h3 class="font-bold text-xl text-slate-800 mb-6">Recent Compliance Activity</h3>
+                        <div class="space-y-6">
+                            <div class="flex gap-5 pb-6 border-b border-slate-100">
+                                <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-va-blue text-xl flex-shrink-0">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-slate-800 text-lg">Routine Audit Completed</p>
+                                    <p class="text-slate-500">Score: 92% - 2 minor findings identified</p>
+                                    <p class="text-sm text-slate-400 mt-2 font-medium">January 15, 2026</p>
+                                </div>
+                                <button class="text-va-blue font-bold hover:underline px-4">View Report →</button>
+                            </div>
+                            
+                            <div class="flex gap-5 pb-6 border-b border-slate-100">
+                                <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 text-xl flex-shrink-0">
+                                    <i class="fas fa-file-upload"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-slate-800 text-lg">Fire Safety Certificate Uploaded</p>
+                                    <p class="text-slate-500">Document verified by compliance team</p>
+                                    <p class="text-sm text-slate-400 mt-2 font-medium">August 15, 2025</p>
+                                </div>
+                                <span class="status-pill bg-emerald-100 text-emerald-700 self-start">Verified</span>
+                            </div>
+                            
+                            <div class="flex gap-5">
+                                <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-xl flex-shrink-0">
+                                    <i class="fas fa-comment-alt"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-slate-800 text-lg">Message from Compliance Officer</p>
+                                    <p class="text-slate-500">"Please schedule follow-up for fire extinguisher check"</p>
+                                    <p class="text-sm text-slate-400 mt-2 font-medium">January 10, 2026</p>
+                                </div>
+                                <button class="text-va-blue font-bold hover:underline px-4">Reply →</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStoreCertificates(container) {
+            container.innerHTML = `
+                <div class="fade-in max-w-6xl mx-auto">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold text-va-blue-dark">Certificates & Documents</h2>
+                            <p class="text-slate-500 mt-2 text-lg">Manage your store's compliance documentation</p>
+                        </div>
+                        <button onclick="openUploadModal()" class="px-8 py-4 btn-primary rounded-2xl flex items-center gap-3 text-lg shadow-xl hover:shadow-2xl transition-all">
+                            <i class="fas fa-cloud-upload-alt text-xl"></i>
+                            <span>Upload New</span>
+                        </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="flex gap-3 mb-8 overflow-x-auto pb-2">
+                        <button class="px-6 py-3 bg-va-blue text-white rounded-2xl font-semibold shadow-md">All Documents</button>
+                        <button class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Valid</button>
+                        <button class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Expiring Soon</button>
+                        <button class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Expired</button>
+                    </div>
+
+                    <!-- Certificates Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        ${storeData.certificates.map(cert => {
+                            const statusColors = {
+                                'valid': 'emerald',
+                                'warning': 'amber',
+                                'expired': 'red'
+                            };
+                            const statusLabels = {
+                                'valid': 'Valid',
+                                'warning': 'Expiring Soon',
+                                'expired': 'Expired'
+                            };
+                            const daysUntil = Math.ceil((new Date(cert.expires) - new Date()) / (1000 * 60 * 60 * 24));
+                            
+                            return `
+                                <div class="cert-card bg-white p-6 border-2 ${cert.status === 'expired' ? 'border-red-200' : cert.status === 'warning' ? 'border-amber-200' : 'border-emerald-200'} rounded-3xl shadow-sm hover:shadow-xl">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div class="w-16 h-16 ${cert.status === 'expired' ? 'bg-red-100 text-red-600' : cert.status === 'warning' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'} rounded-2xl flex items-center justify-center text-3xl shadow-sm">
+                                            <i class="fas ${cert.type === 'health' ? 'fa-heartbeat' : cert.type === 'fire' ? 'fa-fire-extinguisher' : cert.type === 'insurance' ? 'fa-file-contract' : 'fa-utensils'}"></i>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            ${cert.verified ? '<span class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-va-blue text-sm" title="Verified"><i class="fas fa-check"></i></span>' : ''}
+                                            <button class="w-8 h-8 hover:bg-slate-100 rounded-full flex items-center justify-center text-slate-400 transition-colors"><i class="fas fa-ellipsis-v"></i></button>
+                                        </div>
+                                    </div>
+                                    
+                                    <h3 class="font-bold text-xl text-slate-800 mb-2">${cert.name}</h3>
+                                    <p class="text-sm text-slate-400 mb-6 font-medium">ID: CERT-2025-${String(cert.id).padStart(3, '0')}</p>
+                                    
+                                    <div class="space-y-3 mb-6 bg-slate-50 p-4 rounded-2xl">
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-slate-500 font-medium">Issued:</span>
+                                            <span class="text-slate-700 font-semibold">${new Date(cert.issued).toLocaleDateString()}</span>
+                                        </div>
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-slate-500 font-medium">Expires:</span>
+                                            <span class="${cert.status === 'expired' ? 'text-red-600 font-bold' : cert.status === 'warning' ? 'text-amber-600 font-bold' : 'text-slate-700 font-semibold'}">
+                                                ${new Date(cert.expires).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                        <span class="status-pill ${cert.status === 'expired' ? 'bg-red-100 text-red-700' : cert.status === 'warning' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">
+                                            ${statusLabels[cert.status]}
+                                        </span>
+                                        ${cert.status !== 'valid' ? 
+                                            `<button onclick="openUploadModal()" class="text-sm text-va-blue font-bold hover:underline">Renew →</button>` : 
+                                            `<button class="text-sm text-slate-400 hover:text-va-blue font-bold transition-colors">Download →</button>`
+                                        }
+                                    </div>
+                                    
+                                    ${cert.status === 'warning' ? `
+                                        <div class="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-200">
+                                            <p class="text-sm text-amber-800 font-medium"><i class="fas fa-exclamation-triangle mr-2"></i> Expires in ${daysUntil} days</p>
+                                        </div>
+                                    ` : ''}
+                                    ${cert.status === 'expired' ? `
+                                        <div class="mt-4 p-4 bg-red-50 rounded-xl border border-red-200">
+                                            <p class="text-sm text-red-800 font-bold"><i class="fas fa-exclamation-circle mr-2"></i> Expired ${Math.abs(daysUntil)} days ago</p>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                        
+                        <!-- Add New Card -->
+                        <button onclick="openUploadModal()" class="cert-card border-3 border-dashed border-slate-300 rounded-3xl p-6 flex flex-col items-center justify-center text-slate-400 hover:border-va-yellow hover:text-va-blue hover:bg-va-yellow/5 transition-all min-h-[400px] group">
+                            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center text-3xl mb-4 group-hover:bg-va-yellow group-hover:text-va-blue-dark transition-all group-hover:scale-110">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <p class="font-bold text-xl text-slate-600 mb-2 group-hover:text-va-blue-dark">Upload New Certificate</p>
+                            <p class="text-sm text-center">Add a new compliance document</p>
+                        </button>
+                    </div>
+
+                    <!-- Document History -->
+                    <div class="card p-8">
+                        <h3 class="font-bold text-xl text-slate-800 mb-6">Upload History</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="text-left border-b-2 border-slate-100">
+                                        <th class="pb-4 text-sm font-bold text-slate-500 uppercase tracking-wider">Document</th>
+                                        <th class="pb-4 text-sm font-bold text-slate-500 uppercase tracking-wider">Uploaded</th>
+                                        <th class="pb-4 text-sm font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                                        <th class="pb-4 text-sm font-bold text-slate-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <tr class="hover:bg-slate-50 transition-colors">
+                                        <td class="py-5">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-red-500">
+                                                    <i class="fas fa-file-pdf"></i>
+                                                </div>
+                                                <span class="font-bold text-slate-800">Health_Cert_2025.pdf</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 text-slate-500 font-medium">June 1, 2025</td>
+                                        <td class="py-5"><span class="status-pill bg-emerald-100 text-emerald-700">Verified</span></td>
+                                        <td class="py-5">
+                                            <button class="text-va-blue font-bold hover:underline">Download</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-50 transition-colors">
+                                        <td class="py-5">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-500">
+                                                    <i class="fas fa-file-image"></i>
+                                                </div>
+                                                <span class="font-bold text-slate-800">Fire_Safety_Doc.jpg</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-5 text-slate-500 font-medium">August 15, 2025</td>
+                                        <td class="py-5"><span class="status-pill bg-emerald-100 text-emerald-700">Verified</span></td>
+                                        <td class="py-5">
+                                            <button class="text-va-blue font-bold hover:underline">Download</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStoreAudits(container) {
+            container.innerHTML = `
+                <div class="fade-in max-w-5xl mx-auto">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold text-va-blue-dark">Audit History</h2>
+                            <p class="text-slate-500 mt-2 text-lg">View past inspections and compliance checks</p>
+                        </div>
+                        <button class="px-6 py-3 border-2 border-slate-200 rounded-2xl hover:border-va-yellow hover:bg-va-yellow/5 font-semibold text-slate-600 transition-all flex items-center gap-2">
+                            <i class="fas fa-download"></i> Export History
+                        </button>
+                    </div>
+
+                    <div class="space-y-6">
+                        ${storeData.auditHistory.map((audit, index) => `
+                            <div class="card overflow-hidden">
+                                <div class="p-8 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleAuditDetails(${index})">
+                                    <div class="flex items-center gap-6">
+                                        <div class="w-20 h-20 ${audit.score >= 90 ? 'bg-emerald-100 text-emerald-600' : audit.score >= 80 ? 'bg-blue-100 text-va-blue' : 'bg-amber-100 text-amber-600'} rounded-3xl flex flex-col items-center justify-center shadow-lg">
+                                            <span class="text-3xl font-bold">${audit.score}</span>
+                                            <span class="text-xs font-bold uppercase">Score</span>
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-4 mb-2">
+                                                <h3 class="font-bold text-2xl text-slate-800">${audit.type} Audit</h3>
+                                                <span class="status-pill ${audit.status === 'passed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+                                                    ${audit.status === 'passed' ? 'Passed' : 'Conditional'}
+                                                </span>
+                                            </div>
+                                            <p class="text-slate-500 flex items-center gap-2">
+                                                <i class="far fa-calendar-alt text-va-yellow"></i>
+                                                ${new Date(audit.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-slate-500 mb-2 font-medium">${audit.findings} Findings</p>
+                                        <button class="text-va-blue font-bold hover:underline flex items-center gap-2">
+                                            Details <i class="fas fa-chevron-down transition-transform" id="chevron-${index}"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="audit-details-${index}" class="hidden border-t border-slate-100 bg-slate-50 p-8">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div>
+                                            <h4 class="font-bold text-lg text-slate-800 mb-4">Findings Summary</h4>
+                                            <ul class="space-y-3">
+                                                ${Array(audit.findings).fill(0).map((_, i) => `
+                                                    <li class="flex items-start gap-3 text-slate-600 bg-white p-4 rounded-xl shadow-sm">
+                                                        <div class="w-6 h-6 bg-va-yellow rounded-full flex items-center justify-center text-va-blue-dark text-xs font-bold flex-shrink-0 mt-0.5">${i + 1}</div>
+                                                        <span>${['Fire extinguisher access blocked', 'Emergency exit signage dim', 'Storage area organization', 'Staff training records incomplete', 'First aid kit expired'][i] || 'Minor maintenance required'}</span>
+                                                    </li>
+                                                `).join('')}
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-lg text-slate-800 mb-4">Auditor Notes</h4>
+                                            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-6">
+                                                <p class="text-slate-600 leading-relaxed">
+                                                    "Overall compliance is good. Store maintained excellent standards in customer areas. Some minor improvements needed in back-of-house storage and documentation."
+                                                </p>
+                                            </div>
+                                            <div class="flex gap-3">
+                                                <button class="flex-1 px-6 py-3 bg-va-blue text-white rounded-xl font-bold hover:bg-va-blue-dark transition-colors shadow-lg">
+                                                    Download Full Report
+                                                </button>
+                                                <button class="px-6 py-3 border-2 border-slate-200 rounded-xl font-semibold text-slate-600 hover:border-va-yellow transition-colors">
+                                                    View Photos
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStoreMessages(container) {
+            container.innerHTML = `
+                <div class="fade-in max-w-4xl mx-auto">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-3xl font-bold text-va-blue-dark">Messages</h2>
+                        <button class="px-6 py-3 btn-primary rounded-2xl flex items-center gap-2 shadow-lg">
+                            <i class="fas fa-plus"></i> New Message
+                        </button>
+                    </div>
+
+                    <div class="card overflow-hidden">
+                        <div class="divide-y divide-slate-100">
+                            <div class="p-6 hover:bg-blue-50/50 cursor-pointer transition-all bg-gradient-to-r from-blue-50/50 to-transparent border-l-4 border-va-blue">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-14 h-14 bg-gradient-to-br from-va-blue to-va-blue-light rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                            JD
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-lg">John Doe <span class="text-sm font-normal text-slate-400">- Compliance Officer</span></p>
+                                            <p class="text-sm text-slate-400 font-medium">Today, 10:30 AM</p>
+                                        </div>
+                                    </div>
+                                    <span class="w-3 h-3 bg-va-coral rounded-full animate-pulse"></span>
+                                </div>
+                                <p class="font-bold text-slate-800 text-lg mb-2">Upcoming Audit Schedule - April 15</p>
+                                <p class="text-slate-600 leading-relaxed">Hi Sarah, Just confirming our routine audit for next month. Please ensure all certificates are up to date and accessible...</p>
+                            </div>
+
+                            <div class="p-6 hover:bg-slate-50 cursor-pointer transition-all">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                            MS
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-lg">Mike Smith <span class="text-sm font-normal text-slate-400">- Operations</span></p>
+                                            <p class="text-sm text-slate-400 font-medium">Yesterday, 3:45 PM</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="font-bold text-slate-800 text-lg mb-2">Maintenance Access - This Weekend</p>
+                                <p class="text-slate-600 leading-relaxed">We'll be conducting HVAC maintenance this Saturday. Please ensure back-of-house areas are accessible...</p>
+                            </div>
+
+                            <div class="p-6 hover:bg-slate-50 cursor-pointer transition-all">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-14 h-14 bg-gradient-to-br from-slate-400 to-slate-500 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                            <i class="fas fa-robot"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-lg">System <span class="text-sm font-normal text-slate-400">- Automated</span></p>
+                                            <p class="text-sm text-slate-400 font-medium">Feb 20, 2026</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="font-bold text-slate-800 text-lg mb-2">Certificate Expiry Reminder</p>
+                                <p class="text-slate-600 leading-relaxed">Your Public Liability Insurance expires in 8 days. Please upload renewal documentation...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleAuditDetails(index) {
+            const details = document.getElementById(`audit-details-${index}`);
+            const chevron = document.getElementById(`chevron-${index}`);
+            details.classList.toggle('hidden');
+            if (details.classList.contains('hidden')) {
+                chevron.style.transform = 'rotate(0deg)';
+            } else {
+                chevron.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Upload Modal Functions
+        function openUploadModal() {
+            document.getElementById('uploadModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            selectedFile = null;
+            document.getElementById('selectedFile').classList.add('hidden');
+            document.getElementById('fileInput').value = '';
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                selectedFile = files[0];
+                showSelectedFile();
+            }
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            if (files.length > 0) {
+                selectedFile = files[0];
+                showSelectedFile();
+            }
+        }
+
+        function showSelectedFile() {
+            const el = document.getElementById('selectedFile');
+            el.textContent = `Selected: ${selectedFile.name}`;
+            el.classList.remove('hidden');
+        }
+
+        function submitCertificate() {
+            if (!selectedFile) {
+                showToast('Please select a file to upload', 'error');
+                return;
+            }
+            
+            const type = document.getElementById('certType').value;
+            const expiry = document.getElementById('certExpiry').value;
+            
+            if (!expiry) {
+                showToast('Please select an expiry date', 'error');
+                return;
+            }
+
+            showToast('Certificate uploaded successfully! Pending verification.', 'success');
+            closeUploadModal();
+            
+            const newCert = {
+                id: storeData.certificates.length + 1,
+                type: type,
+                name: document.querySelector(`#certType option[value="${type}"]`).textContent,
+                status: 'valid',
+                issued: new Date().toISOString().split('T')[0],
+                expires: expiry,
+                docUrl: '#',
+                verified: false
+            };
+            storeData.certificates.unshift(newCert);
+            
+            if (currentView === 'certificates') {
+                setTimeout(() => render(), 500);
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const titleEl = document.getElementById('toastTitle');
+            const msgEl = document.getElementById('toastMessage');
+            const icon = document.getElementById('toastIcon');
+            
+            titleEl.textContent = type === 'success' ? 'Success!' : 'Error';
+            msgEl.textContent = message;
+            
+            if (type === 'success') {
+                icon.className = 'w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white';
+                icon.innerHTML = '<i class="fas fa-check"></i>';
+            } else {
+                icon.className = 'w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white';
+                icon.innerHTML = '<i class="fas fa-exclamation"></i>';
+            }
+            
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 10);
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3000);
         }
 
         // COMPLIANCE OFFICER VIEWS
         function renderComplianceWork(container) {
             container.innerHTML = `
-                <div class="fade-in max-w-4xl">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800">My Work</h2>
-                        <span class="text-gray-500">Officer: John Doe</span>
+                <div class="fade-in max-w-4xl mx-auto">
+                    <div class="mb-8">
+                        <h2 class="text-4xl font-bold text-va-blue-dark mb-2">My Work</h2>
+                        <p class="text-slate-500 text-lg">Your daily audit assignments and tasks</p>
                     </div>
 
-                    <!-- Today's Audits -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
-                        <div class="flex items-center gap-2 mb-4">
-                            <i class="far fa-calendar text-[#1e3a5f]"></i>
-                            <h3 class="font-semibold text-lg">Today's Audits (3)</h3>
+                    <div class="card p-8 mb-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 bg-va-yellow rounded-2xl flex items-center justify-center text-va-blue-dark text-xl">
+                                <i class="far fa-calendar"></i>
+                            </div>
+                            <h3 class="font-bold text-2xl text-slate-800">Today's Audits (3)</h3>
                         </div>
-                        <div class="space-y-3">
+                        
+                        <div class="space-y-4">
                             ${audits.filter(a => a.status !== 'draft').map(audit => `
-                                <div class="audit-card flex items-center justify-between p-4 rounded-lg border border-gray-200 priority-${audit.priority} ${audit.status === 'urgent' ? 'bg-red-50' : 'bg-gray-50'}">
-                                    <div>
-                                        <h4 class="font-semibold text-gray-800 ${audit.status === 'urgent' ? 'text-red-700' : ''}">${audit.tenant}</h4>
-                                        <p class="text-sm text-gray-500 mt-1">${audit.location} • ${audit.time} ${audit.status === 'urgent' ? '• URGENT' : ''}</p>
+                                <div class="audit-card flex items-center justify-between p-6 rounded-3xl border-2 ${audit.status === 'urgent' ? 'border-red-200 bg-red-50' : 'border-slate-100 bg-slate-50'} priority-${audit.priority}">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-14 h-14 ${audit.status === 'urgent' ? 'bg-red-500' : 'bg-va-blue'} rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">
+                                            <i class="fas fa-store"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-xl text-slate-800 ${audit.status === 'urgent' ? 'text-red-700' : ''}">${audit.tenant}</h4>
+                                            <p class="text-slate-500 mt-1 flex items-center gap-2">
+                                                <i class="fas fa-map-marker-alt text-va-coral"></i>
+                                                ${audit.location} • ${audit.time}
+                                                ${audit.status === 'urgent' ? '<span class="ml-2 px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold">URGENT</span>' : ''}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <button onclick="startAudit(${audit.id})" class="px-6 py-2 rounded-lg font-medium ${audit.status === 'urgent' ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-[#1e3a5f] text-white hover:bg-blue-900'} transition-colors">
-                                        Start
+                                    <button onclick="startAudit(${audit.id})" class="px-8 py-3 ${audit.status === 'urgent' ? 'bg-red-500 hover:bg-red-600' : 'bg-va-blue hover:bg-va-blue-dark'} text-white rounded-2xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                                        Start Audit
                                     </button>
                                 </div>
                             `).join('')}
                         </div>
                     </div>
 
-                    <!-- Draft Audits -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div class="flex items-center gap-2 mb-4">
-                            <i class="fas fa-edit text-yellow-600"></i>
-                            <h3 class="font-semibold text-lg">Draft Audits (1)</h3>
-                        </div>
-                        <div class="audit-card flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-yellow-50">
-                            <div>
-                                <h4 class="font-semibold text-gray-800">Tiger's Milk</h4>
-                                <p class="text-sm text-gray-500 mt-1">Water Shed • Saved 2h ago • 60% complete</p>
+                    <div class="card p-8">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600 text-xl">
+                                <i class="fas fa-edit"></i>
                             </div>
-                            <button class="px-6 py-2 rounded-lg font-medium bg-yellow-600 text-white hover:bg-yellow-700 transition-colors">
+                            <h3 class="font-bold text-2xl text-slate-800">Draft Audits (1)</h3>
+                        </div>
+                        
+                        <div class="audit-card flex items-center justify-between p-6 rounded-3xl border-2 border-amber-200 bg-amber-50">
+                            <div class="flex items-center gap-4">
+                                <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">
+                                    <i class="fas fa-store"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-slate-800">Tiger's Milk</h4>
+                                    <p class="text-slate-500 mt-1 flex items-center gap-2">
+                                        <i class="fas fa-map-marker-alt text-va-coral"></i>
+                                        Water Shed • Saved 2h ago • <span class="text-amber-600 font-semibold">60% complete</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <button class="px-8 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                                 Resume
                             </button>
                         </div>
@@ -250,70 +1346,80 @@
 
         function renderCalendar(container) {
             const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            const fullDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
             
             container.innerHTML = `
                 <div class="fade-in h-full flex flex-col">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex justify-between items-center mb-8">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800">Weekly Schedule</h2>
-                            <p class="text-gray-500 mt-1">Plan and manage your audit schedule</p>
+                            <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Weekly Schedule</h2>
+                            <p class="text-slate-500 text-lg">Plan and manage your audit schedule</p>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="changeWeek(-1)" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <div class="flex gap-3">
+                            <button onclick="changeWeek(-1)" class="w-12 h-12 border-2 border-slate-200 rounded-2xl hover:border-va-yellow hover:bg-va-yellow/5 flex items-center justify-center text-slate-600 transition-all">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
-                            <span class="px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 rounded-lg">
+                            <span class="px-6 py-3 font-bold text-slate-700 bg-white border-2 border-slate-200 rounded-2xl">
                                 ${formatWeekRange()}
                             </span>
-                            <button onclick="changeWeek(1)" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <button onclick="changeWeek(1)" class="w-12 h-12 border-2 border-slate-200 rounded-2xl hover:border-va-yellow hover:bg-va-yellow/5 flex items-center justify-center text-slate-600 transition-all">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
-                            <button onclick="openScheduleModal()" class="ml-2 px-4 py-2 bg-[#1e3a5f] text-white rounded-lg hover:bg-blue-900 flex items-center gap-2">
-                                <i class="fas fa-plus"></i> Schedule Audit
+                            <button onclick="openScheduleModal()" class="ml-4 px-6 py-3 btn-primary rounded-2xl flex items-center gap-2 shadow-lg">
+                                <i class="fas fa-plus"></i> Schedule
                             </button>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-7 gap-4 flex-1">
                         ${weekDays.map((day, idx) => `
-                            <div class="bg-white rounded-xl border border-gray-200 flex flex-col overflow-hidden">
-                                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                                    <p class="text-xs font-semibold text-gray-500 uppercase">${day}</p>
-                                    <p class="text-lg font-bold text-gray-800">${getDateForDay(idx)}</p>
+                            <div class="card flex flex-col overflow-hidden">
+                                <div class="bg-gradient-to-br from-slate-50 to-white px-4 py-4 border-b border-slate-100 text-center">
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">${day}</p>
+                                    <p class="text-2xl font-bold text-slate-800">${getDateForDay(idx)}</p>
                                 </div>
-                                <div class="calendar-day p-3 space-y-2 overflow-y-auto">
+                                <div class="calendar-day p-3 space-y-2 overflow-y-auto flex-1">
                                     ${(scheduleData[day] || []).map(item => `
-                                        <div class="p-2 rounded-lg text-sm ${getScheduleItemClass(item.type)} cursor-pointer hover:opacity-80 transition-opacity" onclick="editSchedule('${day}', '${item.task}')">
-                                            <p class="font-medium">${item.task}</p>
-                                            <p class="text-xs opacity-75">${item.time}</p>
+                                        <div class="p-3 rounded-xl text-sm font-medium ${getScheduleItemClass(item.type)} cursor-pointer hover:opacity-80 transition-all shadow-sm" onclick="editSchedule('${day}', '${item.task}')">
+                                            <p class="font-bold">${item.task}</p>
+                                            <p class="text-xs opacity-75 mt-1"><i class="far fa-clock mr-1"></i>${item.time}</p>
                                         </div>
                                     `).join('')}
-                                    <button onclick="quickAdd('${day}')" class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-400 hover:border-[#1e3a5f] hover:text-[#1e3a5f] transition-colors text-sm">
-                                        <i class="fas fa-plus"></i> Add
+                                    <button onclick="quickAdd('${day}')" class="w-full py-3 border-2 border-dashed border-slate-300 rounded-xl text-slate-400 hover:border-va-yellow hover:text-va-blue hover:bg-va-yellow/5 transition-all text-sm font-medium">
+                                        <i class="fas fa-plus mr-1"></i> Add
                                     </button>
                                 </div>
                             </div>
                         `).join('')}
                     </div>
 
-                    <!-- Quick Stats -->
-                    <div class="grid grid-cols-4 gap-4 mt-6">
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <p class="text-sm text-gray-500">Scheduled Audits</p>
-                            <p class="text-2xl font-bold text-[#1e3a5f]">12</p>
+                    <div class="grid grid-cols-4 gap-6 mt-8">
+                        <div class="card p-6 text-center">
+                            <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-va-blue text-xl mx-auto mb-3">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <p class="text-sm text-slate-500 font-medium mb-1">Scheduled</p>
+                            <p class="text-3xl font-bold text-slate-800">12</p>
                         </div>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <p class="text-sm text-gray-500">Completed This Week</p>
-                            <p class="text-2xl font-bold text-green-600">8</p>
+                        <div class="card p-6 text-center">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 text-xl mx-auto mb-3">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <p class="text-sm text-slate-500 font-medium mb-1">Completed</p>
+                            <p class="text-3xl font-bold text-emerald-600">8</p>
                         </div>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <p class="text-sm text-gray-500">Pending Reviews</p>
-                            <p class="text-2xl font-bold text-orange-600">3</p>
+                        <div class="card p-6 text-center">
+                            <div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600 text-xl mx-auto mb-3">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <p class="text-sm text-slate-500 font-medium mb-1">Pending</p>
+                            <p class="text-3xl font-bold text-amber-600">3</p>
                         </div>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <p class="text-sm text-gray-500">Urgent Items</p>
-                            <p class="text-2xl font-bold text-red-600">1</p>
+                        <div class="card p-6 text-center">
+                            <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 text-xl mx-auto mb-3">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <p class="text-sm text-slate-500 font-medium mb-1">Urgent</p>
+                            <p class="text-3xl font-bold text-red-600">1</p>
                         </div>
                     </div>
                 </div>
@@ -322,12 +1428,12 @@
 
         function getScheduleItemClass(type) {
             const classes = {
-                'audit': 'bg-blue-100 text-blue-800',
-                'urgent': 'bg-red-100 text-red-800',
-                'meeting': 'bg-purple-100 text-purple-800',
-                'inspection': 'bg-green-100 text-green-800'
+                'audit': 'bg-blue-100 text-va-blue border border-blue-200',
+                'urgent': 'bg-red-100 text-red-700 border border-red-200',
+                'meeting': 'bg-purple-100 text-purple-700 border border-purple-200',
+                'inspection': 'bg-emerald-100 text-emerald-700 border border-emerald-200'
             };
-            return classes[type] || 'bg-gray-100 text-gray-800';
+            return classes[type] || 'bg-slate-100 text-slate-700 border border-slate-200';
         }
 
         function formatWeekRange() {
@@ -349,7 +1455,7 @@
         }
 
         function openScheduleModal() {
-            alert('Schedule Audit Modal - Would open a form to schedule new audits');
+            showToast('Schedule modal would open here', 'success');
         }
 
         function quickAdd(day) {
@@ -371,18 +1477,34 @@
         function renderTenants(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Tenant Directory</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Tenant Directory</h2>
+                            <p class="text-slate-500 text-lg">Manage and view all tenant information</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <input type="text" placeholder="Search tenants..." class="px-6 py-3 border-2 border-slate-200 rounded-2xl focus:border-va-yellow focus:ring-4 focus:ring-va-yellow/20 outline-none w-64">
+                            <button class="px-6 py-3 btn-primary rounded-2xl shadow-lg">Filter</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         ${['Woolworths', 'H&M', 'Ocean Basket', 'Tiger\'s Milk', 'Cotton On', 'Ster-Kinekor'].map(tenant => `
-                            <div class="bg-white p-6 rounded-xl border border-gray-200 hover:shadow-md transition-shadow cursor-pointer">
-                                <div class="flex items-start justify-between mb-3">
-                                    <h3 class="font-semibold text-lg text-gray-800">${tenant}</h3>
-                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Active</span>
+                            <div class="card p-6 hover:shadow-xl transition-all cursor-pointer group">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="w-16 h-16 bg-gradient-to-br from-va-blue to-va-blue-light rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform">
+                                        ${tenant[0]}
+                                    </div>
+                                    <span class="px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">Active</span>
                                 </div>
-                                <p class="text-gray-500 text-sm mb-4">Victoria Wharf • Last audited: 2 weeks ago</p>
-                                <div class="flex gap-2">
-                                    <button class="flex-1 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">View Profile</button>
-                                    <button class="flex-1 py-2 bg-[#1e3a5f] text-white rounded-lg text-sm hover:bg-blue-900">Schedule Audit</button>
+                                <h3 class="font-bold text-xl text-slate-800 mb-2">${tenant}</h3>
+                                <p class="text-slate-500 mb-6 flex items-center gap-2">
+                                    <i class="fas fa-map-marker-alt text-va-coral"></i>
+                                    Victoria Wharf
+                                </p>
+                                <div class="flex gap-3">
+                                    <button class="flex-1 py-3 border-2 border-slate-200 rounded-xl text-slate-600 font-semibold hover:border-va-yellow hover:bg-va-yellow/5 transition-all">Profile</button>
+                                    <button class="flex-1 py-3 bg-va-blue text-white rounded-xl font-bold hover:bg-va-blue-dark transition-all shadow-lg">Audit</button>
                                 </div>
                             </div>
                         `).join('')}
@@ -394,31 +1516,40 @@
         function renderAudits(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">All Audits</h2>
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">All Audits</h2>
+                    <p class="text-slate-500 text-lg mb-8">Complete audit history and records</p>
+                    
+                    <div class="card overflow-hidden">
                         <table class="w-full">
-                            <thead class="bg-gray-50">
+                            <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tenant</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tenant</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Location</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200">
+                            <tbody class="divide-y divide-slate-100">
                                 ${audits.map(audit => `
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 font-medium text-gray-900">${audit.tenant}</td>
-                                        <td class="px-6 py-4 text-gray-500">${audit.location}</td>
-                                        <td class="px-6 py-4 text-gray-500">Today, ${audit.time || 'N/A'}</td>
-                                        <td class="px-6 py-4">
-                                            <span class="px-2 py-1 text-xs rounded-full ${audit.status === 'urgent' ? 'bg-red-100 text-red-700' : audit.status === 'draft' ? 'bg-yellow-100 text-yellow-700' : 'bg-blue-100 text-blue-700'}">
+                                    <tr class="hover:bg-slate-50 transition-colors">
+                                        <td class="px-8 py-5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-10 h-10 bg-va-yellow/20 rounded-xl flex items-center justify-center text-va-blue-dark font-bold">
+                                                    ${audit.tenant[0]}
+                                                </div>
+                                                <span class="font-bold text-slate-800">${audit.tenant}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-8 py-5 text-slate-500">${audit.location}</td>
+                                        <td class="px-8 py-5 text-slate-500">Today, ${audit.time || 'N/A'}</td>
+                                        <td class="px-8 py-5">
+                                            <span class="status-pill ${audit.status === 'urgent' ? 'bg-red-100 text-red-700' : audit.status === 'draft' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-va-blue'}">
                                                 ${audit.status.charAt(0).toUpperCase() + audit.status.slice(1)}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4">
-                                            <button class="text-[#1e3a5f] hover:text-blue-900 font-medium text-sm">View Details</button>
+                                        <td class="px-8 py-5">
+                                            <button class="text-va-blue font-bold hover:underline">View Details →</button>
                                         </td>
                                     </tr>
                                 `).join('')}
@@ -433,105 +1564,113 @@
         function renderOpsPriorities(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Operations Priorities</h2>
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Operations Priorities</h2>
+                    <p class="text-slate-500 text-lg mb-8">Critical issues requiring immediate attention</p>
                     
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                         <div class="lg:col-span-2 space-y-4">
-                            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+                            <div class="card border-l-8 border-red-500 p-6 bg-red-50/50">
                                 <div class="flex justify-between items-start">
-                                    <div>
-                                        <h3 class="font-bold text-red-900">Critical: HVAC System Failure</h3>
-                                        <p class="text-red-700 mt-1">Victoria Wharf - Zone C requires immediate attention</p>
-                                        <p class="text-sm text-red-600 mt-2">Reported 30 minutes ago • Assigned to Maintenance Team B</p>
+                                    <div class="flex gap-4">
+                                        <div class="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-xl text-red-900 mb-1">Critical: HVAC System Failure</h3>
+                                            <p class="text-red-700 mb-2">Victoria Wharf - Zone C requires immediate attention</p>
+                                            <p class="text-sm text-red-600 font-medium">Reported 30 minutes ago • Assigned to Maintenance Team B</p>
+                                        </div>
                                     </div>
-                                    <span class="px-3 py-1 bg-red-200 text-red-800 rounded-full text-sm font-medium">Critical</span>
+                                    <span class="px-4 py-2 bg-red-500 text-white rounded-full text-sm font-bold shadow-lg">Critical</span>
                                 </div>
                             </div>
                             
-                            <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg">
+                            <div class="card border-l-8 border-orange-500 p-6 bg-orange-50/50">
                                 <div class="flex justify-between items-start">
-                                    <div>
-                                        <h3 class="font-bold text-orange-900">High: Security Patrol Gap</h3>
-                                        <p class="text-orange-700 mt-1">Clock Tower area - 02:00 AM shift uncovered</p>
-                                        <p class="text-sm text-orange-600 mt-2">Scheduled for immediate reassignment</p>
+                                    <div class="flex gap-4">
+                                        <div class="w-14 h-14 bg-orange-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
+                                            <i class="fas fa-shield-alt"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-xl text-orange-900 mb-1">High: Security Patrol Gap</h3>
+                                            <p class="text-orange-700 mb-2">Clock Tower area - 02:00 AM shift uncovered</p>
+                                            <p class="text-sm text-orange-600 font-medium">Scheduled for immediate reassignment</p>
+                                        </div>
                                     </div>
-                                    <span class="px-3 py-1 bg-orange-200 text-orange-800 rounded-full text-sm font-medium">High</span>
+                                    <span class="px-4 py-2 bg-orange-500 text-white rounded-full text-sm font-bold shadow-lg">High</span>
                                 </div>
                             </div>
 
-                            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+                            <div class="card border-l-8 border-yellow-500 p-6 bg-yellow-50/50">
                                 <div class="flex justify-between items-start">
-                                    <div>
-                                        <h3 class="font-bold text-yellow-900">Medium: Cleaning Schedule Overlap</h3>
-                                        <p class="text-yellow-700 mt-1">Portswood precinct double-booked for tomorrow</p>
+                                    <div class="flex gap-4">
+                                        <div class="w-14 h-14 bg-yellow-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
+                                            <i class="fas fa-broom"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-xl text-yellow-900 mb-1">Medium: Cleaning Schedule Overlap</h3>
+                                            <p class="text-yellow-700">Portswood precinct double-booked for tomorrow</p>
+                                        </div>
                                     </div>
-                                    <span class="px-3 py-1 bg-yellow-200 text-yellow-800 rounded-full text-sm font-medium">Medium</span>
+                                    <span class="px-4 py-2 bg-yellow-500 text-white rounded-full text-sm font-bold shadow-lg">Medium</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="font-semibold text-gray-800 mb-4">Quick Actions</h3>
-                            <div class="space-y-2">
-                                <button class="w-full py-2 px-4 bg-[#1e3a5f] text-white rounded-lg hover:bg-blue-900 text-left flex items-center gap-2">
+                        <div class="card p-6">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6">Quick Actions</h3>
+                            <div class="space-y-3">
+                                <button class="w-full py-4 px-6 bg-va-blue text-white rounded-2xl font-bold hover:bg-va-blue-dark transition-all shadow-lg flex items-center gap-3">
                                     <i class="fas fa-plus"></i> Create Work Order
                                 </button>
-                                <button class="w-full py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left flex items-center gap-2">
+                                <button class="w-full py-4 px-6 border-2 border-slate-200 rounded-2xl font-semibold text-slate-600 hover:border-va-yellow hover:bg-va-yellow/5 transition-all flex items-center gap-3">
                                     <i class="fas fa-user-plus"></i> Assign Staff
                                 </button>
-                                <button class="w-full py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left flex items-center gap-2">
+                                <button class="w-full py-4 px-6 border-2 border-slate-200 rounded-2xl font-semibold text-slate-600 hover:border-va-yellow hover:bg-va-yellow/5 transition-all flex items-center gap-3">
                                     <i class="fas fa-phone"></i> Contact Vendor
                                 </button>
-                                <button class="w-full py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left flex items-center gap-2">
+                                <button class="w-full py-4 px-6 border-2 border-slate-200 rounded-2xl font-semibold text-slate-600 hover:border-va-yellow hover:bg-va-yellow/5 transition-all flex items-center gap-3">
                                     <i class="fas fa-file-alt"></i> Generate Report
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-4 gap-4">
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                </div>
-                                <div>
-                                    <p class="text-2xl font-bold text-gray-800">3</p>
-                                    <p class="text-sm text-gray-500">Critical Issues</p>
-                                </div>
+                    <div class="grid grid-cols-4 gap-6">
+                        <div class="card p-6 flex items-center gap-4">
+                            <div class="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 text-2xl">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-bold text-slate-800">3</p>
+                                <p class="text-sm text-slate-500 font-medium">Critical Issues</p>
                             </div>
                         </div>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
-                                    <i class="fas fa-tasks"></i>
-                                </div>
-                                <div>
-                                    <p class="text-2xl font-bold text-gray-800">12</p>
-                                    <p class="text-sm text-gray-500">Open Work Orders</p>
-                                </div>
+                        <div class="card p-6 flex items-center gap-4">
+                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-va-blue text-2xl">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-bold text-slate-800">12</p>
+                                <p class="text-sm text-slate-500 font-medium">Open Work Orders</p>
                             </div>
                         </div>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
-                                    <i class="fas fa-check-circle"></i>
-                                </div>
-                                <div>
-                                    <p class="text-2xl font-bold text-gray-800">89%</p>
-                                    <p class="text-sm text-gray-500">Completion Rate</p>
-                                </div>
+                        <div class="card p-6 flex items-center gap-4">
+                            <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-bold text-slate-800">89%</p>
+                                <p class="text-sm text-slate-500 font-medium">Completion Rate</p>
                             </div>
                         </div>
-                        <div class="bg-white p-4 rounded-xl border border-gray-200">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div>
-                                    <p class="text-2xl font-bold text-gray-800">24</p>
-                                    <p class="text-sm text-gray-500">Staff On Duty</p>
-                                </div>
+                        <div class="card p-6 flex items-center gap-4">
+                            <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-2xl">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div>
+                                <p class="text-3xl font-bold text-slate-800">24</p>
+                                <p class="text-sm text-slate-500 font-medium">Staff On Duty</p>
                             </div>
                         </div>
                     </div>
@@ -542,32 +1681,38 @@
         function renderOpsTenants(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800">Tenant Operations</h2>
-                        <div class="flex gap-2">
-                            <input type="text" placeholder="Search tenants..." class="px-4 py-2 border border-gray-300 rounded-lg">
-                            <button class="px-4 py-2 bg-[#1e3a5f] text-white rounded-lg">Filter</button>
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Tenant Operations</h2>
+                        <div class="flex gap-3">
+                            <input type="text" placeholder="Search tenants..." class="px-6 py-3 border-2 border-slate-200 rounded-2xl focus:border-va-yellow focus:ring-4 focus:ring-va-yellow/20 outline-none w-64">
+                            <button class="px-6 py-3 btn-primary rounded-2xl shadow-lg">Filter</button>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    
+                    <div class="card overflow-hidden">
                         <table class="w-full">
-                            <thead class="bg-gray-50">
+                            <thead class="bg-slate-50">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tenant</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Zone</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Operating Hours</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Compliance Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tenant</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Zone</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Operating Hours</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-200">
+                            <tbody class="divide-y divide-slate-100">
                                 ${['Woolworths', 'H&M', 'Ocean Basket', 'Tiger\'s Milk', 'Cotton On'].map((t, i) => `
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="px-6 py-4 font-medium text-gray-900">${t}</td>
-                                        <td class="px-6 py-4 text-gray-500">${['Victoria Wharf', 'Clock Tower', 'Portswood', 'Water Shed', 'Victoria Wharf'][i]}</td>
-                                        <td class="px-6 py-4 text-gray-500">09:00 - 21:00</td>
-                                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Compliant</span></td>
-                                        <td class="px-6 py-4 text-[#1e3a5f] cursor-pointer hover:underline">Manage</td>
+                                    <tr class="hover:bg-slate-50 transition-colors">
+                                        <td class="px-8 py-5 font-bold text-slate-800 flex items-center gap-3">
+                                            <div class="w-10 h-10 bg-va-yellow/20 rounded-xl flex items-center justify-center text-va-blue-dark font-bold">
+                                                ${t[0]}
+                                            </div>
+                                            ${t}
+                                        </td>
+                                        <td class="px-8 py-5 text-slate-500">${['Victoria Wharf', 'Clock Tower', 'Portswood', 'Water Shed', 'Victoria Wharf'][i]}</td>
+                                        <td class="px-8 py-5 text-slate-500">09:00 - 21:00</td>
+                                        <td class="px-8 py-5"><span class="status-pill bg-emerald-100 text-emerald-700">Compliant</span></td>
+                                        <td class="px-8 py-5 text-va-blue font-bold hover:underline cursor-pointer">Manage →</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -580,39 +1725,52 @@
         function renderOpsAudits(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Operations Audits</h2>
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Operations Audits</h2>
+                    <p class="text-slate-500 text-lg mb-8">Safety and maintenance audit tracking</p>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="font-semibold text-lg mb-4">Safety Inspections</h3>
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <span>Fire Safety Check</span>
-                                    <span class="text-sm text-gray-500">Due in 2 days</span>
+                        <div class="card p-8">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6 flex items-center gap-3">
+                                <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-red-600">
+                                    <i class="fas fa-hard-hat"></i>
                                 </div>
-                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <span>Emergency Exit Audit</span>
-                                    <span class="text-sm text-green-600">Completed</span>
+                                Safety Inspections
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                    <span class="font-medium text-slate-700">Fire Safety Check</span>
+                                    <span class="text-sm text-amber-600 font-bold bg-amber-100 px-3 py-1 rounded-full">Due in 2 days</span>
                                 </div>
-                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <span>Food Safety Review</span>
-                                    <span class="text-sm text-red-600">Overdue</span>
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                    <span class="font-medium text-slate-700">Emergency Exit Audit</span>
+                                    <span class="text-sm text-emerald-600 font-bold bg-emerald-100 px-3 py-1 rounded-full">Completed</span>
+                                </div>
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                    <span class="font-medium text-slate-700">Food Safety Review</span>
+                                    <span class="text-sm text-red-600 font-bold bg-red-100 px-3 py-1 rounded-full">Overdue</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="font-semibold text-lg mb-4">Maintenance Audits</h3>
-                            <div class="space-y-3">
-                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <span>HVAC Systems</span>
-                                    <span class="text-sm text-yellow-600">In Progress</span>
+                        
+                        <div class="card p-8">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6 flex items-center gap-3">
+                                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-va-blue">
+                                    <i class="fas fa-tools"></i>
                                 </div>
-                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <span>Electrical Systems</span>
-                                    <span class="text-sm text-gray-500">Scheduled</span>
+                                Maintenance Audits
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                    <span class="font-medium text-slate-700">HVAC Systems</span>
+                                    <span class="text-sm text-amber-600 font-bold bg-amber-100 px-3 py-1 rounded-full">In Progress</span>
                                 </div>
-                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <span>Plumbing Inspection</span>
-                                    <span class="text-sm text-green-600">Completed</span>
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                    <span class="font-medium text-slate-700">Electrical Systems</span>
+                                    <span class="text-sm text-slate-500 font-bold bg-slate-200 px-3 py-1 rounded-full">Scheduled</span>
+                                </div>
+                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                    <span class="font-medium text-slate-700">Plumbing Inspection</span>
+                                    <span class="text-sm text-emerald-600 font-bold bg-emerald-100 px-3 py-1 rounded-full">Completed</span>
                                 </div>
                             </div>
                         </div>
@@ -624,50 +1782,63 @@
         function renderMaintenance(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Maintenance Management</h2>
-                    <div class="grid grid-cols-3 gap-6 mb-6">
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="text-gray-500 text-sm font-medium mb-2">Active Work Orders</h3>
-                            <p class="text-3xl font-bold text-[#1e3a5f]">18</p>
-                            <p class="text-sm text-gray-400 mt-1">5 high priority</p>
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Maintenance Management</h2>
+                    <p class="text-slate-500 text-lg mb-8">Track work orders and vendor response times</p>
+                    
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="card p-6 text-center">
+                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-va-blue text-2xl mx-auto mb-4">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <h3 class="text-slate-500 font-medium mb-1">Active Work Orders</h3>
+                            <p class="text-4xl font-bold text-slate-800">18</p>
+                            <p class="text-sm text-amber-600 font-semibold mt-2">5 high priority</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="text-gray-500 text-sm font-medium mb-2">Completed Today</h3>
-                            <p class="text-3xl font-bold text-green-600">7</p>
-                            <p class="text-sm text-gray-400 mt-1">On target</p>
+                        <div class="card p-6 text-center">
+                            <div class="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl mx-auto mb-4">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                            <h3 class="text-slate-500 font-medium mb-1">Completed Today</h3>
+                            <p class="text-4xl font-bold text-slate-800">7</p>
+                            <p class="text-sm text-emerald-600 font-semibold mt-2">On target</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="text-gray-500 text-sm font-medium mb-2">Vendor Response</h3>
-                            <p class="text-3xl font-bold text-orange-600">4.2h</p>
-                            <p class="text-sm text-gray-400 mt-1">Average time</p>
+                        <div class="card p-6 text-center">
+                            <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-2xl mx-auto mb-4">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <h3 class="text-slate-500 font-medium mb-1">Vendor Response</h3>
+                            <p class="text-4xl font-bold text-slate-800">4.2h</p>
+                            <p class="text-sm text-slate-400 font-semibold mt-2">Average time</p>
                         </div>
                     </div>
-                    <div class="bg-white rounded-xl border border-gray-200 p-6">
-                        <h3 class="font-semibold text-lg mb-4">Recent Work Orders</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    
+                    <div class="card p-8">
+                        <h3 class="font-bold text-xl text-slate-800 mb-6">Recent Work Orders</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-6 bg-red-50 rounded-2xl border-2 border-red-200">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600">
+                                    <div class="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
                                         <i class="fas fa-temperature-high"></i>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-gray-800">AC Unit Failure - Zone C</p>
-                                        <p class="text-sm text-gray-500">Victoria Wharf • Reported 2 hours ago</p>
+                                        <p class="font-bold text-lg text-slate-800">AC Unit Failure - Zone C</p>
+                                        <p class="text-slate-500">Victoria Wharf • Reported 2 hours ago</p>
                                     </div>
                                 </div>
-                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm">Critical</span>
+                                <span class="px-4 py-2 bg-red-500 text-white rounded-full text-sm font-bold shadow-lg">Critical</span>
                             </div>
-                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            
+                            <div class="flex items-center justify-between p-6 bg-amber-50 rounded-2xl border-2 border-amber-200">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600">
+                                    <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
                                         <i class="fas fa-lightbulb"></i>
                                     </div>
                                     <div>
-                                        <p class="font-medium text-gray-800">Lighting Repair - Parking P3</p>
-                                        <p class="text-sm text-gray-500">Underground Parking • Reported 5 hours ago</p>
+                                        <p class="font-bold text-lg text-slate-800">Lighting Repair - Parking P3</p>
+                                        <p class="text-slate-500">Underground Parking • Reported 5 hours ago</p>
                                     </div>
                                 </div>
-                                <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm">Medium</span>
+                                <span class="px-4 py-2 bg-amber-500 text-white rounded-full text-sm font-bold shadow-lg">Medium</span>
                             </div>
                         </div>
                     </div>
@@ -678,29 +1849,32 @@
         function renderStaffScheduling(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Staff Scheduling</h2>
-                    <div class="bg-white rounded-xl border border-gray-200 p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="flex gap-2">
-                                <button class="px-4 py-2 bg-[#1e3a5f] text-white rounded-lg">Week View</button>
-                                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Day View</button>
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Staff Scheduling</h2>
+                    <p class="text-slate-500 text-lg mb-8">Manage weekly staff rotations and shifts</p>
+                    
+                    <div class="card p-8">
+                        <div class="flex justify-between items-center mb-8">
+                            <div class="flex gap-3">
+                                <button class="px-6 py-3 bg-va-blue text-white rounded-2xl font-bold shadow-lg">Week View</button>
+                                <button class="px-6 py-3 border-2 border-slate-200 rounded-2xl font-semibold text-slate-600 hover:border-va-yellow transition-all">Day View</button>
                             </div>
-                            <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
+                            <button class="px-6 py-3 border-2 border-slate-200 rounded-2xl font-semibold text-slate-600 hover:border-va-yellow hover:bg-va-yellow/5 transition-all flex items-center gap-2">
                                 <i class="fas fa-plus"></i> Add Shift
                             </button>
                         </div>
-                        <div class="grid grid-cols-7 gap-2">
+                        
+                        <div class="grid grid-cols-7 gap-3">
                             ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => `
-                                <div class="border border-gray-200 rounded-lg p-3">
-                                    <p class="font-semibold text-gray-700 mb-2 text-center">${day}</p>
-                                    <div class="space-y-2">
-                                        <div class="bg-blue-50 p-2 rounded text-xs">
-                                            <p class="font-medium text-blue-900">Morning</p>
-                                            <p class="text-blue-700">8 staff</p>
+                                <div class="card p-4 text-center hover:shadow-lg transition-shadow">
+                                    <p class="font-bold text-slate-700 mb-3 text-lg">${day}</p>
+                                    <div class="space-y-3">
+                                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                                            <p class="font-bold text-va-blue text-sm">Morning</p>
+                                            <p class="text-xs text-slate-500 mt-1">8 staff</p>
                                         </div>
-                                        <div class="bg-purple-50 p-2 rounded text-xs">
-                                            <p class="font-medium text-purple-900">Evening</p>
-                                            <p class="text-purple-700">12 staff</p>
+                                        <div class="bg-purple-50 p-3 rounded-xl border border-purple-100">
+                                            <p class="font-bold text-purple-600 text-sm">Evening</p>
+                                            <p class="text-xs text-slate-500 mt-1">12 staff</p>
                                         </div>
                                     </div>
                                 </div>
@@ -715,109 +1889,127 @@
         function renderRiskOverview(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Risk Overview Dashboard</h2>
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Risk Overview</h2>
+                    <p class="text-slate-500 text-lg mb-8">Executive dashboard for risk management</p>
                     
-                    <div class="grid grid-cols-4 gap-4 mb-6">
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-gray-500 text-sm font-medium">Overall Risk Score</h3>
-                                <i class="fas fa-shield-alt text-green-500"></i>
+                    <div class="grid grid-cols-4 gap-6 mb-8">
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-slate-500 font-medium">Risk Score</h3>
+                                <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
                             </div>
-                            <p class="text-3xl font-bold text-gray-800">72/100</p>
-                            <p class="text-sm text-green-600 mt-1">Low Risk</p>
+                            <p class="text-4xl font-bold text-slate-800">72<span class="text-2xl text-slate-400">/100</span></p>
+                            <p class="text-sm text-emerald-600 font-semibold mt-2">Low Risk</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-gray-500 text-sm font-medium">Open Incidents</h3>
-                                <i class="fas fa-exclamation-circle text-orange-500"></i>
+                        
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-slate-500 font-medium">Open Incidents</h3>
+                                <div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
                             </div>
-                            <p class="text-3xl font-bold text-gray-800">5</p>
-                            <p class="text-sm text-orange-600 mt-1">2 critical</p>
+                            <p class="text-4xl font-bold text-slate-800">5</p>
+                            <p class="text-sm text-orange-600 font-semibold mt-2">2 critical</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-gray-500 text-sm font-medium">Compliance Rate</h3>
-                                <i class="fas fa-check-circle text-blue-500"></i>
+                        
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-slate-500 font-medium">Compliance Rate</h3>
+                                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-va-blue">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
                             </div>
-                            <p class="text-3xl font-bold text-gray-800">94%</p>
-                            <p class="text-sm text-green-600 mt-1">+2% from last month</p>
+                            <p class="text-4xl font-bold text-slate-800">94%</p>
+                            <p class="text-sm text-emerald-600 font-semibold mt-2">+2% from last month</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <div class="flex items-center justify-between mb-2">
-                                <h3 class="text-gray-500 text-sm font-medium">Financial Exposure</h3>
-                                <i class="fas fa-dollar-sign text-purple-500"></i>
+                        
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-slate-500 font-medium">Financial Exposure</h3>
+                                <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
                             </div>
-                            <p class="text-3xl font-bold text-gray-800">R2.4M</p>
-                            <p class="text-sm text-gray-400 mt-1">Potential liability</p>
+                            <p class="text-4xl font-bold text-slate-800">R2.4M</p>
+                            <p class="text-sm text-slate-400 font-semibold mt-2">Potential liability</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="font-semibold text-lg mb-4">Risk by Category</h3>
-                            <div class="space-y-4">
+                        <div class="card p-8">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6">Risk by Category</h3>
+                            <div class="space-y-6">
                                 <div>
-                                    <div class="flex justify-between mb-1">
-                                        <span class="text-sm font-medium text-gray-700">Operational</span>
-                                        <span class="text-sm text-gray-500">35%</span>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-medium text-slate-700">Operational</span>
+                                        <span class="font-bold text-slate-500">35%</span>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 35%"></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-3">
+                                        <div class="bg-va-yellow h-3 rounded-full shadow-lg" style="width: 35%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="flex justify-between mb-1">
-                                        <span class="text-sm font-medium text-gray-700">Safety & Security</span>
-                                        <span class="text-sm text-gray-500">25%</span>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-medium text-slate-700">Safety & Security</span>
+                                        <span class="font-bold text-slate-500">25%</span>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-red-500 h-2 rounded-full" style="width: 25%"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between mb-1">
-                                        <span class="text-sm font-medium text-gray-700">Compliance</span>
-                                        <span class="text-sm text-gray-500">20%</span>
-                                    </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 20%"></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-3">
+                                        <div class="bg-red-500 h-3 rounded-full shadow-lg" style="width: 25%"></div>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="flex justify-between mb-1">
-                                        <span class="text-sm font-medium text-gray-700">Financial</span>
-                                        <span class="text-sm text-gray-500">20%</span>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-medium text-slate-700">Compliance</span>
+                                        <span class="font-bold text-slate-500">20%</span>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div class="bg-green-500 h-2 rounded-full" style="width: 20%"></div>
+                                    <div class="w-full bg-slate-100 rounded-full h-3">
+                                        <div class="bg-va-blue h-3 rounded-full shadow-lg" style="width: 20%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="font-medium text-slate-700">Financial</span>
+                                        <span class="font-bold text-slate-500">20%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-100 rounded-full h-3">
+                                        <div class="bg-emerald-500 h-3 rounded-full shadow-lg" style="width: 20%"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="font-semibold text-lg mb-4">Recent Risk Events</h3>
-                            <div class="space-y-3">
-                                <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
-                                    <div class="flex-1">
-                                        <p class="font-medium text-red-900">HVAC System Critical Failure</p>
-                                        <p class="text-sm text-red-700 mt-1">Victoria Wharf • 2 hours ago</p>
+                        <div class="card p-8">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6">Recent Risk Events</h3>
+                            <div class="space-y-4">
+                                <div class="p-5 bg-red-50 rounded-2xl border-l-8 border-red-500">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <p class="font-bold text-red-900 text-lg">HVAC System Critical Failure</p>
+                                            <p class="text-red-700 mt-1">Victoria Wharf • 2 hours ago</p>
+                                        </div>
+                                        <span class="px-3 py-1 bg-red-200 text-red-800 rounded-full text-xs font-bold">High</span>
                                     </div>
-                                    <span class="text-xs font-medium text-red-800 bg-red-200 px-2 py-1 rounded">High</span>
                                 </div>
-                                <div class="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
-                                    <div class="flex-1">
-                                        <p class="font-medium text-yellow-900">Tenant Compliance Delay</p>
-                                        <p class="text-sm text-yellow-700 mt-1">3 tenants overdue on safety certs</p>
+                                <div class="p-5 bg-amber-50 rounded-2xl border-l-8 border-amber-500">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <p class="font-bold text-amber-900 text-lg">Tenant Compliance Delay</p>
+                                            <p class="text-amber-700 mt-1">3 tenants overdue on safety certs</p>
+                                        </div>
+                                        <span class="px-3 py-1 bg-amber-200 text-amber-800 rounded-full text-xs font-bold">Med</span>
                                     </div>
-                                    <span class="text-xs font-medium text-yellow-800 bg-yellow-200 px-2 py-1 rounded">Med</span>
                                 </div>
-                                <div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                                    <div class="flex-1">
-                                        <p class="font-medium text-blue-900">Quarterly Audit Due</p>
-                                        <p class="text-sm text-blue-700 mt-1">Scheduled for next week</p>
+                                <div class="p-5 bg-blue-50 rounded-2xl border-l-8 border-va-blue">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <p class="font-bold text-va-blue text-lg">Quarterly Audit Due</p>
+                                            <p class="text-blue-700 mt-1">Scheduled for next week</p>
+                                        </div>
+                                        <span class="px-3 py-1 bg-blue-200 text-va-blue rounded-full text-xs font-bold">Low</span>
                                     </div>
-                                    <span class="text-xs font-medium text-blue-800 bg-blue-200 px-2 py-1 rounded">Low</span>
                                 </div>
                             </div>
                         </div>
@@ -829,7 +2021,9 @@
         function renderPrecincts(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">All Precincts</h2>
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">All Precincts</h2>
+                    <p class="text-slate-500 text-lg mb-8">Overview of all mall precincts and zones</p>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         ${[
                             { name: 'Victoria Wharf', status: 'Operational', occupancy: '92%', alerts: 2 },
@@ -838,28 +2032,31 @@
                             { name: 'Water Shed', status: 'Operational', occupancy: '95%', alerts: 0 },
                             { name: 'Silo District', status: 'Operational', occupancy: '82%', alerts: 1 }
                         ].map(precinct => `
-                            <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow cursor-pointer">
-                                <div class="flex justify-between items-start mb-4">
-                                    <h3 class="font-semibold text-lg text-gray-800">${precinct.name}</h3>
-                                    <span class="px-2 py-1 rounded-full text-xs ${precinct.status === 'Operational' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">
+                            <div class="card p-6 hover:shadow-xl transition-all cursor-pointer group">
+                                <div class="flex justify-between items-start mb-6">
+                                    <div class="w-16 h-16 bg-gradient-to-br from-va-blue to-va-blue-light rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform">
+                                        ${precinct.name[0]}
+                                    </div>
+                                    <span class="px-4 py-1.5 ${precinct.status === 'Operational' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'} rounded-full text-xs font-bold">
                                         ${precinct.status}
                                     </span>
                                 </div>
-                                <div class="space-y-3">
+                                <h3 class="font-bold text-xl text-slate-800 mb-4">${precinct.name}</h3>
+                                <div class="space-y-3 mb-6">
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-500">Occupancy</span>
-                                        <span class="font-medium text-gray-800">${precinct.occupancy}</span>
+                                        <span class="text-slate-500 font-medium">Occupancy</span>
+                                        <span class="font-bold text-slate-800">${precinct.occupancy}</span>
                                     </div>
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-500">Active Alerts</span>
-                                        <span class="font-medium ${precinct.alerts > 0 ? 'text-red-600' : 'text-green-600'}">${precinct.alerts}</span>
+                                        <span class="text-slate-500 font-medium">Active Alerts</span>
+                                        <span class="font-bold ${precinct.alerts > 0 ? 'text-red-600' : 'text-emerald-600'}">${precinct.alerts}</span>
                                     </div>
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-500">Tenants</span>
-                                        <span class="font-medium text-gray-800">${Math.floor(Math.random() * 50 + 20)}</span>
+                                        <span class="text-slate-500 font-medium">Tenants</span>
+                                        <span class="font-bold text-slate-800">${Math.floor(Math.random() * 50 + 20)}</span>
                                     </div>
                                 </div>
-                                <button class="w-full mt-4 py-2 border border-[#1e3a5f] text-[#1e3a5f] rounded-lg hover:bg-[#1e3a5f] hover:text-white transition-colors">
+                                <button class="w-full py-3 border-2 border-va-blue text-va-blue rounded-2xl font-bold hover:bg-va-blue hover:text-white transition-all">
                                     View Details
                                 </button>
                             </div>
@@ -872,41 +2069,42 @@
         function renderAnalytics(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Performance Analytics</h2>
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Performance Analytics</h2>
+                    <p class="text-slate-500 text-lg mb-8">Historical trends and performance metrics</p>
+                    
                     <div class="grid grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="font-semibold text-lg mb-4">Compliance Trends (6 Months)</h3>
-                            <div class="h-64 flex items-end justify-between gap-2">
+                        <div class="card p-8">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6">Compliance Trends (6 Months)</h3>
+                            <div class="h-64 flex items-end justify-between gap-4">
                                 ${[85, 87, 90, 88, 92, 94].map((val, i) => `
-                                    <div class="flex-1 flex flex-col items-center gap-2">
-                                        <div class="w-full bg-blue-500 rounded-t-lg hover:bg-blue-600 transition-colors relative group" style="height: ${val * 2}px">
-                                            <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                                                ${val}%
-                                            </div>
+                                    <div class="flex-1 flex flex-col items-center gap-3 group">
+                                        <div class="w-full bg-gradient-to-t from-va-blue to-va-blue-light rounded-t-2xl shadow-lg relative overflow-hidden group-hover:from-va-yellow group-hover:to-va-yellow transition-all duration-300" style="height: ${val * 2}px">
+                                            <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
                                         </div>
-                                        <span class="text-xs text-gray-500">${['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'][i]}</span>
+                                        <span class="text-sm font-bold text-slate-500 group-hover:text-va-blue transition-colors">${['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb'][i]}</span>
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-gray-200">
-                            <h3 class="font-semibold text-lg mb-4">Incident Resolution Time</h3>
+                        
+                        <div class="card p-8">
+                            <h3 class="font-bold text-xl text-slate-800 mb-6">Incident Resolution Time</h3>
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <span class="text-gray-700">Critical Issues</span>
-                                    <span class="font-bold text-red-600">2.4 hours</span>
+                                <div class="flex items-center justify-between p-5 bg-red-50 rounded-2xl border-2 border-red-100">
+                                    <span class="font-medium text-slate-700">Critical Issues</span>
+                                    <span class="font-bold text-red-600 text-xl">2.4 hours</span>
                                 </div>
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <span class="text-gray-700">High Priority</span>
-                                    <span class="font-bold text-orange-600">8.1 hours</span>
+                                <div class="flex items-center justify-between p-5 bg-orange-50 rounded-2xl border-2 border-orange-100">
+                                    <span class="font-medium text-slate-700">High Priority</span>
+                                    <span class="font-bold text-orange-600 text-xl">8.1 hours</span>
                                 </div>
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <span class="text-gray-700">Medium Priority</span>
-                                    <span class="font-bold text-yellow-600">24 hours</span>
+                                <div class="flex items-center justify-between p-5 bg-amber-50 rounded-2xl border-2 border-amber-100">
+                                    <span class="font-medium text-slate-700">Medium Priority</span>
+                                    <span class="font-bold text-amber-600 text-xl">24 hours</span>
                                 </div>
-                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <span class="text-gray-700">Low Priority</span>
-                                    <span class="font-bold text-green-600">3.2 days</span>
+                                <div class="flex items-center justify-between p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-100">
+                                    <span class="font-medium text-slate-700">Low Priority</span>
+                                    <span class="font-bold text-emerald-600 text-xl">3.2 days</span>
                                 </div>
                             </div>
                         </div>
@@ -918,17 +2116,19 @@
         function renderReports(container) {
             container.innerHTML = `
                 <div class="fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Executive Reports</h2>
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Executive Reports</h2>
+                    <p class="text-slate-500 text-lg mb-8">Downloadable reports and documentation</p>
+                    
+                    <div class="card overflow-hidden">
+                        <div class="p-8 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
                             <div class="flex justify-between items-center">
-                                <h3 class="font-semibold text-lg">Available Reports</h3>
-                                <button class="px-4 py-2 bg-[#1e3a5f] text-white rounded-lg flex items-center gap-2">
+                                <h3 class="font-bold text-xl text-slate-800">Available Reports</h3>
+                                <button class="px-6 py-3 btn-primary rounded-2xl shadow-lg flex items-center gap-2">
                                     <i class="fas fa-download"></i> Download All
                                 </button>
                             </div>
                         </div>
-                        <div class="divide-y divide-gray-200">
+                        <div class="divide-y divide-slate-100">
                             ${[
                                 { name: 'Q4 2025 Compliance Summary', date: 'Dec 31, 2025', type: 'Quarterly', size: '2.4 MB' },
                                 { name: 'Risk Assessment Report', date: 'Jan 15, 2026', type: 'Monthly', size: '1.8 MB' },
@@ -936,19 +2136,19 @@
                                 { name: 'Safety Audit Results', date: 'Feb 10, 2026', type: 'Ad-hoc', size: '4.1 MB' },
                                 { name: 'Operational Efficiency Analysis', date: 'Feb 15, 2026', type: 'Weekly', size: '1.5 MB' }
                             ].map(report => `
-                                <div class="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                                <div class="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors group">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+                                        <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-red-500 text-xl">
                                             <i class="fas fa-file-pdf"></i>
                                         </div>
                                         <div>
-                                            <p class="font-medium text-gray-800">${report.name}</p>
-                                            <p class="text-sm text-gray-500">${report.date} • ${report.type} • ${report.size}</p>
+                                            <p class="font-bold text-lg text-slate-800 group-hover:text-va-blue transition-colors">${report.name}</p>
+                                            <p class="text-sm text-slate-500">${report.date} • ${report.type} • ${report.size}</p>
                                         </div>
                                     </div>
-                                    <div class="flex gap-2">
-                                        <button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 text-sm">Preview</button>
-                                        <button class="px-3 py-1 bg-[#1e3a5f] text-white rounded hover:bg-blue-900 text-sm">Download</button>
+                                    <div class="flex gap-3">
+                                        <button class="px-4 py-2 border-2 border-slate-200 rounded-xl font-semibold text-slate-600 hover:border-va-yellow hover:bg-va-yellow/5 transition-all">Preview</button>
+                                        <button class="px-4 py-2 bg-va-blue text-white rounded-xl font-bold hover:bg-va-blue-dark transition-all shadow-lg">Download</button>
                                     </div>
                                 </div>
                             `).join('')}
@@ -959,14 +2159,14 @@
         }
 
         function startAudit(id) {
-            alert(`Starting audit #${id}...`);
+            showToast(`Starting audit #${id}...`, 'success');
         }
 
         // Close role menu when clicking outside
         document.addEventListener('click', (e) => {
             const menu = document.getElementById('roleMenu');
-            const btn = e.target.closest('button');
-            if (!btn || !btn.innerHTML.includes('Switch Role')) {
+            const btn = e.target.closest('div');
+            if (!btn || !btn.querySelector('.fa-chevron-down')) {
                 if (!menu.classList.contains('hidden')) {
                     menu.classList.add('hidden');
                 }
