@@ -132,10 +132,11 @@
             transform: translateY(-2px);
         }
         .card {
-            background: white;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
             border-radius: 2rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            border: 1px solid #F1F5F9;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
         .gradient-hero {
             background: linear-gradient(135deg, #236192 0%, #4A9FD4 100%);
@@ -160,11 +161,21 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
+        /* Background image styling */
+        .bg-waterfront {
+            background-image: url('https://images.unsplash.com/photo-1580060839134-75a5edca2e27?w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .bg-overlay {
+            background: linear-gradient(135deg, rgba(248, 249, 250, 0.97) 0%, rgba(248, 249, 250, 0.95) 100%);
+        }
     </style>
 </head>
 <body class="bg-slate-50 h-screen flex flex-col overflow-hidden">
     <!-- Header -->
-    <header class="bg-white border-b border-slate-100 h-20 flex items-center justify-between px-8 shadow-sm z-10">
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 h-20 flex items-center justify-between px-8 shadow-sm z-20 relative">
         <div class="flex items-center gap-4">
             <div class="w-12 h-12 bg-va-yellow rounded-2xl flex items-center justify-center text-va-blue-dark shadow-lg transform -rotate-3">
                 <i class="fas fa-anchor text-2xl"></i>
@@ -194,7 +205,7 @@
     </header>
 
     <!-- Role Switcher Dropdown -->
-    <div id="roleMenu" class="hidden absolute top-24 right-8 bg-white rounded-3xl shadow-2xl z-50 w-72 overflow-hidden border border-slate-100">
+    <div id="roleMenu" class="hidden absolute top-24 right-8 bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl z-50 w-72 overflow-hidden border border-slate-100">
         <div class="px-6 py-4 bg-gradient-to-r from-va-yellow to-va-yellow-light">
             <p class="text-sm font-bold text-va-blue-dark uppercase tracking-wider">Select Portal</p>
         </div>
@@ -238,9 +249,9 @@
         </div>
     </div>
 
-    <div class="flex flex-1 overflow-hidden">
+    <div class="flex flex-1 overflow-hidden relative">
         <!-- Sidebar -->
-        <aside class="w-72 bg-white border-r border-slate-100 flex flex-col">
+        <aside class="w-72 bg-white/95 backdrop-blur-md border-r border-slate-200 flex flex-col z-10 relative">
             <div class="p-6 border-b border-slate-100" id="storeInfo" style="display: none;">
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
@@ -267,15 +278,20 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main id="mainContent" class="flex-1 overflow-y-auto p-8 bg-slate-50">
-            <!-- Dynamic content -->
+        <!-- Main Content with Background Image -->
+        <main class="flex-1 overflow-y-auto relative bg-waterfront">
+            <!-- Faint overlay -->
+            <div class="absolute inset-0 bg-overlay"></div>
+            <!-- Content -->
+            <div id="mainContent" class="relative z-10 p-8 min-h-full">
+                <!-- Dynamic content -->
+            </div>
         </main>
     </div>
 
     <!-- Upload Modal -->
-    <div id="uploadModal" class="hidden fixed inset-0 bg-slate-900 bg-opacity-50 z-50 flex items-center justify-center backdrop-blur-sm">
-        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg mx-4 overflow-hidden transform transition-all scale-100">
+    <div id="uploadModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl w-full max-w-lg mx-4 overflow-hidden transform transition-all scale-100">
             <div class="px-8 py-6 bg-gradient-to-r from-va-yellow to-va-yellow-light flex justify-between items-center">
                 <h3 class="font-bold text-xl text-va-blue-dark">Upload Certificate</h3>
                 <button onclick="closeUploadModal()" class="text-va-blue-dark hover:text-va-blue-dark/70 transition-colors w-10 h-10 rounded-full hover:bg-white/20 flex items-center justify-center">
@@ -319,8 +335,8 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 z-50 transform transition-all duration-300 translate-y-10 opacity-0">
-        <div id="toastIcon" class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+    <div id="toast" class="hidden fixed bottom-8 right-8 bg-slate-800/95 backdrop-blur-md text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 z-50 transform transition-all duration-300 translate-y-10 opacity-0">
+        <div id="toastIcon" class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center">
             <i class="fas fa-check"></i>
         </div>
         <div>
@@ -558,7 +574,7 @@
                 <div class="fade-in max-w-6xl mx-auto">
                     <div class="mb-8">
                         <h2 class="text-4xl font-bold text-va-blue-dark mb-2">Welcome back, ${storeData.manager.split(' ')[0]}! 👋</h2>
-                        <p class="text-slate-500 text-lg">Here's what's happening with <span class="font-semibold text-va-blue">${storeData.name}</span></p>
+                        <p class="text-slate-600 text-lg">Here's what's happening with <span class="font-semibold text-va-blue">${storeData.name}</span> at ${storeData.location}</p>
                     </div>
 
                     <!-- Compliance Score Hero -->
@@ -684,7 +700,7 @@
                             </div>
                             <div class="space-y-4">
                                 ${storeData.upcoming.map(event => `
-                                    <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl hover:bg-blue-50 transition-colors">
+                                    <div class="flex items-center gap-4 p-4 bg-slate-50/80 rounded-2xl hover:bg-blue-50/80 transition-colors">
                                         <div class="w-16 h-16 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center">
                                             <span class="text-xs font-bold text-va-blue uppercase">${new Date(event.date).toLocaleDateString('en-US', {month: 'short'})}</span>
                                             <span class="text-2xl font-bold text-slate-800">${new Date(event.date).getDate()}</span>
@@ -725,7 +741,7 @@
                     <div class="flex justify-between items-center mb-8">
                         <div>
                             <h2 class="text-3xl font-bold text-va-blue-dark">Compliance Status</h2>
-                            <p class="text-slate-500 mt-2 text-lg">Track your store's compliance requirements</p>
+                            <p class="text-slate-600 mt-2 text-lg">Track your store's compliance requirements</p>
                         </div>
                         <button onclick="openUploadModal()" class="px-8 py-4 btn-primary rounded-2xl flex items-center gap-3 text-lg shadow-lg">
                             <i class="fas fa-plus"></i> Upload Document
@@ -756,7 +772,7 @@
                         <div class="lg:col-span-2 card p-8">
                             <h3 class="font-bold text-xl text-slate-800 mb-6">Compliance Requirements</h3>
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-200">
+                                <div class="flex items-center justify-between p-5 bg-emerald-50/80 rounded-2xl border-2 border-emerald-200">
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
                                             <i class="fas fa-check"></i>
@@ -769,7 +785,7 @@
                                     <span class="status-pill bg-emerald-100 text-emerald-700">Compliant</span>
                                 </div>
 
-                                <div class="flex items-center justify-between p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-200">
+                                <div class="flex items-center justify-between p-5 bg-emerald-50/80 rounded-2xl border-2 border-emerald-200">
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
                                             <i class="fas fa-check"></i>
@@ -782,7 +798,7 @@
                                     <span class="status-pill bg-emerald-100 text-emerald-700">Compliant</span>
                                 </div>
 
-                                <div class="flex items-center justify-between p-5 bg-amber-50 rounded-2xl border-2 border-amber-200">
+                                <div class="flex items-center justify-between p-5 bg-amber-50/80 rounded-2xl border-2 border-amber-200">
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
                                             <i class="fas fa-clock"></i>
@@ -795,7 +811,7 @@
                                     <button onclick="openUploadModal()" class="px-6 py-2.5 bg-amber-500 text-white rounded-xl font-bold hover:bg-amber-600 transition-colors shadow-lg">Renew Now</button>
                                 </div>
 
-                                <div class="flex items-center justify-between p-5 bg-red-50 rounded-2xl border-2 border-red-200">
+                                <div class="flex items-center justify-between p-5 bg-red-50/80 rounded-2xl border-2 border-red-200">
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
                                             <i class="fas fa-exclamation"></i>
@@ -862,7 +878,7 @@
                     <div class="flex justify-between items-center mb-8">
                         <div>
                             <h2 class="text-3xl font-bold text-va-blue-dark">Certificates & Documents</h2>
-                            <p class="text-slate-500 mt-2 text-lg">Manage your store's compliance documentation</p>
+                            <p class="text-slate-600 mt-2 text-lg">Manage your store's compliance documentation</p>
                         </div>
                         <button onclick="openUploadModal()" class="px-8 py-4 btn-primary rounded-2xl flex items-center gap-3 text-lg shadow-xl hover:shadow-2xl transition-all">
                             <i class="fas fa-cloud-upload-alt text-xl"></i>
@@ -873,9 +889,9 @@
                     <!-- Filters -->
                     <div class="flex gap-3 mb-8 overflow-x-auto pb-2">
                         <button class="px-6 py-3 bg-va-blue text-white rounded-2xl font-semibold shadow-md">All Documents</button>
-                        <button class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Valid</button>
-                        <button class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Expiring Soon</button>
-                        <button class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Expired</button>
+                        <button class="px-6 py-3 bg-white/80 border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Valid</button>
+                        <button class="px-6 py-3 bg-white/80 border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Expiring Soon</button>
+                        <button class="px-6 py-3 bg-white/80 border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold hover:border-va-yellow hover:text-va-blue transition-all">Expired</button>
                     </div>
 
                     <!-- Certificates Grid -->
@@ -894,7 +910,7 @@
                             const daysUntil = Math.ceil((new Date(cert.expires) - new Date()) / (1000 * 60 * 60 * 24));
                             
                             return `
-                                <div class="cert-card bg-white p-6 border-2 ${cert.status === 'expired' ? 'border-red-200' : cert.status === 'warning' ? 'border-amber-200' : 'border-emerald-200'} rounded-3xl shadow-sm hover:shadow-xl">
+                                <div class="cert-card bg-white/95 backdrop-blur-sm p-6 border-2 ${cert.status === 'expired' ? 'border-red-200' : cert.status === 'warning' ? 'border-amber-200' : 'border-emerald-200'} rounded-3xl shadow-sm hover:shadow-xl">
                                     <div class="flex justify-between items-start mb-6">
                                         <div class="w-16 h-16 ${cert.status === 'expired' ? 'bg-red-100 text-red-600' : cert.status === 'warning' ? 'bg-amber-100 text-amber-600' : 'bg-emerald-100 text-emerald-600'} rounded-2xl flex items-center justify-center text-3xl shadow-sm">
                                             <i class="fas ${cert.type === 'health' ? 'fa-heartbeat' : cert.type === 'fire' ? 'fa-fire-extinguisher' : cert.type === 'insurance' ? 'fa-file-contract' : 'fa-utensils'}"></i>
@@ -908,7 +924,7 @@
                                     <h3 class="font-bold text-xl text-slate-800 mb-2">${cert.name}</h3>
                                     <p class="text-sm text-slate-400 mb-6 font-medium">ID: CERT-2025-${String(cert.id).padStart(3, '0')}</p>
                                     
-                                    <div class="space-y-3 mb-6 bg-slate-50 p-4 rounded-2xl">
+                                    <div class="space-y-3 mb-6 bg-slate-50/80 p-4 rounded-2xl">
                                         <div class="flex justify-between text-sm">
                                             <span class="text-slate-500 font-medium">Issued:</span>
                                             <span class="text-slate-700 font-semibold">${new Date(cert.issued).toLocaleDateString()}</span>
@@ -969,7 +985,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-100">
-                                    <tr class="hover:bg-slate-50 transition-colors">
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
                                         <td class="py-5">
                                             <div class="flex items-center gap-4">
                                                 <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-red-500">
@@ -984,7 +1000,7 @@
                                             <button class="text-va-blue font-bold hover:underline">Download</button>
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-50 transition-colors">
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
                                         <td class="py-5">
                                             <div class="flex items-center gap-4">
                                                 <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-500">
@@ -1013,7 +1029,7 @@
                     <div class="flex justify-between items-center mb-8">
                         <div>
                             <h2 class="text-3xl font-bold text-va-blue-dark">Audit History</h2>
-                            <p class="text-slate-500 mt-2 text-lg">View past inspections and compliance checks</p>
+                            <p class="text-slate-600 mt-2 text-lg">View past inspections and compliance checks</p>
                         </div>
                         <button class="px-6 py-3 border-2 border-slate-200 rounded-2xl hover:border-va-yellow hover:bg-va-yellow/5 font-semibold text-slate-600 transition-all flex items-center gap-2">
                             <i class="fas fa-download"></i> Export History
@@ -1023,7 +1039,7 @@
                     <div class="space-y-6">
                         ${storeData.auditHistory.map((audit, index) => `
                             <div class="card overflow-hidden">
-                                <div class="p-8 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors" onclick="toggleAuditDetails(${index})">
+                                <div class="p-8 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition-colors" onclick="toggleAuditDetails(${index})">
                                     <div class="flex items-center gap-6">
                                         <div class="w-20 h-20 ${audit.score >= 90 ? 'bg-emerald-100 text-emerald-600' : audit.score >= 80 ? 'bg-blue-100 text-va-blue' : 'bg-amber-100 text-amber-600'} rounded-3xl flex flex-col items-center justify-center shadow-lg">
                                             <span class="text-3xl font-bold">${audit.score}</span>
@@ -1049,7 +1065,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div id="audit-details-${index}" class="hidden border-t border-slate-100 bg-slate-50 p-8">
+                                <div id="audit-details-${index}" class="hidden border-t border-slate-100 bg-slate-50/50 p-8">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div>
                                             <h4 class="font-bold text-lg text-slate-800 mb-4">Findings Summary</h4>
@@ -1099,7 +1115,7 @@
 
                     <div class="card overflow-hidden">
                         <div class="divide-y divide-slate-100">
-                            <div class="p-6 hover:bg-blue-50/50 cursor-pointer transition-all bg-gradient-to-r from-blue-50/50 to-transparent border-l-4 border-va-blue">
+                            <div class="p-6 hover:bg-blue-50/50 cursor-pointer transition-all bg-gradient-to-r from-blue-50/30 to-transparent border-l-4 border-va-blue">
                                 <div class="flex justify-between items-start mb-3">
                                     <div class="flex items-center gap-4">
                                         <div class="w-14 h-14 bg-gradient-to-br from-va-blue to-va-blue-light rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
@@ -1116,7 +1132,7 @@
                                 <p class="text-slate-600 leading-relaxed">Hi Sarah, Just confirming our routine audit for next month. Please ensure all certificates are up to date and accessible...</p>
                             </div>
 
-                            <div class="p-6 hover:bg-slate-50 cursor-pointer transition-all">
+                            <div class="p-6 hover:bg-slate-50/50 cursor-pointer transition-all">
                                 <div class="flex justify-between items-start mb-3">
                                     <div class="flex items-center gap-4">
                                         <div class="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
@@ -1132,7 +1148,7 @@
                                 <p class="text-slate-600 leading-relaxed">We'll be conducting HVAC maintenance this Saturday. Please ensure back-of-house areas are accessible...</p>
                             </div>
 
-                            <div class="p-6 hover:bg-slate-50 cursor-pointer transition-all">
+                            <div class="p-6 hover:bg-slate-50/50 cursor-pointer transition-all">
                                 <div class="flex justify-between items-start mb-3">
                                     <div class="flex items-center gap-4">
                                         <div class="w-14 h-14 bg-gradient-to-br from-slate-400 to-slate-500 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
@@ -1279,7 +1295,7 @@
                 <div class="fade-in max-w-4xl mx-auto">
                     <div class="mb-8">
                         <h2 class="text-4xl font-bold text-va-blue-dark mb-2">My Work</h2>
-                        <p class="text-slate-500 text-lg">Your daily audit assignments and tasks</p>
+                        <p class="text-slate-600 text-lg">Your daily audit assignments and tasks</p>
                     </div>
 
                     <div class="card p-8 mb-6">
@@ -1292,7 +1308,7 @@
                         
                         <div class="space-y-4">
                             ${audits.filter(a => a.status !== 'draft').map(audit => `
-                                <div class="audit-card flex items-center justify-between p-6 rounded-3xl border-2 ${audit.status === 'urgent' ? 'border-red-200 bg-red-50' : 'border-slate-100 bg-slate-50'} priority-${audit.priority}">
+                                <div class="audit-card flex items-center justify-between p-6 rounded-3xl border-2 ${audit.status === 'urgent' ? 'border-red-200 bg-red-50/80' : 'border-slate-100 bg-slate-50/80'} priority-${audit.priority}">
                                     <div class="flex items-center gap-4">
                                         <div class="w-14 h-14 ${audit.status === 'urgent' ? 'bg-red-500' : 'bg-va-blue'} rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">
                                             <i class="fas fa-store"></i>
@@ -1322,7 +1338,7 @@
                             <h3 class="font-bold text-2xl text-slate-800">Draft Audits (1)</h3>
                         </div>
                         
-                        <div class="audit-card flex items-center justify-between p-6 rounded-3xl border-2 border-amber-200 bg-amber-50">
+                        <div class="audit-card flex items-center justify-between p-6 rounded-3xl border-2 border-amber-200 bg-amber-50/80">
                             <div class="flex items-center gap-4">
                                 <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg">
                                     <i class="fas fa-store"></i>
@@ -1352,13 +1368,13 @@
                     <div class="flex justify-between items-center mb-8">
                         <div>
                             <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Weekly Schedule</h2>
-                            <p class="text-slate-500 text-lg">Plan and manage your audit schedule</p>
+                            <p class="text-slate-600 text-lg">Plan and manage your audit schedule</p>
                         </div>
                         <div class="flex gap-3">
                             <button onclick="changeWeek(-1)" class="w-12 h-12 border-2 border-slate-200 rounded-2xl hover:border-va-yellow hover:bg-va-yellow/5 flex items-center justify-center text-slate-600 transition-all">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
-                            <span class="px-6 py-3 font-bold text-slate-700 bg-white border-2 border-slate-200 rounded-2xl">
+                            <span class="px-6 py-3 font-bold text-slate-700 bg-white/80 border-2 border-slate-200 rounded-2xl">
                                 ${formatWeekRange()}
                             </span>
                             <button onclick="changeWeek(1)" class="w-12 h-12 border-2 border-slate-200 rounded-2xl hover:border-va-yellow hover:bg-va-yellow/5 flex items-center justify-center text-slate-600 transition-all">
@@ -1480,10 +1496,10 @@
                     <div class="flex justify-between items-center mb-8">
                         <div>
                             <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Tenant Directory</h2>
-                            <p class="text-slate-500 text-lg">Manage and view all tenant information</p>
+                            <p class="text-slate-600 text-lg">Manage and view all tenant information</p>
                         </div>
                         <div class="flex gap-3">
-                            <input type="text" placeholder="Search tenants..." class="px-6 py-3 border-2 border-slate-200 rounded-2xl focus:border-va-yellow focus:ring-4 focus:ring-va-yellow/20 outline-none w-64">
+                            <input type="text" placeholder="Search tenants..." class="px-6 py-3 border-2 border-slate-200 rounded-2xl focus:border-va-yellow focus:ring-4 focus:ring-va-yellow/20 outline-none w-64 bg-white/80">
                             <button class="px-6 py-3 btn-primary rounded-2xl shadow-lg">Filter</button>
                         </div>
                     </div>
@@ -1517,11 +1533,11 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">All Audits</h2>
-                    <p class="text-slate-500 text-lg mb-8">Complete audit history and records</p>
+                    <p class="text-slate-600 text-lg mb-8">Complete audit history and records</p>
                     
                     <div class="card overflow-hidden">
                         <table class="w-full">
-                            <thead class="bg-slate-50">
+                            <thead class="bg-slate-50/80">
                                 <tr>
                                     <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tenant</th>
                                     <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Location</th>
@@ -1532,7 +1548,7 @@
                             </thead>
                             <tbody class="divide-y divide-slate-100">
                                 ${audits.map(audit => `
-                                    <tr class="hover:bg-slate-50 transition-colors">
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
                                         <td class="px-8 py-5">
                                             <div class="flex items-center gap-3">
                                                 <div class="w-10 h-10 bg-va-yellow/20 rounded-xl flex items-center justify-center text-va-blue-dark font-bold">
@@ -1565,7 +1581,7 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Operations Priorities</h2>
-                    <p class="text-slate-500 text-lg mb-8">Critical issues requiring immediate attention</p>
+                    <p class="text-slate-600 text-lg mb-8">Critical issues requiring immediate attention</p>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                         <div class="lg:col-span-2 space-y-4">
@@ -1684,14 +1700,14 @@
                     <div class="flex justify-between items-center mb-8">
                         <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Tenant Operations</h2>
                         <div class="flex gap-3">
-                            <input type="text" placeholder="Search tenants..." class="px-6 py-3 border-2 border-slate-200 rounded-2xl focus:border-va-yellow focus:ring-4 focus:ring-va-yellow/20 outline-none w-64">
+                            <input type="text" placeholder="Search tenants..." class="px-6 py-3 border-2 border-slate-200 rounded-2xl focus:border-va-yellow focus:ring-4 focus:ring-va-yellow/20 outline-none w-64 bg-white/80">
                             <button class="px-6 py-3 btn-primary rounded-2xl shadow-lg">Filter</button>
                         </div>
                     </div>
                     
                     <div class="card overflow-hidden">
                         <table class="w-full">
-                            <thead class="bg-slate-50">
+                            <thead class="bg-slate-50/80">
                                 <tr>
                                     <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Tenant</th>
                                     <th class="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Zone</th>
@@ -1702,7 +1718,7 @@
                             </thead>
                             <tbody class="divide-y divide-slate-100">
                                 ${['Woolworths', 'H&M', 'Ocean Basket', 'Tiger\'s Milk', 'Cotton On'].map((t, i) => `
-                                    <tr class="hover:bg-slate-50 transition-colors">
+                                    <tr class="hover:bg-slate-50/50 transition-colors">
                                         <td class="px-8 py-5 font-bold text-slate-800 flex items-center gap-3">
                                             <div class="w-10 h-10 bg-va-yellow/20 rounded-xl flex items-center justify-center text-va-blue-dark font-bold">
                                                 ${t[0]}
@@ -1726,7 +1742,7 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Operations Audits</h2>
-                    <p class="text-slate-500 text-lg mb-8">Safety and maintenance audit tracking</p>
+                    <p class="text-slate-600 text-lg mb-8">Safety and maintenance audit tracking</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="card p-8">
@@ -1737,15 +1753,15 @@
                                 Safety Inspections
                             </h3>
                             <div class="space-y-4">
-                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                <div class="flex justify-between items-center p-4 bg-slate-50/80 rounded-2xl border-2 border-slate-100">
                                     <span class="font-medium text-slate-700">Fire Safety Check</span>
                                     <span class="text-sm text-amber-600 font-bold bg-amber-100 px-3 py-1 rounded-full">Due in 2 days</span>
                                 </div>
-                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                <div class="flex justify-between items-center p-4 bg-slate-50/80 rounded-2xl border-2 border-slate-100">
                                     <span class="font-medium text-slate-700">Emergency Exit Audit</span>
                                     <span class="text-sm text-emerald-600 font-bold bg-emerald-100 px-3 py-1 rounded-full">Completed</span>
                                 </div>
-                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                <div class="flex justify-between items-center p-4 bg-slate-50/80 rounded-2xl border-2 border-slate-100">
                                     <span class="font-medium text-slate-700">Food Safety Review</span>
                                     <span class="text-sm text-red-600 font-bold bg-red-100 px-3 py-1 rounded-full">Overdue</span>
                                 </div>
@@ -1760,15 +1776,15 @@
                                 Maintenance Audits
                             </h3>
                             <div class="space-y-4">
-                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                <div class="flex justify-between items-center p-4 bg-slate-50/80 rounded-2xl border-2 border-slate-100">
                                     <span class="font-medium text-slate-700">HVAC Systems</span>
                                     <span class="text-sm text-amber-600 font-bold bg-amber-100 px-3 py-1 rounded-full">In Progress</span>
                                 </div>
-                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                <div class="flex justify-between items-center p-4 bg-slate-50/80 rounded-2xl border-2 border-slate-100">
                                     <span class="font-medium text-slate-700">Electrical Systems</span>
                                     <span class="text-sm text-slate-500 font-bold bg-slate-200 px-3 py-1 rounded-full">Scheduled</span>
                                 </div>
-                                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-100">
+                                <div class="flex justify-between items-center p-4 bg-slate-50/80 rounded-2xl border-2 border-slate-100">
                                     <span class="font-medium text-slate-700">Plumbing Inspection</span>
                                     <span class="text-sm text-emerald-600 font-bold bg-emerald-100 px-3 py-1 rounded-full">Completed</span>
                                 </div>
@@ -1783,7 +1799,7 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Maintenance Management</h2>
-                    <p class="text-slate-500 text-lg mb-8">Track work orders and vendor response times</p>
+                    <p class="text-slate-600 text-lg mb-8">Track work orders and vendor response times</p>
                     
                     <div class="grid grid-cols-3 gap-6 mb-8">
                         <div class="card p-6 text-center">
@@ -1815,7 +1831,7 @@
                     <div class="card p-8">
                         <h3 class="font-bold text-xl text-slate-800 mb-6">Recent Work Orders</h3>
                         <div class="space-y-4">
-                            <div class="flex items-center justify-between p-6 bg-red-50 rounded-2xl border-2 border-red-200">
+                            <div class="flex items-center justify-between p-6 bg-red-50/80 rounded-2xl border-2 border-red-200">
                                 <div class="flex items-center gap-4">
                                     <div class="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
                                         <i class="fas fa-temperature-high"></i>
@@ -1828,7 +1844,7 @@
                                 <span class="px-4 py-2 bg-red-500 text-white rounded-full text-sm font-bold shadow-lg">Critical</span>
                             </div>
                             
-                            <div class="flex items-center justify-between p-6 bg-amber-50 rounded-2xl border-2 border-amber-200">
+                            <div class="flex items-center justify-between p-6 bg-amber-50/80 rounded-2xl border-2 border-amber-200">
                                 <div class="flex items-center gap-4">
                                     <div class="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg">
                                         <i class="fas fa-lightbulb"></i>
@@ -1850,7 +1866,7 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Staff Scheduling</h2>
-                    <p class="text-slate-500 text-lg mb-8">Manage weekly staff rotations and shifts</p>
+                    <p class="text-slate-600 text-lg mb-8">Manage weekly staff rotations and shifts</p>
                     
                     <div class="card p-8">
                         <div class="flex justify-between items-center mb-8">
@@ -1890,7 +1906,7 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Risk Overview</h2>
-                    <p class="text-slate-500 text-lg mb-8">Executive dashboard for risk management</p>
+                    <p class="text-slate-600 text-lg mb-8">Executive dashboard for risk management</p>
                     
                     <div class="grid grid-cols-4 gap-6 mb-8">
                         <div class="card p-6">
@@ -1984,7 +2000,7 @@
                         <div class="card p-8">
                             <h3 class="font-bold text-xl text-slate-800 mb-6">Recent Risk Events</h3>
                             <div class="space-y-4">
-                                <div class="p-5 bg-red-50 rounded-2xl border-l-8 border-red-500">
+                                <div class="p-5 bg-red-50/80 rounded-2xl border-l-8 border-red-500">
                                     <div class="flex justify-between items-start">
                                         <div>
                                             <p class="font-bold text-red-900 text-lg">HVAC System Critical Failure</p>
@@ -1993,7 +2009,7 @@
                                         <span class="px-3 py-1 bg-red-200 text-red-800 rounded-full text-xs font-bold">High</span>
                                     </div>
                                 </div>
-                                <div class="p-5 bg-amber-50 rounded-2xl border-l-8 border-amber-500">
+                                <div class="p-5 bg-amber-50/80 rounded-2xl border-l-8 border-amber-500">
                                     <div class="flex justify-between items-start">
                                         <div>
                                             <p class="font-bold text-amber-900 text-lg">Tenant Compliance Delay</p>
@@ -2002,7 +2018,7 @@
                                         <span class="px-3 py-1 bg-amber-200 text-amber-800 rounded-full text-xs font-bold">Med</span>
                                     </div>
                                 </div>
-                                <div class="p-5 bg-blue-50 rounded-2xl border-l-8 border-va-blue">
+                                <div class="p-5 bg-blue-50/80 rounded-2xl border-l-8 border-va-blue">
                                     <div class="flex justify-between items-start">
                                         <div>
                                             <p class="font-bold text-va-blue text-lg">Quarterly Audit Due</p>
@@ -2022,7 +2038,7 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">All Precincts</h2>
-                    <p class="text-slate-500 text-lg mb-8">Overview of all mall precincts and zones</p>
+                    <p class="text-slate-600 text-lg mb-8">Overview of all mall precincts and zones</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         ${[
@@ -2070,7 +2086,7 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Performance Analytics</h2>
-                    <p class="text-slate-500 text-lg mb-8">Historical trends and performance metrics</p>
+                    <p class="text-slate-600 text-lg mb-8">Historical trends and performance metrics</p>
                     
                     <div class="grid grid-cols-2 gap-6">
                         <div class="card p-8">
@@ -2090,19 +2106,19 @@
                         <div class="card p-8">
                             <h3 class="font-bold text-xl text-slate-800 mb-6">Incident Resolution Time</h3>
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between p-5 bg-red-50 rounded-2xl border-2 border-red-100">
+                                <div class="flex items-center justify-between p-5 bg-red-50/80 rounded-2xl border-2 border-red-100">
                                     <span class="font-medium text-slate-700">Critical Issues</span>
                                     <span class="font-bold text-red-600 text-xl">2.4 hours</span>
                                 </div>
-                                <div class="flex items-center justify-between p-5 bg-orange-50 rounded-2xl border-2 border-orange-100">
+                                <div class="flex items-center justify-between p-5 bg-orange-50/80 rounded-2xl border-2 border-orange-100">
                                     <span class="font-medium text-slate-700">High Priority</span>
                                     <span class="font-bold text-orange-600 text-xl">8.1 hours</span>
                                 </div>
-                                <div class="flex items-center justify-between p-5 bg-amber-50 rounded-2xl border-2 border-amber-100">
+                                <div class="flex items-center justify-between p-5 bg-amber-50/80 rounded-2xl border-2 border-amber-100">
                                     <span class="font-medium text-slate-700">Medium Priority</span>
                                     <span class="font-bold text-amber-600 text-xl">24 hours</span>
                                 </div>
-                                <div class="flex items-center justify-between p-5 bg-emerald-50 rounded-2xl border-2 border-emerald-100">
+                                <div class="flex items-center justify-between p-5 bg-emerald-50/80 rounded-2xl border-2 border-emerald-100">
                                     <span class="font-medium text-slate-700">Low Priority</span>
                                     <span class="font-bold text-emerald-600 text-xl">3.2 days</span>
                                 </div>
@@ -2117,10 +2133,10 @@
             container.innerHTML = `
                 <div class="fade-in">
                     <h2 class="text-3xl font-bold text-va-blue-dark mb-2">Executive Reports</h2>
-                    <p class="text-slate-500 text-lg mb-8">Downloadable reports and documentation</p>
+                    <p class="text-slate-600 text-lg mb-8">Downloadable reports and documentation</p>
                     
                     <div class="card overflow-hidden">
-                        <div class="p-8 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+                        <div class="p-8 border-b border-slate-100 bg-gradient-to-r from-slate-50/80 to-white">
                             <div class="flex justify-between items-center">
                                 <h3 class="font-bold text-xl text-slate-800">Available Reports</h3>
                                 <button class="px-6 py-3 btn-primary rounded-2xl shadow-lg flex items-center gap-2">
@@ -2136,7 +2152,7 @@
                                 { name: 'Safety Audit Results', date: 'Feb 10, 2026', type: 'Ad-hoc', size: '4.1 MB' },
                                 { name: 'Operational Efficiency Analysis', date: 'Feb 15, 2026', type: 'Weekly', size: '1.5 MB' }
                             ].map(report => `
-                                <div class="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors group">
+                                <div class="p-6 flex items-center justify-between hover:bg-slate-50/50 transition-colors group">
                                     <div class="flex items-center gap-4">
                                         <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-red-500 text-xl">
                                             <i class="fas fa-file-pdf"></i>
